@@ -3,7 +3,7 @@ project(mach)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_executable(mach lib/glad.c src/MachApplication.cpp src/graphics/window/RenderWindow.cpp src/graphics/window/RenderWindow.hpp src/graphics/window/OpenGLWindow.cpp src/graphics/window/OpenGLWindow.hpp src/auxiliary/Constants.hpp src/io/KeyInput.cpp src/io/KeyInput.hpp src/io/MouseInput.cpp src/io/MouseInput.hpp src/MachApplication.hpp src/math/linalg/Vector2.hpp src/math/linalg/Vector3.hpp src/math/linalg/Vector4.hpp src/auxiliary/LogHelper.cpp src/auxiliary/LogHelper.hpp src/math/linalg/Vector.hpp)
+add_executable(mach lib/glad.c src/MachApplication.cpp src/graphics/window/RenderWindow.cpp src/graphics/window/RenderWindow.hpp src/graphics/window/OpenGLWindow.cpp src/graphics/window/OpenGLWindow.hpp src/auxiliary/Constants.hpp src/io/KeyInput.cpp src/io/KeyInput.hpp src/io/MouseInput.cpp src/io/MouseInput.hpp src/MachApplication.hpp src/auxiliary/LogHelper.cpp src/auxiliary/LogHelper.hpp src/math/linalg/Vectors/Vector.hpp src/auxiliary/iterators/VectorRawIterator.hpp src/auxiliary/iterators/VectorRawReverseIterator.hpp src/math/linalg/Vectors/Vector2.hpp src/math/linalg/Vectors/Vector3.hpp src/math/linalg/Vectors/Vector4.hpp src/math/linalg/LinMatTypes.hpp src/math/linalg/Matrices/Matrix.hpp)
 
 #Sets a base path for the includes so that they can be used in the same way as in Visual Studio/Codeblocks
 set(BASEPATH "${CMAKE_SOURCE_DIR}/src")
