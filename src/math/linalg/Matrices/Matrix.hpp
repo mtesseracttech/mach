@@ -65,6 +65,7 @@ namespace mach {
             return output;
         }
 
+
         friend std::ostream &operator<<(std::ostream &p_os, const Matrix &p_m) {
             for (int i = 0; i < H; ++i) {
                 p_os << "[" << p_m[i][0];
@@ -100,11 +101,20 @@ namespace mach {
         }
 
 
-        //Use enable_if to enable/disable multiplication between differently sized matrices
-        //Use enable_if to enable identity matrices only for W == H matrices
-        //Use enable_if to enable determinants only for W == H matrices
-        //Use enable_if to enable inverses only for W == H matrices
+        template<typename = typename std::enable_if_t<H == W>>
+        inline T determinant() const {
+            if (H == 2) return (*this)[0][0] * (*this)[1][1] - (*this)[0][1] * (*this)[1][0];
+            for (size_t c = 0; c < W; ++c) {
+                int sign = (int) c % 2 * 2 - 1;
+                T ref = sign * (*this)[0][c];
+                //Construct a matrix of H-1, W-1, and calculate determinant for those
+            }
+        }
 
+        template<typename = typename std::enable_if_t<W == H>>
+        inline Matrix inverse() const {
+
+        }
 
         template<typename RColVectorBase, typename RRowVectorBase, typename RT, size_t RH, size_t RW,
                 typename = typename std::enable_if_t<W == RH>>
@@ -119,6 +129,21 @@ namespace mach {
             }
             return output;
         }
+
+
+        inline RowVectorBase operator*(const RowVectorBase &p_v) const {
+            RowVectorBase output;
+            for (size_t i = 0; i < output.size(); ++i) {
+                output[i] = (*this)[i].dot(p_v);
+            }
+            return output;
+        }
+
+
+
+        //Use enable_if to enable determinants only for W == H matrices
+        //Use enable_if to enable inverses only for W == H matrices
+
     };
 }
 

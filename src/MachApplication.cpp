@@ -63,6 +63,9 @@ namespace mach {
         Mat4x2 m6 = Mat4x2::zero();
         std::cout << "mat4x2 zero:" << std::endl << m6 << std::endl;
 
+
+        std::cout << "identity * v3 = " << m5 * v3 << std::endl;
+
         std::cout << "Math test end" << std::endl;
 
     }
