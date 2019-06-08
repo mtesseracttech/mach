@@ -21,27 +21,23 @@ namespace mach {
     template<typename Base, typename T, size_t N>
     class Vector {
     public:
-        virtual T &operator[](size_t p_n) = 0;
-
-        virtual const T &operator[](size_t p_n) const = 0;
-
         constexpr size_t size() { return N; }
 
     protected:
         template<typename Functor>
-        inline Base un_op(Functor &&op) const {
+        inline Base un_op(Functor &&p_op) const {
             Base output;
             for (size_t i = 0; i < N; ++i) {
-                output[i] = op((*this)[i]);
+                output[i] = p_op((*reinterpret_cast<const Base *>(this))[i]);
             }
             return output;
         }
 
         template<typename Functor>
-        inline Base bin_op(const Base &p_v, Functor &&op) const {
+        inline Base bin_op(const Base &p_v, Functor &&p_op) const {
             Base output;
             for (size_t i = 0; i < N; ++i) {
-                output[i] = op((*this)[i], p_v[i]);
+                output[i] = p_op(((*reinterpret_cast<const Base *>(this))[i]), p_v[i]);
             }
             return output;
         }
@@ -80,7 +76,7 @@ namespace mach {
             return os;
         }
 
-        static inline T dot(const Vector &p_v1, const Vector &p_v2) {
+        static inline T dot(const Base &p_v1, const Base &p_v2) {
             T result = 0;
             for (size_t i = 0; i < N; ++i) {
                 result += p_v1[i] * p_v2[i];
@@ -89,12 +85,14 @@ namespace mach {
         }
 
 
-        inline T dot(const Vector &p_v) const {
-            return Vector::dot(*this, p_v);
+        inline T dot(const Base &p_v) const {
+            return Vector::dot(*reinterpret_cast<const Base *>(this), p_v);
         }
 
         inline T length_squared() const {
-            return Vector::dot(*this, *this);
+
+
+            return Vector::dot(*reinterpret_cast<const Base *>(this), *reinterpret_cast<const Base *>(this));
         }
 
         inline T length() const {

@@ -47,21 +47,24 @@ namespace mach {
         std::cout << Vec3::distance(v5, v6 + Vec3(30, 40, 50)) << std::endl;
 
         Mat2 m0;
-
-        std::cout << "sizeof float: " << sizeof(float) << std::endl;
-        std::cout << "sizeof Vec2: " << sizeof(v1) << std::endl;
-
         std::cout << m0 << std::endl;
 
-        Mat2x2 m1(1.0, 2.0, 3.0, 4.0);
-        Mat2x2 m2(3.0, 4.0, 5.0, 6.0);
+        Mat2x3 m1(1.0, 2.0, 3.0, 4.0, 5.0, 6.0);
+        std::cout << "m1:" << std::endl << m1 << std::endl;
+        Mat3x2 m2(1.0, 2.0, 3.0, 4.0, 5.0, 6.0);
+        std::cout << "m2:" << std::endl << m2 << std::endl;
+        auto m2_t = m2.transpose();
+        std::cout << "m2 transpose:" << std::endl << m2_t << std::endl;
+        std::cout << "m1 * m2:" << std::endl << m1 * m2 << std::endl;
 
-        Mat2x2 m3 = m1 * m2;
+        Mat4x4 m5 = Mat4x4::identity();
+        std::cout << "mat4x4 identity:" << std::endl << m5 << std::endl;
 
-
-        std::cout << m1 << std::endl;
+        Mat4x2 m6 = Mat4x2::zero();
+        std::cout << "mat4x2 zero:" << std::endl << m6 << std::endl;
 
         std::cout << "Math test end" << std::endl;
+
     }
 }
 

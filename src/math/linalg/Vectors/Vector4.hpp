@@ -18,15 +18,15 @@ namespace mach {
             };
         };
 
-        Vector4() : x(0), y(0), z(0), w(0) {}
+        Vector4() : m_array{0} {}
 
-        Vector4(T p_s) : x(p_s), y(p_s), z(p_s), w(p_s) {}
+        Vector4(T p_s) : m_array{p_s} {}
 
-        Vector4(T p_x, T p_y, T p_z, T p_w) : x(p_x), y(p_y), z(p_z), w(p_w) {}
+        Vector4(T p_x, T p_y, T p_z, T p_w) : m_array{p_x, p_y, p_z, p_w} {}
 
-        T &operator[](size_t p_n) override { return m_array[p_n]; }
+        T &operator[](size_t p_n) { return m_array[p_n]; }
 
-        const T &operator[](size_t p_n) const override { return m_array[p_n]; }
+        const T &operator[](size_t p_n) const { return m_array[p_n]; }
     };
 
 

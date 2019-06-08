@@ -13,20 +13,20 @@ namespace mach {
     public:
         union {
             std::array<T, 2> m_array;
-            struct {
+            /*struct {
                 T x, y;
-            };
+            };*/
         };
 
-        Vector2() : x(0), y(0) {}
+        Vector2() : m_array{0} {}
 
-        Vector2(T p_s) : x(p_s), y(p_s) {}
+        Vector2(T p_s) : m_array{p_s} {}
 
-        Vector2(T p_x, T p_y) : x(p_x), y(p_y) {}
+        Vector2(T p_x, T p_y) : m_array{p_x, p_y} {}
 
-        T &operator[](size_t p_n) override { return m_array[p_n]; }
+        T &operator[](size_t p_n) { return m_array[p_n]; }
 
-        const T &operator[](size_t p_n) const override { return m_array[p_n]; }
+        const T &operator[](size_t p_n) const { return m_array[p_n]; }
     };
 }
 

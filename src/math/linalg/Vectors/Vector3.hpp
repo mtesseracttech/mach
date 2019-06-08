@@ -18,15 +18,15 @@ namespace mach {
             };
         };
 
-        Vector3() : x(0), y(0), z(0) {}
+        Vector3() : m_array{0} {}
 
-        Vector3(T p_s) : x(p_s), y(p_s), z(p_s) {}
+        Vector3(T p_s) : m_array{p_s} {}
 
-        Vector3(T p_x, T p_y, T p_z) : x(p_x), y(p_y), z(p_z) {}
+        Vector3(T p_x, T p_y, T p_z) : m_array{p_x, p_y, p_z} {}
 
-        T &operator[](size_t p_n) override { return m_array[p_n]; }
+        T &operator[](size_t p_n) { return m_array[p_n]; }
 
-        const T &operator[](size_t p_n) const override { return m_array[p_n]; }
+        const T &operator[](size_t p_n) const { return m_array[p_n]; }
 
         static inline Vector3<T> cross(const Vector3<T> &p_v1, const Vector3<T> &p_v2) {
             Vector3<T> output(

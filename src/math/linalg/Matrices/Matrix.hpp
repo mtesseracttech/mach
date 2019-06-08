@@ -14,19 +14,16 @@
  */
 
 namespace mach {
-    template<typename RowVectorBase, typename ColVectorBase, typename T, size_t W, size_t H>
+    template<typename ColVectorBase, typename RowVectorBase, typename T, size_t H, size_t W>
     class Matrix {
         union {
-            std::array<T, W * H> m_data;
+            std::array<T, H * W> m_data;
             std::array<RowVectorBase, H> m_rows;
         };
 
-        static_assert(sizeof(m_rows) != sizeof(m_data));
 
     public:
         Matrix() : m_data{0} {}
-
-        //Matrix(T p_s) : m_data(p_s) {}
 
         Matrix(const Matrix &p_m) : m_data(p_m.m_data) {}
 
@@ -42,6 +39,31 @@ namespace mach {
         constexpr size_t height() { return H; }
 
         constexpr size_t size() { return W * H; }
+
+        template<typename = typename std::enable_if_t<W == H>>
+        static constexpr Matrix identity() {
+            Matrix output;
+            for (size_t row = 0; row < H; ++row) {
+                for (size_t col = 0; col < W; ++col) {
+                    if (row == col) {
+                        output[row][col] = 1.0;
+                    } else {
+                        output[row][col] = 0.0;
+                    }
+                }
+            }
+            return output;
+        }
+
+        static constexpr Matrix zero() {
+            Matrix output;
+            for (size_t row = 0; row < W; ++row) {
+                for (size_t col = 0; col < H; ++col) {
+                    output[row][col] = 0.0;
+                }
+            }
+            return output;
+        }
 
         friend std::ostream &operator<<(std::ostream &p_os, const Matrix &p_m) {
             for (int i = 0; i < H; ++i) {
@@ -67,10 +89,10 @@ namespace mach {
             return output;
         }
 
-        inline Matrix<ColVectorBase, RowVectorBase, T, H, W> transpose() const {
-            Matrix<ColVectorBase, RowVectorBase, T, H, W> output;
-            for (size_t row = 0; row < W; ++row) {
-                for (size_t col = 0; col < H; ++col) {
+        inline Matrix<RowVectorBase, ColVectorBase, T, W, H> transpose() const {
+            Matrix<RowVectorBase, ColVectorBase, T, W, H> output;
+            for (size_t row = 0; row < H; ++row) {
+                for (size_t col = 0; col < W; ++col) {
                     output[col][row] = (*this)[row][col];
                 }
             }
@@ -83,15 +105,16 @@ namespace mach {
         //Use enable_if to enable determinants only for W == H matrices
         //Use enable_if to enable inverses only for W == H matrices
 
-        template<typename RRowVectorBase, typename RColVectorBase, typename RT, size_t RW, size_t RH,
-                typename = typename std::enable_if_t<H == RW>>
-        inline Matrix<RRowVectorBase, ColVectorBase, T, W, RH>
-        operator*(const Matrix<RRowVectorBase, RColVectorBase, RT, RW, RH> &p_m) const {
-            auto p_m_transpose = p_m.transpose();
-            Matrix<RRowVectorBase, ColVectorBase, T, W, RH> output;
-            for (size_t row = 0; row < output.height(); ++row) {
-                for (size_t col = 0; col < output.width(); ++col) {
-                    output[row][col] = (*this)[row].dot(p_m_transpose[col]);
+
+        template<typename RColVectorBase, typename RRowVectorBase, typename RT, size_t RH, size_t RW,
+                typename = typename std::enable_if_t<W == RH>>
+        inline Matrix<ColVectorBase, RRowVectorBase, T, H, RW>
+        operator*(const Matrix<RRowVectorBase, RColVectorBase, RT, RH, RW> &p_m) const {
+            auto p_m_t = p_m.transpose();
+            Matrix<ColVectorBase, RRowVectorBase, T, H, RW> output;
+            for (size_t row = 0; row < H; ++row) {
+                for (size_t col = 0; col < RW; ++col) {
+                    output[row][col] = (*this)[row].dot(p_m_t[col]);
                 }
             }
             return output;
