@@ -30,9 +30,9 @@ namespace mach {
         template<typename... Args, typename = typename std::enable_if<sizeof...(Args) == W * H>::type>
         explicit Matrix(Args &&... p_values) : m_data{std::forward<Args>(p_values)...} {}
 
-        virtual RowVectorBase &operator[](size_t p_n) { return m_rows[p_n]; };
+        RowVectorBase &operator[](size_t p_n) { return m_rows[p_n]; };
 
-        virtual const RowVectorBase &operator[](size_t p_n) const { return m_rows[p_n]; };
+        const RowVectorBase &operator[](size_t p_n) const { return m_rows[p_n]; };
 
         constexpr size_t width() { return W; }
 
