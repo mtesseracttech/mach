@@ -5,11 +5,12 @@
 #ifndef MACH_LINMATTYPES_HPP
 #define MACH_LINMATTYPES_HPP
 
-#include "math/linalg/Vectors/Vector2.hpp"
-#include "math/linalg/Vectors/Vector3.hpp"
-#include "math/linalg/Vectors/Vector4.hpp"
+#include "math/linalg/Vector/Vector2.hpp"
+#include "math/linalg/Vector/Vector3.hpp"
+#include "math/linalg/Vector/Vector4.hpp"
 
-#include "math/linalg/Matrices/Matrix.hpp"
+#include "math/linalg/Matrix/Matrix.hpp"
+#include "Quaternion.hpp"
 
 namespace mach {
     //Standard Precision
@@ -53,6 +54,10 @@ namespace mach {
     typedef Matrix<Vec4h, Vec2h, double, 4, 2> Mat4x2h;
     typedef Matrix<Vec4h, Vec3h, double, 4, 3> Mat4x3h;
     typedef Matrix<Vec4h, Vec4h, double, 4, 4> Mat4x4h;
+
+    //Quaternions
+    typedef Quaternion<float> Quat;
+    typedef Quaternion<double> Quath;
 }
 
 #endif //MACH_LINMATTYPES_HPP

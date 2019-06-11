@@ -13,16 +13,19 @@ namespace mach {
     public:
         union {
             std::array<T, 2> m_array;
-            /*struct {
+            struct {
                 T x, y;
-            };*/
+            };
         };
 
         Vector2() : m_array{0} {}
 
-        Vector2(T p_s) : m_array{p_s} {}
+        explicit Vector2(T p_s) : m_array{p_s} {}
 
         Vector2(T p_x, T p_y) : m_array{p_x, p_y} {}
+
+        template<typename... Args, typename = typename std::enable_if<sizeof...(Args) == 2>::type>
+        explicit Vector2(Args &&... p_values) : m_array{std::forward<Args>(p_values)...} {}
 
         T &operator[](size_t p_n) { return m_array[p_n]; }
 

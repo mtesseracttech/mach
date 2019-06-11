@@ -20,9 +20,13 @@ namespace mach {
 
         Vector3() : m_array{0} {}
 
-        Vector3(T p_s) : m_array{p_s} {}
+        explicit Vector3(T p_s) : m_array{p_s} {}
 
         Vector3(T p_x, T p_y, T p_z) : m_array{p_x, p_y, p_z} {}
+
+        template<typename... Args, typename = typename std::enable_if<sizeof...(Args) == 3>::type>
+        explicit Vector3(Args &&... p_values) : m_array{std::forward<Args>(p_values)...} {}
+
 
         T &operator[](size_t p_n) { return m_array[p_n]; }
 
