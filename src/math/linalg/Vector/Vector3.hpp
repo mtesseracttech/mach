@@ -2,6 +2,8 @@
 // Created by mtesseract on 6/4/19.
 //
 
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "HidingNonVirtualFunction"
 #ifndef MACH_VECTOR3_HPP
 #define MACH_VECTOR3_HPP
 
@@ -32,8 +34,8 @@ namespace mach {
 
         const T &operator[](size_t p_n) const { return m_array[p_n]; }
 
-        static inline Vector3<T> cross(const Vector3<T> &p_v1, const Vector3<T> &p_v2) {
-            Vector3<T> output(
+        static inline Vector3 cross(const Vector3 &p_v1, const Vector3 &p_v2) {
+            Vector3 output(
                     p_v1.y * p_v2.z - p_v1.z * p_v2.y,
                     p_v1.z * p_v2.x - p_v1.x * p_v2.z,
                     p_v1.x * p_v2.y - p_v1.y * p_v2.x
@@ -41,10 +43,12 @@ namespace mach {
             return output;
         }
 
-        inline Vector3<T> cross(const Vector3<T> &p_v) {
-            return Vector3<T>::cross(*this, p_v);
+        inline Vector3 cross(const Vector3 &p_v) {
+            return cross(*this, p_v);
         }
     };
 }
 
 #endif //MACH_VECTOR3_HPP
+
+#pragma clang diagnostic pop

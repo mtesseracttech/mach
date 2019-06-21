@@ -8,6 +8,7 @@
 #include <algorithm>
 #include <functional>
 #include "../Vector/Vector.hpp"
+#include <memory>
 
 /*
  * Access is [row][column]
@@ -194,7 +195,6 @@ namespace mach {
         template<typename = typename std::enable_if_t<W == H>>
         inline Matrix inverse() const {
             T det = determinant();
-
             if (det != 0.0) {
                 return adjugate() * (1.0 / det);
             } else {
@@ -249,6 +249,10 @@ namespace mach {
                 }
             }
             return true;
+        }
+
+        inline std::shared_ptr<Matrix<RowVectorBase, ColVectorBase, T, W, H>> to_opengl() {
+            return std::make_shared<Matrix<RowVectorBase, ColVectorBase, T, W, H>>(transpose());
         }
     };
 }

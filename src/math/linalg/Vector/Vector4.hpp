@@ -31,8 +31,6 @@ namespace mach {
 
         const T &operator[](size_t p_n) const { return m_array[p_n]; }
     };
-
-
 }
 
 #endif //MACH_VECTOR4_HPP

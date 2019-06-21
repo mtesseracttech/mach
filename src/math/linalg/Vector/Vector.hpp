@@ -15,7 +15,7 @@
 #include "../../util/NumberTraits.hpp"
 
 /*
- * Thanks to Gaztin from the Cherno discord, for helping me with the template code and the functor system.
+ * Thanks to Gaztin from the Cherno discord, for helping me with the CRTP and the functor system.
  */
 
 namespace mach {
@@ -24,12 +24,21 @@ namespace mach {
     public:
         constexpr size_t size() { return N; }
 
-        // These 2 operators should not be virtual, no matter how much the impl classes complain
-        T &operator[](size_t p_n) {
+        static constexpr Base zero() {
+            return Base(0.0);
+        }
+
+        static constexpr Base one() {
+            return Base(1.0);
+        }
+
+    private:
+        //Replacements for the index operators, to avoid problems in the subclasses
+        inline T &get_n(size_t p_n) {
             return (*reinterpret_cast<const Base *>(this))[p_n];
         }
 
-        const T &operator[](size_t p_n) const {
+        const T &get_n(size_t p_n) const {
             return (*reinterpret_cast<const Base *>(this))[p_n];
         }
 
@@ -40,7 +49,7 @@ namespace mach {
         inline Base un_op(Functor &&p_op) const {
             Base output;
             for (size_t i = 0; i < N; ++i) {
-                output[i] = p_op((*reinterpret_cast<const Base *>(this))[i]);
+                output[i] = p_op(get_n(i));
             }
             return output;
         }
@@ -49,7 +58,7 @@ namespace mach {
         inline Base bin_op(const Base &p_v, Functor &&p_op) const {
             Base output;
             for (size_t i = 0; i < N; ++i) {
-                output[i] = p_op(((*reinterpret_cast<const Base *>(this))[i]), p_v[i]);
+                output[i] = p_op(get_n(i), p_v[i]);
             }
             return output;
         }
@@ -101,14 +110,14 @@ namespace mach {
             return bin_op(p_s, std::modulus<T>());
         }
 
+
         friend inline Base operator*(T &p_s, const Base &p_v) {
             return p_v * p_s;
         }
 
         inline bool operator==(const Base &p_v) const {
             for (size_t i = 0; i < N; ++i) {
-                if (!approx_eq((*this)[i], p_v[i])) {
-                    std::cout << "Comparing: " << std::scientific << (*this)[i] << "&" << p_v[i] << std::endl;
+                if (!approx_eq(get_n(i), p_v[i])) {
                     return false;
                 }
             }
@@ -151,6 +160,82 @@ namespace mach {
 
         inline bool is_unit() const {
             return approx_eq(length_squared(), 1.0);
+        }
+
+        static inline Base reflect(const Base &p_incident, const Base &p_normal) {
+            assert(p_normal.is_unit());
+            return p_incident - 2.0 * dot(p_incident, p_normal) * p_normal;
+        }
+
+        static inline Base refract(const Base &p_incident, const Base &p_normal, const T p_eta) {
+            T n_dot_i = dot(p_normal, p_incident);
+            T k = 1.0 - p_eta * p_eta * (1.0 - n_dot_i * n_dot_i);
+            if (k < 0.0) {
+                return zero();
+            } else {
+                return p_eta * p_incident - (p_eta * n_dot_i * std::sqrt(k)) * p_normal;
+            }
+        }
+
+        static inline Base mix(const Base &p_start, const Base &p_end, T p_t) {
+            return p_start + (p_end - p_start) * p_t;
+        }
+
+        static inline Base mix(const Base &p_start, const Base &p_end, const Base &p_t) {
+            Base result;
+            Base delta = p_end - p_start;
+            for (size_t i = 0; i < N; ++i) {
+                result[i] = p_start[i] + delta[i] * p_t;
+            }
+            return result;
+        }
+
+        static inline Base clamp(const Base &p_v, const T p_low, const T p_high) {
+            Base result;
+            for (size_t i = 0; i < N; ++i) {
+                result[i] = std::clamp(p_v[i], p_low, p_high);
+            }
+            return result;
+        }
+
+        static inline Base clamp(const Base &p_v, const Base &p_low, const Base &p_high) {
+            Base result;
+            for (size_t i = 0; i < N; ++i) {
+                result[i] = std::clamp(p_v[i], p_low[i], p_high[i]);
+            }
+            return result;
+        }
+
+        inline T get_largest() const {
+            T largest = get_n(0);
+            for (size_t i = 1; i < N; ++i) {
+                if (get_n(i) > largest) largest = get_n(i);
+            }
+            return largest;
+        }
+
+        inline T get_smallest() const {
+            T smallest = get_n(0);
+            for (size_t i = 1; i < N; ++i) {
+                if (get_n(i) < smallest) smallest = get_n(i);
+            }
+            return smallest;
+        }
+
+        inline size_t get_largest_index() const {
+            size_t largest = 0;
+            for (size_t i = 1; i < N; ++i) {
+                if (get_n(i) > largest) largest = i;
+            }
+            return largest;
+        }
+
+        inline size_t get_smallest_index() const {
+            size_t smallest = 0;
+            for (size_t i = 1; i < N; ++i) {
+                if (get_n(i) < smallest) smallest = i;
+            }
+            return smallest;
         }
     };
 }

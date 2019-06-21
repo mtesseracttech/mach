@@ -30,6 +30,7 @@ namespace mach {
         m_window->close();
     }
 
+
     void MachApplication::test() {
         std::cout << "Math tests begin" << std::endl;
 
@@ -52,9 +53,12 @@ namespace mach {
         Mat2 m0;
         std::cout << m0 << std::endl;
 
-        Mat2x3 m1(1.0, 2.0, 3.0, 4.0, 5.0, 6.0);
+        Mat2x3 m1(1.0, 2.0, 3.0,
+                  4.0, 5.0, 6.0);
         std::cout << "m1:" << std::endl << m1 << std::endl;
-        Mat3x2 m2(1.0, 2.0, 3.0, 4.0, 5.0, 6.0);
+        Mat3x2 m2(1.0, 2.0,
+                  3.0, 4.0,
+                  5.0, 6.0);
         std::cout << "m2:" << std::endl << m2 << std::endl;
 
         auto m2_t = m2.transpose();
@@ -106,8 +110,30 @@ namespace mach {
 
         std::cout << "Math test end" << std::endl;
 
-        Quat q0 = Quat(1.0, 0.0, 0.0, 0.0);
+        Quat q0(1.0, 0.0, 0.0, 0.0);
+        Quat q1(1.0, 0.0, 1.0, 0.0);
+        q1.normalize();
+        Quat q2 = Quat::identity();
 
+        std::cout << "Start: " << q0 << " Ending: " << q1 << std::endl;
+        int steps = 20;
+        for (int i = 0; i <= steps; ++i) {
+            float t = (float) i / steps;
+            std::cout << " t: " << t;
+            q2 = Quat::lerp_norm(q0, q1, t);
+            std::cout << " lerp_norm: " << q2;
+            q2 = Quat::slerp(q0, q1, t);
+            std::cout << " slerp: " << q2 << std::endl;
+        }
+
+        Mat3 m10 = Mat3::identity();
+        Quat q4 = Quat::from_matrix(m10);
+
+        std::cout << m10 << std::endl << q4 << std::endl;
+        std::cout << sizeof(Quat) << std::endl;
+
+        auto m1v2 = m1.to_opengl();
+        std::cout << *m1v2.get() << std::endl;
     }
 }
 

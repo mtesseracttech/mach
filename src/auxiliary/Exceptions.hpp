@@ -5,19 +5,18 @@
 #ifndef MACH_EXCEPTIONS_HPP
 #define MACH_EXCEPTIONS_HPP
 
-#include <exception>
+#include <string>
+#include <stdexcept>
 
 namespace mach {
     class NotImplemented : public std::logic_error {
     private:
-        std::string _text;
+        std::string m_text;
 
-        NotImplemented(const char *message, const char *function)
-                :
-                std::logic_error("Not Implemented") {
-            _text = message;
-            _text += " : ";
-            _text += function;
+        NotImplemented(const char *p_message, const char *p_function) : std::logic_error("Not Implemented") {
+            m_text = p_message;
+            m_text += " : ";
+            m_text += p_function;
         };
 
     public:
@@ -26,7 +25,7 @@ namespace mach {
 
         NotImplemented(const char *message) : NotImplemented(message, __FUNCTION__) {}
 
-        virtual const char *what() const throw() { return _text.c_str(); }
+        virtual const char *what() const throw() { return m_text.c_str(); }
     };
 }
 
