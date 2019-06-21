@@ -140,6 +140,6 @@ namespace mach {
 int main() {
     mach::MachApplication app;
     app.test();
-    app.run();
+    //app.run();
 }
 

@@ -29,7 +29,7 @@ namespace mach {
         Matrix(const Matrix &p_m) : m_data(p_m.m_data) {}
 
         template<typename... Args, typename = typename std::enable_if<sizeof...(Args) == W * H>::type>
-        explicit Matrix(Args &&... p_values) : m_data{std::forward<Args>(p_values)...} {}
+        explicit Matrix(Args &&... p_values) : m_data{static_cast<T>(std::forward<Args>(p_values))...} {}
 
         RowVectorBase &operator[](size_t p_n) { return m_rows[p_n]; };
 
@@ -41,8 +41,9 @@ namespace mach {
 
         constexpr size_t size() { return W * H; }
 
-        template<typename = typename std::enable_if_t<W == H>>
+        //template<typename = typename std::enable_if_t<W == H>>
         static constexpr Matrix identity() {
+            static_assert(W == H, "Identity matrices only exist can only be created for square matrices");
             Matrix output;
             for (size_t row = 0; row < H; ++row) {
                 for (size_t col = 0; col < W; ++col) {
@@ -102,8 +103,9 @@ namespace mach {
         }
 
 
-        template<typename = typename std::enable_if_t<(W == H)>>
+        //template<typename = typename std::enable_if_t<(W == H)>>
         inline T determinant() const {
+            static_assert(W == H, "Determinants can only be created from square matrices");
             if constexpr (W == 2) {
                 return (m_data[0] * m_data[3]) - (m_data[1] * m_data[2]);
             } else {
@@ -143,8 +145,9 @@ namespace mach {
             }
         }
 
-        template<typename = typename std::enable_if_t<W == H>>
+        //template<typename = typename std::enable_if_t<W == H>>
         inline Matrix adjugate() const {
+            static_assert(W == H, "Adugates can only be created from square matrices");
             Matrix result;
             if constexpr (W == 2) { //Directly implemented because the downscale algorithm does not work on Mat2
                 result[0][0] = m_rows[1][1];
@@ -192,8 +195,9 @@ namespace mach {
             return result;
         }
 
-        template<typename = typename std::enable_if_t<W == H>>
+        //template<typename = typename std::enable_if_t<W == H>>
         inline Matrix inverse() const {
+            static_assert(W == H, "Inverses can only be created from square matrices");
             T det = determinant();
             if (det != 0.0) {
                 return adjugate() * (1.0 / det);
@@ -202,10 +206,11 @@ namespace mach {
             }
         }
 
-        template<typename RColVectorBase, typename RRowVectorBase, typename RT, size_t RH, size_t RW,
-                typename = typename std::enable_if_t<W == RH>>
+        template<typename RColVectorBase, typename RRowVectorBase, typename RT, size_t RH, size_t RW/*,
+                typename = typename std::enable_if_t<W == RH>*/>
         inline Matrix<ColVectorBase, RRowVectorBase, T, H, RW>
         operator*(const Matrix<RRowVectorBase, RColVectorBase, RT, RH, RW> &p_m) const {
+            static_assert(W == RH, "Matrix multiplication is only defined for matrices with matching inner dimensions");
             auto p_m_t = p_m.transpose();
             Matrix<ColVectorBase, RRowVectorBase, T, H, RW> output;
             for (size_t row = 0; row < H; ++row) {

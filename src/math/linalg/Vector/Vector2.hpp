@@ -24,9 +24,6 @@ namespace mach {
 
         Vector2(T p_x, T p_y) : m_array{p_x, p_y} {}
 
-        template<typename... Args, typename = typename std::enable_if<sizeof...(Args) == 2>::type>
-        explicit Vector2(Args &&... p_values) : m_array{std::forward<Args>(p_values)...} {}
-
         T &operator[](size_t p_n) { return m_array[p_n]; }
 
         const T &operator[](size_t p_n) const { return m_array[p_n]; }
