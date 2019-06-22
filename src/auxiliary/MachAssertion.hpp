@@ -10,6 +10,7 @@
 #include <sstream>
 #include <iostream>
 #include <auxiliary/logging/Logger.hpp>
+#include <cassert>
 
 namespace mach {
 	// Exception type for assertion failures
@@ -30,6 +31,7 @@ namespace mach {
 
 		public:
 			operator std::string() const {
+				//assert(false);
 				return m_stream.str();
 			}
 
@@ -92,12 +94,15 @@ namespace mach {
 		}
 	};
 
-	//MACH_ASSERT does not exist during release
+	//mach_assert does not exist during release
 #ifdef NDEBUG
 #define MACH_ASSERT(EXPRESSION, MESSAGE) ((void)0)
 #else
-	// Assert that EXPRESSION evaluates to true, otherwise raise AssertionFailureException with associated MESSAGE (which may use C++ stream-style message formatting)
-#define MACH_ASSERT(EXPRESSION, MESSAGE) if(!(EXPRESSION)) { throw mach::MachAssertionException(#EXPRESSION, __FILE__, __LINE__, (mach::MachAssertionException::StreamFormatter() << MESSAGE)); }
+	// Assert that expr evaluates to true, otherwise raise AssertionFailureException with associated MESSAGE (which may use C++ stream-style message formatting)
+#define mach_assert(expr, message) \
+if(!(expr)) { \
+    throw mach::MachAssertionException(#expr, __FILE__, __LINE__, (mach::MachAssertionException::StreamFormatter() << message)); \
+}
 #endif
 }
 

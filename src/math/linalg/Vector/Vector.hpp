@@ -172,12 +172,12 @@ namespace mach {
 		}
 
 		static inline Base reflect(const Base &p_incident, const Base &p_normal) {
-			MACH_ASSERT(p_normal.is_unit(), "The reflect function only works with normalized normal vectors");
+			mach_assert(p_normal.is_unit(), "The reflect function only works with normalized normal vectors");
 			return p_incident - static_cast<T>(2.0) * dot(p_incident, p_normal) * p_normal;
 		}
 
 		static inline Base refract(const Base &p_incident, const Base &p_normal, const T p_eta) {
-			MACH_ASSERT(p_normal.is_unit(), "The refraction function only works with normalized normal vectors");
+			mach_assert(p_normal.is_unit(), "The refraction function only works with normalized normal vectors");
 			T n_dot_i = dot(p_normal, p_incident);
 			T k = 1.0 - p_eta * p_eta * (1.0 - n_dot_i * n_dot_i);
 			if (k < 0.0) {

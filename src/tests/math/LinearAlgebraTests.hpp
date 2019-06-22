@@ -36,31 +36,31 @@ namespace mach::tests::math {
 
 		std::cout << "Initialization tests running:" << std::endl;
 		Vec2 vec2(10, -15);
-		MACH_ASSERT(vec2.x == 10.f && vec2.y == -15.f, "");
+		mach_assert(vec2.x == 10.f && vec2.y == -15.f, "");
 		Vec3 vec3(-123, 75, 21);
-		MACH_ASSERT(vec3.x == -123.f && vec3.y == 75.f && vec3.z == 21.f, "");
+		mach_assert(vec3.x == -123.f && vec3.y == 75.f && vec3.z == 21.f, "");
 		Vec4 vec4(12345, -1345, 2895, -12983);
-		MACH_ASSERT(vec4.x == 12345.f && vec4.y == -1345.f && vec4.z == 2895.f && vec4.w == -12983.f, "");
+		mach_assert(vec4.x == 12345.f && vec4.y == -1345.f && vec4.z == 2895.f && vec4.w == -12983.f, "");
 
 		std::cout << "Vector size tests running. " << std::endl;
-		MACH_ASSERT(sizeof(Vec2) == sizeof(float) * 2, "");
-		MACH_ASSERT(sizeof(Vec3) == sizeof(float) * 3, "");
-		MACH_ASSERT(sizeof(Vec4) == sizeof(float) * 4, "");
-		MACH_ASSERT(sizeof(Vec2h) == sizeof(double) * 2, "");
-		MACH_ASSERT(sizeof(Vec3h) == sizeof(double) * 3, "");
-		MACH_ASSERT(sizeof(Vec4h) == sizeof(double) * 4, "");
+		mach_assert(sizeof(Vec2) == sizeof(float) * 2, "");
+		mach_assert(sizeof(Vec3) == sizeof(float) * 3, "");
+		mach_assert(sizeof(Vec4) == sizeof(float) * 4, "");
+		mach_assert(sizeof(Vec2h) == sizeof(double) * 2, "");
+		mach_assert(sizeof(Vec3h) == sizeof(double) * 3, "");
+		mach_assert(sizeof(Vec4h) == sizeof(double) * 4, "");
 		std::cout << "Vector size tests passed. " << std::endl;
 
 		std::cout << "Index operator tests: " << std::endl;
-		MACH_ASSERT(vec2[0] == 10.f && vec2[1] == -15.f, "");
-		MACH_ASSERT(vec3[0] == -123.f && vec3[1] == 75.f && vec3[2] == 21.f, "");
-		MACH_ASSERT(vec4[0] == 12345.f && vec4[1] == -1345.f && vec4[2] == 2895.f && vec4[3] == -12983.f, "");
+		mach_assert(vec2[0] == 10.f && vec2[1] == -15.f, "");
+		mach_assert(vec3[0] == -123.f && vec3[1] == 75.f && vec3[2] == 21.f, "");
+		mach_assert(vec4[0] == 12345.f && vec4[1] == -1345.f && vec4[2] == 2895.f && vec4[3] == -12983.f, "");
 
 		std::cout << "Zero/One tests:" << std::endl;
 		Vec2 v2_zero = Vec2::zero();
 		Vec4 v4_one = Vec4::one();
-		MACH_ASSERT(v2_zero.x == 0.f && v2_zero.y == 0.f, "");
-		MACH_ASSERT(v4_one.x == 1.f && v4_one.y == 1.f && v4_one.z == 1.f && v4_one.w == 1.f, "");
+		mach_assert(v2_zero.x == 0.f && v2_zero.y == 0.f, "");
+		mach_assert(v4_one.x == 1.f && v4_one.y == 1.f && v4_one.z == 1.f && v4_one.w == 1.f, "");
 
 		Vec3 v_a(-0.5, 75, -20);
 		Vec3 v_b(10.5, -10, 30);
@@ -68,64 +68,64 @@ namespace mach::tests::math {
 
 		std::cout << "Addition tests:" << std::endl;
 		Vec3 v_a_plus_b(10, 65, 10);
-		MACH_ASSERT(v_a + v_b == v_a_plus_b, "");
+		mach_assert(v_a + v_b == v_a_plus_b, "");
 
 		std::cout << "Subtraction tests:" << std::endl;
 		Vec3 v_a_minus_b(-11, 85, -50);
-		MACH_ASSERT(v_a - v_b == v_a_minus_b, "");
+		mach_assert(v_a - v_b == v_a_minus_b, "");
 
 		std::cout << "Memberwise Multiplication tests:" << std::endl;
 		Vec3 v_a_times_b(-5.25, -750, -600);
-		MACH_ASSERT(v_a * v_b == v_a_times_b, "");
+		mach_assert(v_a * v_b == v_a_times_b, "");
 
 		std::cout << "Memberwise Division tests:" << std::endl;
 		Vec3 v_a_div_b(-0.04761904761, -7.5, -0.66666666666);
-		MACH_ASSERT(v_a / v_b == v_a_div_b, "");
+		mach_assert(v_a / v_b == v_a_div_b, "");
 
 		std::cout << "Scaling tests:" << std::endl;
 		Vec3 v_a_scaled_by_s(-50, 7500, -2000);
-		MACH_ASSERT(v_a * s == v_a_scaled_by_s, "");
+		mach_assert(v_a * s == v_a_scaled_by_s, "");
 
 		std::cout << "Division scaling tests:" << std::endl;
 		Vec3 v_a_divided_by_s(-0.005, 0.75, -0.2);
-		MACH_ASSERT(v_a / s == v_a_divided_by_s, "");
+		mach_assert(v_a / s == v_a_divided_by_s, "");
 
 		std::cout << "Dot product tests:" << std::endl;
-		MACH_ASSERT(Vec3::dot(Vec3::up(), Vec3::right()) == 0.0, "");
-		MACH_ASSERT(Vec3::dot(Vec3::up(), Vec3::up()) == 1.0, "");
-		MACH_ASSERT(Vec3::dot(Vec3::up(), -Vec3::up()) == -1.0, "");
+		mach_assert(Vec3::dot(Vec3::up(), Vec3::right()) == 0.0, "");
+		mach_assert(Vec3::dot(Vec3::up(), Vec3::up()) == 1.0, "");
+		mach_assert(Vec3::dot(Vec3::up(), -Vec3::up()) == -1.0, "");
 
 		std::cout << "Cross product tests:" << std::endl;
-		MACH_ASSERT(Vec3::cross(Vec3::up(), Vec3::right()) == -Vec3::forward(), "");
+		mach_assert(Vec3::cross(Vec3::up(), Vec3::right()) == -Vec3::forward(), "");
 
 		std::cout << "Negation tests:" << std::endl;
 		Vec3 backward(0, 0, -1);
-		MACH_ASSERT(-backward == Vec3::forward(), "");
+		mach_assert(-backward == Vec3::forward(), "");
 
 		std::cout << "Magnitude tests:" << std::endl;
 		Vec2 vec_mag_5(3, 4);
-		MACH_ASSERT(vec_mag_5.length_squared() == 25.0f, "");
-		MACH_ASSERT(vec_mag_5.length() == 5.0f, "");
+		mach_assert(vec_mag_5.length_squared() == 25.0f, "");
+		mach_assert(vec_mag_5.length() == 5.0f, "");
 
 		std::cout << "Normalization tests:" << std::endl;
 		Vec2 thirty_deg_vec_n = vec_mag_5.normalized();
-		MACH_ASSERT(thirty_deg_vec_n.x == 3.0f / 5.0f && thirty_deg_vec_n.y == 4.0f / 5.0f, "");
-		MACH_ASSERT(thirty_deg_vec_n.length_squared() == 1.0f, "");
-		MACH_ASSERT(thirty_deg_vec_n.length() == 1.0f, "");
+		mach_assert(thirty_deg_vec_n.x == 3.0f / 5.0f && thirty_deg_vec_n.y == 4.0f / 5.0f, "");
+		mach_assert(thirty_deg_vec_n.length_squared() == 1.0f, "");
+		mach_assert(thirty_deg_vec_n.length() == 1.0f, "");
 
 		std::cout << "Distance tests:" << std::endl;
-		MACH_ASSERT(Vec3::distance(v_a, v_b) == Vec3::distance(v_b, v_a) && (v_b - v_a).length(), "");
+		mach_assert(Vec3::distance(v_a, v_b) == Vec3::distance(v_b, v_a) && (v_b - v_a).length(), "");
 
 		std::cout << "Reflect tests:" << std::endl;
-		MACH_ASSERT(Vec3::reflect(Vec3(0, -1, 0), Vec3::up()) == Vec3::up(), "");
-		MACH_ASSERT(Vec3::reflect(Vec3(0, -1, -1).normalized(), Vec3::up()) == Vec3(0, 1, -1).normalized(), "");
-		MACH_ASSERT(Vec3::reflect(Vec3(0, -1, -1).normalized(), -Vec3::right()) == Vec3(0, -1, -1).normalized(), "");
+		mach_assert(Vec3::reflect(Vec3(0, -1, 0), Vec3::up()) == Vec3::up(), "");
+		mach_assert(Vec3::reflect(Vec3(0, -1, -1).normalized(), Vec3::up()) == Vec3(0, 1, -1).normalized(), "");
+		mach_assert(Vec3::reflect(Vec3(0, -1, -1).normalized(), -Vec3::right()) == Vec3(0, -1, -1).normalized(), "");
 
 		std::cout << "Refract tests:" << std::endl;
-		MACH_ASSERT(Vec3::refract(Vec3(-1, -1, 0).normalized(), Vec3::up(), 1.0) == Vec3(-1, -1, 0).normalized(), "");
+		mach_assert(Vec3::refract(Vec3(-1, -1, 0).normalized(), Vec3::up(), 1.0) == Vec3(-1, -1, 0).normalized(), "");
 
 		std::cout << "Clamp tests:" << std::endl;
-		MACH_ASSERT(Vec3::clamp(Vec3(50, 32, -210), -10, 35) == Vec3(35, 32, -10), "");
+		mach_assert(Vec3::clamp(Vec3(50, 32, -210), -10, 35) == Vec3(35, 32, -10), "");
 
 		std::cout << "Mix/interpolation tests:" << std::endl;
 		throw NotImplemented("Missing tests");
