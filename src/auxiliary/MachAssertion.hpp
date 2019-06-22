@@ -23,21 +23,19 @@ namespace mach {
 		std::string m_report;
 
 	public:
-
-		// Helper class for formatting assertion message
 		class StreamFormatter {
+
 		private:
 			std::ostringstream m_stream;
 
 		public:
 			operator std::string() const {
-				//assert(false);
 				return m_stream.str();
 			}
 
 			template<typename T>
-			StreamFormatter &operator<<(const T &value) {
-				m_stream << value;
+			StreamFormatter &operator<<(const T &p_value) {
+				m_stream << p_value;
 				return *this;
 			}
 		};
@@ -45,7 +43,6 @@ namespace mach {
 		// Log error before throwing
 		void log_error() {
 			Logger::log(m_report, LogError);
-			//std::cerr << m_report << std::endl;
 		}
 
 		MachAssertionException(const char *p_expression, const char *p_file, int p_line, const std::string &p_message)
@@ -90,20 +87,24 @@ namespace mach {
 			return m_message.c_str();
 		}
 
-		~MachAssertionException() noexcept {
-		}
-	};
+		~MachAssertionException() noexcept {}
 
-	//mach_assert does not exist during release
+		static void
+		__mach_assert_fail(const char *p_expression, const char *p_file, int p_line, const std::string &p_message) {
+			throw MachAssertionException(p_expression, p_file, p_line, p_message);
+		}
+
+		//mach_assert does not exist during release
 #ifdef NDEBUG
-#define MACH_ASSERT(EXPRESSION, MESSAGE) ((void)0)
+#define mach_assert(expr, mess) ((void)0)
 #else
-	// Assert that expr evaluates to true, otherwise raise AssertionFailureException with associated MESSAGE (which may use C++ stream-style message formatting)
+		// Assert that expr evaluates to true, otherwise raise AssertionFailureException with associated MESSAGE (which may use C++ stream-style message formatting)
 #define mach_assert(expr, message) \
-if(!(expr)) { \
-    throw mach::MachAssertionException(#expr, __FILE__, __LINE__, (mach::MachAssertionException::StreamFormatter() << message)); \
-}
+    (static_cast<bool> (expr) \
+    ? (void(0)) \
+    : mach::MachAssertionException::__mach_assert_fail(#expr, __FILE__, __LINE__, (mach::MachAssertionException::StreamFormatter() << message)))
 #endif
+	};
 }
 
 #endif //MACH_MACHASSERTION_HPP

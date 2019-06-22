@@ -183,7 +183,7 @@ namespace mach {
 			if (k < 0.0) {
 				return zero();
 			} else {
-				return p_eta * p_incident - (p_eta * n_dot_i * std::sqrt(k)) * p_normal;
+				return p_eta * p_incident - (p_eta * n_dot_i + std::sqrt(k)) * p_normal;
 			}
 		}
 
@@ -192,12 +192,7 @@ namespace mach {
 		}
 
 		static inline Base mix(const Base &p_start, const Base &p_end, const Base &p_t) {
-			Base result;
-			Base delta = p_end - p_start;
-			for (size_t i = 0; i < N; ++i) {
-				result[i] = p_start[i] + delta[i] * p_t;
-			}
-			return result;
+			return p_start + (p_end - p_start) * p_t;
 		}
 
 		static inline Base clamp(const Base &p_v, const T p_low, const T p_high) {

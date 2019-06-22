@@ -43,12 +43,12 @@ namespace mach::tests::math {
 		mach_assert(vec4.x == 12345.f && vec4.y == -1345.f && vec4.z == 2895.f && vec4.w == -12983.f, "");
 
 		std::cout << "Vector size tests running. " << std::endl;
-		mach_assert(sizeof(Vec2) == sizeof(float) * 2, "");
-		mach_assert(sizeof(Vec3) == sizeof(float) * 3, "");
-		mach_assert(sizeof(Vec4) == sizeof(float) * 4, "");
-		mach_assert(sizeof(Vec2h) == sizeof(double) * 2, "");
-		mach_assert(sizeof(Vec3h) == sizeof(double) * 3, "");
-		mach_assert(sizeof(Vec4h) == sizeof(double) * 4, "");
+		static_assert(sizeof(Vec2) == sizeof(float) * 2, "");
+		static_assert(sizeof(Vec3) == sizeof(float) * 3, "");
+		static_assert(sizeof(Vec4) == sizeof(float) * 4, "");
+		static_assert(sizeof(Vec2h) == sizeof(double) * 2, "");
+		static_assert(sizeof(Vec3h) == sizeof(double) * 3, "");
+		static_assert(sizeof(Vec4h) == sizeof(double) * 4, "");
 		std::cout << "Vector size tests passed. " << std::endl;
 
 		std::cout << "Index operator tests: " << std::endl;
@@ -128,13 +128,14 @@ namespace mach::tests::math {
 		mach_assert(Vec3::clamp(Vec3(50, 32, -210), -10, 35) == Vec3(35, 32, -10), "");
 
 		std::cout << "Mix/interpolation tests:" << std::endl;
-		throw NotImplemented("Missing tests");
-
-		std::cout << "Clamp tests:" << std::endl;
-		throw NotImplemented("Missing tests");
+		mach_assert(Vec3::mix(v_a, v_b, 0.5) == v_a + ((v_b - v_a) / 2), "");
+		mach_assert(Vec3::mix(v_a, v_b, Vec3(0.2, 0.5, 0.7)) == v_a + ((v_b - v_a) * Vec3(0.2, 0.5, 0.7)), "");
 
 		std::cout << "Getting largest/smallest indices tests:" << std::endl;
-		throw NotImplemented("Missing tests");
+		mach_assert(v_a.get_largest() == 75.0f, "");
+		mach_assert(v_b.get_smallest() == -10.0f, "");
+		mach_assert(v_a.get_smallest_index() == 2, "");
+		mach_assert(v_b.get_largest_index() == 2, "");
 
 		std::cout << "Vector tests done!" << std::endl;
 	}
