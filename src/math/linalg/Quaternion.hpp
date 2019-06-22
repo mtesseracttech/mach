@@ -5,7 +5,7 @@
 #ifndef MACH_QUATERNION_HPP
 #define MACH_QUATERNION_HPP
 
-#include <auxiliary/Exceptions.hpp>
+#include <auxiliary/exceptions/NotImplemented.hpp>
 #include "Vector/Vector3.hpp"
 #include "Rotations.hpp"
 

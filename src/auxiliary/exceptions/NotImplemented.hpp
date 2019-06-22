@@ -2,8 +2,8 @@
 // Created by mtesseract on 6/11/19.
 //
 
-#ifndef MACH_EXCEPTIONS_HPP
-#define MACH_EXCEPTIONS_HPP
+#ifndef MACH_NOTIMPLEMENTED_HPP
+#define MACH_NOTIMPLEMENTED_HPP
 
 #include <string>
 #include <stdexcept>
@@ -29,4 +29,4 @@ namespace mach {
     };
 }
 
-#endif //MACH_EXCEPTIONS_HPP
+#endif //MACH_NOTIMPLEMENTED_HPP

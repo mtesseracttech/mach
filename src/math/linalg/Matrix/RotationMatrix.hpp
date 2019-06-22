@@ -8,7 +8,7 @@
 #include <math/linalg/Quaternion.hpp>
 #include "Matrix.hpp"
 #include "../Vector/Vector3.hpp"
-#include "auxiliary/Exceptions.hpp"
+#include "auxiliary/exceptions/NotImplemented.hpp"
 
 namespace mach {
     template<typename T>
