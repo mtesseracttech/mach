@@ -18,7 +18,7 @@ namespace mach {
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-		glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, true);
+		glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
 		auto window = glfwCreateWindow(p_width, p_height, p_window_title.c_str(), nullptr, nullptr);
 
@@ -48,6 +48,7 @@ namespace mach {
 	}
 
 	void OpenGlWindow::glfw_resize_window_callback(GLFWwindow *p_window, int p_width, int p_height) {
+		std::cout << "resizing viewport" << std::endl;
 		glViewport(0, 0, p_width, p_height);
 	}
 

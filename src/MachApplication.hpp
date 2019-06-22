@@ -12,8 +12,6 @@ namespace mach {
 
 		void run();
 
-		void test();
-
 	protected:
 		RenderWindow *m_window;
 
