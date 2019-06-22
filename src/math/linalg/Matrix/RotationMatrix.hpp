@@ -19,12 +19,15 @@ namespace mach {
 
         explicit RotationMatrix(Mat3 p_matrix) : m_matrix(p_matrix) {}
 
+        template<typename... Args, typename = typename std::enable_if<sizeof...(Args) == 9>::type>
+        explicit RotationMatrix(Args &&... p_values) : m_matrix(static_cast<T>(std::forward<Args>(p_values))...) {}
+
     public:
 
         RotationMatrix() : m_matrix(Mat3::identity()) {}
 
         template<RotationOrder O = BPH>
-        explicit RotationMatrix(const EulerAngles<T, O> &p_angles) {
+        inline static RotationMatrix from_euler(const EulerAngles<T, O> &p_angles) {
             T sp = std::sin(p_angles.pitch);
             T cp = std::cos(p_angles.pitch);
             T sh = std::sin(p_angles.heading);
@@ -42,24 +45,23 @@ namespace mach {
                    0.0, cp, sp,
                    0.0, -sp, cp);
 
-            m_matrix = combine_rotations<O>(p, h, b);
+            RotationMatrix result;
+            result.m_matrix = combine_rotations<O>(p, h, b);
+            return result;
         }
 
-        explicit RotationMatrix(const Quaternion<T> &p_q) {
-            m_matrix = {
-                    Vector3<T>(1.0 - 2.0 * p_q.y * p_q.y - 2.0 * p_q.z * p_q.z,
-                               2.0 * p_q.x * p_q.y + 2.0 * p_q.w * p_q.z,
-                               2.0 * p_q.x * p_q.z - 2.0 * p_q.w * p_q.y),
-                    Vector3<T>(2.0 * p_q.x * p_q.y - 2.0 * p_q.w * p_q.z,
-                               1.0 - 2.0 * p_q.x * p_q.x - 2.0 * p_q.z * p_q.z,
-                               2.0 * p_q.y * p_q.z + 2.0 * p_q.w * p_q.x),
-                    Vector3<T>(2.0 * p_q.x * p_q.z + 2.0 * p_q.w * p_q.y,
-                               2.0 * p_q.y * p_q.z - 2.0 * p_q.w * p_q.x,
-                               1.0 - 2.0 * p_q.x * p_q.x - 2.0 * p_q.y * p_q.y)
-            };
+        inline RotationMatrix from_quat(const Quaternion<T> &p_q) {
+            return RotationMatrix(1.0 - 2.0 * p_q.y * p_q.y - 2.0 * p_q.z * p_q.z,
+                                  2.0 * p_q.x * p_q.y + 2.0 * p_q.w * p_q.z,
+                                  2.0 * p_q.x * p_q.z - 2.0 * p_q.w * p_q.y,
+                                  2.0 * p_q.x * p_q.y - 2.0 * p_q.w * p_q.z,
+                                  1.0 - 2.0 * p_q.x * p_q.x - 2.0 * p_q.z * p_q.z,
+                                  2.0 * p_q.y * p_q.z + 2.0 * p_q.w * p_q.x,
+                                  2.0 * p_q.x * p_q.z + 2.0 * p_q.w * p_q.y,
+                                  2.0 * p_q.y * p_q.z - 2.0 * p_q.w * p_q.x,
+                                  1.0 - 2.0 * p_q.x * p_q.x - 2.0 * p_q.y * p_q.y);
         }
 
-    public:
         inline RotationMatrix transpose() {
             RotationMatrix matrix(m_matrix.transpose());
             return matrix;

@@ -69,8 +69,8 @@ namespace mach {
         std::cout << "mat4x4 identity:" << std::endl << m5 << std::endl;
 
         Mat4x2 m6 = Mat4x2::zero();
-        std::cout << "mat4x2 zero:" << std::endl << m6 << std::endl;
-
+        std::cout << "mat4x2 zero: " << std::endl << m6 << std::endl;
+        //m6 = Mat4x2::identity(); //Should fail
 
         std::cout << "identity * v3 = " << m5 * v3 << std::endl;
 
@@ -140,6 +140,6 @@ namespace mach {
 int main() {
     mach::MachApplication app;
     app.test();
-    //app.run();
+    app.run();
 }
 
