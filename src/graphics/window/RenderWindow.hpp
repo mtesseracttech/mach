@@ -28,7 +28,7 @@ namespace mach {
 		                                                                 p_width,
 		                                                                 p_height) {}
 
-		RenderWindow(std::string p_window_title, uint32_t p_width, uint32_t p_height) {};
+		RenderWindow(std::string p_window_title, uint32_t p_width, uint32_t p_height);;
 
 		virtual ~RenderWindow();
 
@@ -42,8 +42,6 @@ namespace mach {
 
 		virtual void swap_buffers() = 0;
 
-		virtual void resize_viewport(uint32_t p_width, uint32_t p_height) = 0;
-
 		virtual void poll_events();
 
 		virtual void set_window_title(std::string p_window_title);
@@ -51,7 +49,13 @@ namespace mach {
 		virtual void set_window_dimensions(uint32_t p_width, uint32_t p_height);
 
 	protected:
+		virtual void resize_framebuffer(uint32_t p_width, uint32_t p_height) = 0;
+
+		virtual void resize_viewport(uint32_t p_width, uint32_t p_height) = 0;
+
 		static void glfw_error_callback(int p_err_code, const char *p_err_str);
+
+		static void glfw_resize_window_callback(GLFWwindow *p_window, int p_width, int p_height);
 	};
 
 }

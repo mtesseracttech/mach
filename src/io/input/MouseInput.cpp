@@ -18,9 +18,9 @@ namespace mach {
 			glfwSetMouseButtonCallback(window, glfw_mouse_button_callback);
 			glfwSetCursorPosCallback(window, glfw_mouse_pos_callback);
 			m_prepared = true;
-			std::cout << "Set up the mouse input" << std::endl;
+			Logger::log("Set up the mouse input handler", LogInfo);
 		} else {
-			std::cout << "Could not set up the mouse input, the GLFW window is not defined" << std::endl;
+			Logger::log("Could not set up the mouse input handler because the GLFW window is null", LogError);
 		}
 	}
 

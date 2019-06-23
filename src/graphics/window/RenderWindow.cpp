@@ -13,6 +13,7 @@ namespace mach {
 
 	RenderWindow::~RenderWindow() {
 		if (m_glfw_window) {
+			Logger::log("Destroying the rendering window and terminating GLFW");
 			glfwDestroyWindow(m_glfw_window);
 			glfwTerminate();
 		}
@@ -40,10 +41,29 @@ namespace mach {
 	}
 
 	void RenderWindow::glfw_error_callback(int p_err_code, const char *p_err_str) {
-		std::cout << "GLFW Error: " << p_err_code << " description: " << p_err_str << std::endl;
+		std::stringstream ss;
+		ss << "GLFW Error: " << p_err_code << " description: " << p_err_str;
+		Logger::log(ss.str(), LogType::LogError);
+	}
+
+	void RenderWindow::glfw_resize_window_callback(GLFWwindow *p_window, int p_width, int p_height) {
+		Logger::log("Resizing window");
+		auto *window = reinterpret_cast<RenderWindow *>(glfwGetWindowUserPointer(p_window));
+		mach_assert(window != nullptr, "The window user pointer that the resize callback got is somehow null");
+		window->resize_framebuffer(p_width, p_height);
 	}
 
 	void RenderWindow::poll_events() {
 		glfwPollEvents();
+	}
+
+	RenderWindow::RenderWindow(std::string p_window_title, uint32_t p_width, uint32_t p_height) {
+		glfwSetErrorCallback(glfw_error_callback);
+
+		if (glfwInit() == GL_FALSE) {
+			Logger::log("GLFW Failed to initialize successfully", LogError);
+		} else {
+			Logger::log("GLFW initialized successfully", LogInfo);
+		}
 	}
 }

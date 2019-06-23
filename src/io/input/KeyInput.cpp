@@ -16,9 +16,9 @@ namespace mach {
 		if (window) {
 			glfwSetKeyCallback(window, glfw_key_callback);
 			m_prepared = true;
-			std::cout << "Set up the keyboard input" << std::endl;
+			Logger::log("Set up the keyboard input handler", LogInfo);
 		} else {
-			std::cout << "Could not set up the keyboard input, the GLFW window is not defined" << std::endl;
+			Logger::log("Could not set up the keyboard input handler because the GLFW window is null", LogError);
 		}
 	}
 

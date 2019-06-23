@@ -28,16 +28,15 @@ namespace mach {
 
 		OpenGlWindow(std::string p_window_title, uint32_t p_width, uint32_t p_height);
 
-		~OpenGlWindow() override;
-
 		void swap_buffers() override;
-
-		void resize_viewport(uint32_t p_width, uint32_t p_height) override;
 
 		void clear(float p_r, float p_g, float p_b, float p_a) override;
 
 	protected:
-		static void glfw_resize_window_callback(GLFWwindow *p_window, int p_width, int p_height);
+		//Called by the glfw callback
+		void resize_framebuffer(uint32_t p_width, uint32_t p_height) override;
+
+		void resize_viewport(uint32_t p_width, uint32_t p_height) override;
 	};
 }
 

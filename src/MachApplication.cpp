@@ -44,8 +44,8 @@ namespace mach {
 
 
 	void MachApplication::shutdown() {
-
 		m_window->close();
+		delete m_window;
 	}
 }
 
