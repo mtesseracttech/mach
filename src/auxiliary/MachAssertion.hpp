@@ -13,14 +13,14 @@
 #include <cassert>
 
 namespace mach {
-    // Exception type for assertion failures
-    class MachAssertionException : public std::exception {
-    private:
-        const char *m_expression;
-        const char *m_file;
-        std::string m_message;
-        std::string m_report;
-        int m_line;
+	// Exception type for assertion failures
+	class MachAssertionException : public std::exception {
+	private:
+		const char *m_expression;
+		const char *m_file;
+		std::string m_message;
+		std::string m_report;
+		int m_line;
 
 	public:
 		class StreamFormatter {
@@ -45,47 +45,47 @@ namespace mach {
 			Logger::log(m_report, LogError);
 		}
 
-        MachAssertionException(const char *p_expression, const char *p_file, int p_line, const std::string &p_message)
-                : m_expression(p_expression), m_file(p_file), m_line(p_line), m_message(p_message) {
-            std::ostringstream output_stream;
+		MachAssertionException(const char *p_expression, const char *p_file, int p_line, const std::string &p_message)
+				: m_expression(p_expression), m_file(p_file), m_line(p_line), m_message(p_message) {
+			std::ostringstream output_stream;
 
-            if (!p_message.empty()) {
-                output_stream << p_message << ": ";
-            }
+			if (!p_message.empty()) {
+				output_stream << p_message << ": ";
+			}
 
-            std::string expression_string = p_expression;
+			std::string expression_string = p_expression;
 
-            if (expression_string == "false" || expression_string == "0" || expression_string == "FALSE") {
-                output_stream << "Unreachable code assertion";
-            } else {
-                output_stream << "Assertion '" << p_expression << "'";
-            }
+			if (expression_string == "false" || expression_string == "0" || expression_string == "FALSE") {
+				output_stream << "Unreachable code assertion";
+			} else {
+				output_stream << "Assertion '" << p_expression << "'";
+			}
 
-            output_stream << " failed in file '" << p_file << "' line " << p_line;
-            m_report = output_stream.str();
+			output_stream << " failed in file '" << p_file << "' line " << p_line;
+			m_report = output_stream.str();
 
-            log_error();
-        }
+			log_error();
+		}
 
-        virtual const char *what() const noexcept {
-            return m_report.c_str();
-        }
+		virtual const char *what() const noexcept {
+			return m_report.c_str();
+		}
 
-        const char *expression() const noexcept {
-            return m_expression;
-        }
+		const char *expression() const noexcept {
+			return m_expression;
+		}
 
-        const char *file() const noexcept {
-            return m_file;
-        }
+		const char *file() const noexcept {
+			return m_file;
+		}
 
-        int line() const noexcept {
-            return m_line;
-        }
+		int line() const noexcept {
+			return m_line;
+		}
 
-        const char *message() const noexcept {
-            return m_message.c_str();
-        }
+		const char *message() const noexcept {
+			return m_message.c_str();
+		}
 
 		~MachAssertionException() noexcept {}
 

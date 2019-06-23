@@ -60,13 +60,6 @@ namespace mach {
 		}
 
 		static constexpr Matrix zero() {
-//			Matrix output;
-//			for (size_t row = 0; row < W; ++row) {
-//				for (size_t col = 0; col < H; ++col) {
-//					output[row][col] = 0.0;
-//				}
-//			}
-//			return output;
 			return Matrix(0.0);
 		}
 
@@ -105,8 +98,6 @@ namespace mach {
 			return output;
 		}
 
-
-		//template<typename = typename std::enable_if_t<(W == H)>>
 		inline T determinant() const {
 			static_assert(W == H, "Determinants can only be created from square matrices");
 			if constexpr (W == 2) {
@@ -148,7 +139,6 @@ namespace mach {
 			}
 		}
 
-		//template<typename = typename std::enable_if_t<W == H>>
 		inline Matrix adjugate() const {
 			static_assert(W == H, "Adugates can only be created from square matrices");
 			Matrix result;
@@ -198,7 +188,6 @@ namespace mach {
 			return result;
 		}
 
-		//template<typename = typename std::enable_if_t<W == H>>
 		inline Matrix inverse() const {
 			static_assert(W == H, "Inverses can only be created from square matrices");
 			T det = determinant();
@@ -209,8 +198,7 @@ namespace mach {
 			}
 		}
 
-		template<typename RColVectorBase, typename RRowVectorBase, typename RT, size_t RH, size_t RW/*,
-                typename = typename std::enable_if_t<W == RH>*/>
+		template<typename RColVectorBase, typename RRowVectorBase, typename RT, size_t RH, size_t RW>
 		inline Matrix<ColVectorBase, RRowVectorBase, T, H, RW>
 		operator*(const Matrix<RColVectorBase, RRowVectorBase, RT, RH, RW> &p_m) const {
 			static_assert(W == RH, "Matrix multiplication is only defined for matrices with matching inner dimensions");

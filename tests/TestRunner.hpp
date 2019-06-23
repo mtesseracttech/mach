@@ -5,7 +5,7 @@
 #ifndef MACH_TESTRUNNER_HPP
 #define MACH_TESTRUNNER_HPP
 
-#include <tests/math/LinearAlgebraTests.hpp>
+#include "math/LinearAlgebraTests.hpp"
 
 namespace mach {
 	namespace tests {

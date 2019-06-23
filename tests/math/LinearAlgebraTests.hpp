@@ -12,14 +12,14 @@
 #include <math/util/MathUtils.hpp>
 
 namespace mach::tests::math {
-    class LinearAlgebraTests {
-    public:
-        static void run_tests();
+	class LinearAlgebraTests {
+	public:
+		static void run_tests();
 
-    private:
-        static void vector_tests();
+	private:
+		static void vector_tests();
 
-        static void matrix_tests();
+		static void matrix_tests();
 
 		static void quaternion_tests();
 

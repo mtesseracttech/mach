@@ -32,6 +32,7 @@ namespace mach {
 				throw "Failed to initialize GLAD";
 			}
 
+			glfwSetWindowUserPointer(window, this);
 			glfwSetFramebufferSizeCallback(window, glfw_resize_window_callback);
 
 			m_glfw_window = window;
@@ -49,7 +50,9 @@ namespace mach {
 
 	void OpenGlWindow::glfw_resize_window_callback(GLFWwindow *p_window, int p_width, int p_height) {
 		std::cout << "resizing viewport" << std::endl;
-		glViewport(0, 0, p_width, p_height);
+		OpenGlWindow *window = reinterpret_cast<OpenGlWindow *>(glfwGetWindowUserPointer(p_window));
+		std::cout << window << std::endl;
+		//window.resize_viewport(p_width, p_height);
 	}
 
 	void OpenGlWindow::swap_buffers() {
@@ -58,9 +61,12 @@ namespace mach {
 		}
 	}
 
-	void OpenGlWindow::clear(const Vec4 &p_color) {
-		glClearColor(p_color.x, p_color.y, p_color.z, p_color.w);
-		glClear(GL_COLOR_BUFFER_BIT);
+	void OpenGlWindow::resize_viewport(uint32_t p_width, uint32_t p_height) {
+		glViewport(0, 0, p_width, p_height);
 	}
 
+	void OpenGlWindow::clear(float p_r, float p_g, float p_b, float p_a) {
+		glClearColor(p_r, p_g, p_b, p_a);
+		glClear(GL_COLOR_BUFFER_BIT);
+	}
 }

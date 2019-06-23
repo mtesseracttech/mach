@@ -8,26 +8,26 @@
 #include "math/linalg/LinAlgTypes.hpp"
 
 namespace mach {
-    template<typename T>
-    struct VectorTraits {
-    };
+	template<typename T>
+	struct VectorTraits {
+	};
 
-    template<typename T>
-    struct VectorTraits<Vector2<T>> {
-        using LowerDim = T;
-        using UpperDim = Vector3<T>;
-    };
+	template<typename T>
+	struct VectorTraits<Vector2<T>> {
+		using LowerDim = T;
+		using UpperDim = Vector3<T>;
+	};
 
-    template<typename T>
-    struct VectorTraits<Vector3<T>> {
-        using LowerDim = Vector2<T>;
-        using UpperDim = Vector4<T>;
-    };
+	template<typename T>
+	struct VectorTraits<Vector3<T>> {
+		using LowerDim = Vector2<T>;
+		using UpperDim = Vector4<T>;
+	};
 
-    template<typename T>
-    struct VectorTraits<Vector4<T>> {
-        using LowerDim = Vector3<T>;
-    };
+	template<typename T>
+	struct VectorTraits<Vector4<T>> {
+		using LowerDim = Vector3<T>;
+	};
 }
 
 

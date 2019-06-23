@@ -3,7 +3,7 @@
 #include "io/input/KeyInput.hpp"
 #include "io/input/MouseInput.hpp"
 #include "MachApplication.hpp"
-#include "tests/TestRunner.hpp"
+#include "../tests/TestRunner.hpp"
 
 namespace mach {
 
@@ -18,13 +18,24 @@ namespace mach {
 	}
 
 	void MachApplication::run() {
+		Vec3 vertices[] = {
+				Vec3(-0.5f, -0.5f, 0.0f),
+				Vec3(0.5f, -0.5f, 0.0f),
+				Vec3(0.0f, 0.5f, 0.0f)
+		};
+
+		unsigned int VBO;
+		glGenBuffers(1, &VBO);
+		glBindBuffer(GL_ARRAY_BUFFER, VBO);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+
 		while (!m_window->is_closing()) {
 			if (KeyInput::enter(Escape)) {
 				m_window->close();
 			}
 
-			m_window->clear(Vec4(0.2, 0.3, 0.3, 1.0));
-
+			m_window->clear(0.2, 0.3, 0.3, 1.0);
 			m_window->swap_buffers();
 			m_window->poll_events();
 		}

@@ -38,9 +38,11 @@ namespace mach {
 
 		virtual bool is_closing();
 
-		virtual void clear(const Vec4 &p_clear_color) = 0;
+		virtual void clear(float p_r, float p_g, float p_b, float p_a) = 0;
 
 		virtual void swap_buffers() = 0;
+
+		virtual void resize_viewport(uint32_t p_width, uint32_t p_height) = 0;
 
 		virtual void poll_events();
 

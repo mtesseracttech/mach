@@ -1,3 +1,5 @@
+#include <utility>
+
 //
 // Created by mtesseract on 23-5-19.
 //
@@ -16,8 +18,9 @@ namespace mach {
 	public:
 		OpenGlWindow() : OpenGlWindow(std::string(mach::Constants::DEF_WIN_NAME)) {}
 
-		OpenGlWindow(std::string p_window_title) : OpenGlWindow(p_window_title, mach::Constants::DEF_WIN_WIDTH,
-		                                                        mach::Constants::DEF_WIN_HEIGHT) {}
+		explicit OpenGlWindow(std::string p_window_title) : OpenGlWindow(std::move(p_window_title),
+		                                                                 mach::Constants::DEF_WIN_WIDTH,
+		                                                                 mach::Constants::DEF_WIN_HEIGHT) {}
 
 		OpenGlWindow(uint32_t p_width, uint32_t p_height) : OpenGlWindow(std::string(mach::Constants::DEF_WIN_NAME),
 		                                                                 p_width,
@@ -29,7 +32,9 @@ namespace mach {
 
 		void swap_buffers() override;
 
-		void clear(const Vec4 &p_color) override;
+		void resize_viewport(uint32_t p_width, uint32_t p_height) override;
+
+		void clear(float p_r, float p_g, float p_b, float p_a) override;
 
 	protected:
 		static void glfw_resize_window_callback(GLFWwindow *p_window, int p_width, int p_height);
