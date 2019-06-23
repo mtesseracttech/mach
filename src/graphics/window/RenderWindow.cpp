@@ -49,8 +49,11 @@ namespace mach {
 	void RenderWindow::glfw_resize_window_callback(GLFWwindow *p_window, int p_width, int p_height) {
 		Logger::log("Resizing window");
 		auto *window = reinterpret_cast<RenderWindow *>(glfwGetWindowUserPointer(p_window));
-		mach_assert(window != nullptr, "The window user pointer that the resize callback got is somehow null");
-		window->resize_framebuffer(p_width, p_height);
+		if (window) {
+			window->resize_framebuffer(p_width, p_height);
+		} else {
+			mach_assert(false, "The window user pointer that the resize callback got is somehow null");
+		}
 	}
 
 	void RenderWindow::poll_events() {
