@@ -5,7 +5,7 @@
 #ifndef MACH_VECTORTRAITS_HPP
 #define MACH_VECTORTRAITS_HPP
 
-#include "../LinMatTypes.hpp"
+#include "math/linalg/LinAlgTypes.hpp"
 
 namespace mach {
     template<typename T>

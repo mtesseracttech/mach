@@ -29,6 +29,8 @@ namespace mach {
 
 		void swap_buffers() override;
 
+		void clear(const Vec4 &p_color) override;
+
 	protected:
 		static void glfw_resize_window_callback(GLFWwindow *p_window, int p_width, int p_height);
 	};

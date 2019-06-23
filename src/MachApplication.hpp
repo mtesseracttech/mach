@@ -5,6 +5,8 @@
 #ifndef MACH_MACHAPPLICATION_HPP
 #define MACH_MACHAPPLICATION_HPP
 
+#include <io/input/KeyInput.hpp>
+
 namespace mach {
 	class MachApplication {
 	public:
@@ -14,10 +16,6 @@ namespace mach {
 
 	protected:
 		RenderWindow *m_window;
-
-		void setup_window();
-
-		void setup_input();
 
 		void setup_subsystems();
 

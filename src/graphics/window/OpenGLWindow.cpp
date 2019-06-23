@@ -58,4 +58,9 @@ namespace mach {
 		}
 	}
 
+	void OpenGlWindow::clear(const Vec4 &p_color) {
+		glClearColor(p_color.x, p_color.y, p_color.z, p_color.w);
+		glClear(GL_COLOR_BUFFER_BIT);
+	}
+
 }

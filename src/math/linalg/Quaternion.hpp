@@ -30,6 +30,8 @@ namespace mach {
 
 		Quaternion(T p_w, Vector3<T> p_v) : w(p_w), v(p_v) {}
 
+		Quaternion(const Quaternion &p_q) : w(p_q.w), v(p_q.v) {}
+
 		static constexpr Quaternion identity() {
 			return Quaternion(1.0, 0.0, 0.0, 0.0);
 		}
@@ -62,9 +64,21 @@ namespace mach {
 		}
 
 		friend inline Vector3<T> operator*(const Vector3<T> &p_v, const Quaternion<T> &p_q) {
-			Quaternion<T> result(0.0, p_v);
-			result = p_q * result * p_q.inverse();
-			return result.w;
+			Quaternion<T> in(0.0, p_v);
+			Quaternion result = p_q * in * p_q.inverse();
+			return result.v;
+		}
+
+		/*
+		 * Compares two quaternions for equality.
+		 * Leverages pre-existing code that exists for vectors.
+		 */
+		inline bool operator==(const Quaternion &p_q) const {
+			return (*reinterpret_cast<const Vector4<T> *>(this)) == (*reinterpret_cast<const Vector4<T> *>(&p_q));
+		}
+
+		inline bool operator!=(const Quaternion &p_q) const {
+			return !((*this) == p_q);
 		}
 
 		friend std::ostream &operator<<(std::ostream &p_os, const Quaternion &p_q) {
@@ -81,24 +95,24 @@ namespace mach {
 			return dot(*this, p_q);
 		}
 
-		inline T magnitude_squared() {
+		inline T magnitude_squared() const {
 			return dot(*this);
 		}
 
-		inline T magnitude() {
+		inline T magnitude() const {
 			return std::sqrt(magnitude_squared());
 		}
 
-		inline Quaternion conjugate() {
+		inline Quaternion conjugate() const {
 			return Quaternion(w, -v);
 		}
 
-		inline Quaternion inverse() {
+		inline Quaternion inverse() const {
 			T inv = 1.0 / magnitude();
 			return conjugate() * inv;
 		}
 
-		inline Quaternion normalized() {
+		inline Quaternion normalized() const {
 			T inv = 1.0 / magnitude();
 			return Quaternion(w * inv, v * inv);
 		}
@@ -199,14 +213,15 @@ namespace mach {
 		}
 
 		//Angle Axis
-		inline static Quaternion from_angle_axis(T p_t, const Vector3<T> &p_v) {
-			T st = std::sin(p_t / 2.0);
-			T ct = std::cos(p_t / 2.0);
-			return Quaternion(ct, p_v * st);
+		inline static Quaternion from_angle_axis(T p_theta, const Vector3<T> &p_n) {
+			mach_assert(p_n.is_unit(), "You can only construct a quaternion from an angle-axis with a normalized axis");
+			T st = std::sin(p_theta / 2.0);
+			T ct = std::cos(p_theta / 2.0);
+			return Quaternion(ct, p_n * st);
 		}
 
 		//Angle Axis
-		inline static Quaternion from_angle_axis(AngleAxis<T> p_angle_axis) {
+		inline static Quaternion from_angle_axis(const AngleAxis<T> &p_angle_axis) {
 			return from_angle_axis(p_angle_axis.theta, p_angle_axis.n);
 		}
 

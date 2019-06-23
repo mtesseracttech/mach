@@ -124,6 +124,10 @@ namespace mach {
 			return true;
 		}
 
+		inline bool operator!=(const Base &p_v) const {
+			return !((*this) == p_v);
+		}
+
 		friend std::ostream &operator<<(std::ostream &p_os, const Base &p_v) {
 			p_os << std::fixed << std::setprecision(3) << "(" << p_v[0];
 			for (int i = 1; i < N; ++i) {

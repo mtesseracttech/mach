@@ -10,6 +10,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include "auxiliary/Constants.hpp"
+#include <math/linalg/LinAlgTypes.hpp>
 
 
 namespace mach {
@@ -36,6 +37,8 @@ namespace mach {
 		virtual void close();
 
 		virtual bool is_closing();
+
+		virtual void clear(const Vec4 &p_clear_color) = 0;
 
 		virtual void swap_buffers() = 0;
 

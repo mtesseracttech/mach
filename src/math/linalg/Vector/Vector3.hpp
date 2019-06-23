@@ -24,7 +24,9 @@ namespace mach {
 
 		explicit Vector3(T p_s) : m_array{p_s, p_s, p_s} {}
 
-		Vector3(T p_x, T p_y, T p_z) : m_array{p_x, p_y, p_z} {}
+		Vector3(const Vector3 &p_v) : x(p_v.x), y(p_v.y), z(p_v.z) {}
+
+		Vector3(T p_x, T p_y, T p_z) : x(p_x), y(p_y), z(p_z) {}
 
 		T &operator[](size_t p_n) { return m_array[p_n]; }
 
@@ -51,7 +53,7 @@ namespace mach {
 			return output;
 		}
 
-		inline Vector3 cross(const Vector3 &p_v) {
+		inline Vector3 cross(const Vector3 &p_v) const {
 			return cross(*this, p_v);
 		}
 	};

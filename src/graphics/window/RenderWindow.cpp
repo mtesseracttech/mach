@@ -19,6 +19,7 @@ namespace mach {
 	}
 
 	void RenderWindow::close() {
+		if (m_glfw_window) glfwSetWindowShouldClose(m_glfw_window, true);
 		m_closing = true;
 	}
 

@@ -22,7 +22,9 @@ namespace mach {
 
 		explicit Vector4(T p_s) : m_array{p_s, p_s, p_s, p_s} {}
 
-		Vector4(T p_x, T p_y, T p_z, T p_w) : m_array{p_x, p_y, p_z, p_w} {}
+		Vector4(const Vector4 &p_v) : x(p_v.x), y(p_v.y), z(p_v.z), w(p_v.w) {}
+
+		Vector4(T p_x, T p_y, T p_z, T p_w) : x(p_x), y(p_y), z(p_z), w(p_w) {}
 
 		T &operator[](size_t p_n) { return m_array[p_n]; }
 

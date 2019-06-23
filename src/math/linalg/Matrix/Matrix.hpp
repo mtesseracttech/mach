@@ -26,6 +26,8 @@ namespace mach {
 	public:
 		Matrix() : m_data{0} {}
 
+		Matrix(const T &p_s) { m_data.fill(p_s); }
+
 		Matrix(const Matrix &p_m) : m_data(p_m.m_data) {}
 
 		template<typename... Args, typename = typename std::enable_if<sizeof...(Args) == W * H>::type>
@@ -58,13 +60,14 @@ namespace mach {
 		}
 
 		static constexpr Matrix zero() {
-			Matrix output;
-			for (size_t row = 0; row < W; ++row) {
-				for (size_t col = 0; col < H; ++col) {
-					output[row][col] = 0.0;
-				}
-			}
-			return output;
+//			Matrix output;
+//			for (size_t row = 0; row < W; ++row) {
+//				for (size_t col = 0; col < H; ++col) {
+//					output[row][col] = 0.0;
+//				}
+//			}
+//			return output;
+			return Matrix(0.0);
 		}
 
 
@@ -209,7 +212,7 @@ namespace mach {
 		template<typename RColVectorBase, typename RRowVectorBase, typename RT, size_t RH, size_t RW/*,
                 typename = typename std::enable_if_t<W == RH>*/>
 		inline Matrix<ColVectorBase, RRowVectorBase, T, H, RW>
-		operator*(const Matrix<RRowVectorBase, RColVectorBase, RT, RH, RW> &p_m) const {
+		operator*(const Matrix<RColVectorBase, RRowVectorBase, RT, RH, RW> &p_m) const {
 			static_assert(W == RH, "Matrix multiplication is only defined for matrices with matching inner dimensions");
 			auto p_m_t = p_m.transpose();
 			Matrix<ColVectorBase, RRowVectorBase, T, H, RW> output;

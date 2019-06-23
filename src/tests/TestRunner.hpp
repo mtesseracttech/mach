@@ -10,7 +10,7 @@
 namespace mach {
 	namespace tests {
 		static void run_tests() {
-			std::cout << "Running test suites:" << std::endl;
+			Logger::log("RUNNING TEST SUITES:");
 
 			math::LinearAlgebraTests::run_tests();
 		}
