@@ -6,13 +6,14 @@
 #define MACH_TIMER_HPP
 
 #include <chrono>
+#include <string>
 
 namespace mach {
 	class Timer {
 	private:
-		typedef std::chrono::high_resolution_clock ChronoClock;
+		typedef std::chrono::system_clock ChronoClock;
 		typedef std::chrono::duration<double, std::ratio<1> > ChronoSecond;
-		std::chrono::time_point<std::chrono::high_resolution_clock> m_start;
+		std::chrono::time_point<ChronoClock> m_start;
 
 	public:
 		Timer();
@@ -20,6 +21,8 @@ namespace mach {
 		void reset();
 
 		double get_elapsed() const;
+
+		std::string get_time_in_hh_mm_ss();
 	};
 }
 

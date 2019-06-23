@@ -24,9 +24,12 @@ namespace mach {
 				Vec3(0.0f, 0.5f, 0.0f)
 		};
 
-		unsigned int VBO;
-		glGenBuffers(1, &VBO);
-		glBindBuffer(GL_ARRAY_BUFFER, VBO);
+		Timer timer;
+		timer.get_time_in_hh_mm_ss();
+
+		uint32_t vbo;
+		glGenBuffers(1, &vbo);
+		glBindBuffer(GL_ARRAY_BUFFER, vbo);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
 
