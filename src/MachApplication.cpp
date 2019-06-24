@@ -24,9 +24,6 @@ namespace mach {
 				Vec3(0.0f, 0.5f, 0.0f)
 		};
 
-		Timer timer;
-		timer.get_time_in_hh_mm_ss();
-
 		uint32_t vbo;
 		glGenBuffers(1, &vbo);
 		glBindBuffer(GL_ARRAY_BUFFER, vbo);

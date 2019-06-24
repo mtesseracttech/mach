@@ -21,8 +21,6 @@ namespace mach {
 		void reset();
 
 		double get_elapsed() const;
-
-		std::string get_time_in_hh_mm_ss();
 	};
 }
 

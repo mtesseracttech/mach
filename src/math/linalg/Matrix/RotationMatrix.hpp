@@ -6,10 +6,11 @@
 #define MACH_ROTATIONMATRIX_HPP
 
 #include <math/linalg/Quaternion.hpp>
+#include <math/linalg/Vector/Vector3.hpp>
 #include <math/linalg/Vector/Vector4.hpp>
+#include <auxiliary/exceptions/NotImplemented.hpp>
 #include "Matrix.hpp"
-#include "../Vector/Vector3.hpp"
-#include "auxiliary/exceptions/NotImplemented.hpp"
+
 
 namespace mach {
 	template<typename T>
@@ -64,6 +65,32 @@ namespace mach {
 			                      2.0 * p_q.y * p_q.z - 2.0 * p_q.w * p_q.x,
 			                      1.0 - 2.0 * p_q.x * p_q.x - 2.0 * p_q.y * p_q.y);
 		}
+
+		//Angle Axis
+		inline static RotationMatrix from_angle_axis(T p_theta, const Vector3<T> &p_n) {
+			mach_assert(p_n.is_unit(),
+			            "You can only construct a RotationMatrix from an angle-axis with a normalized axis");
+			T c = std::cos(p_theta);
+			T s = std::sin(p_theta);
+			T o_m_c = 1.0 - c;
+			return RotationMatrix(p_n.x * p_n.x * o_m_c + c,
+			                      p_n.x * p_n.y * o_m_c + p_n.z * s,
+			                      p_n.x * p_n.z * o_m_c - p_n.y * s,
+			                      p_n.x * p_n.y * o_m_c - p_n.z * s,
+			                      p_n.y * p_n.y * o_m_c + c,
+			                      p_n.y * p_n.z * o_m_c + p_n.x * s,
+			                      p_n.x * p_n.z * o_m_c + p_n.y * s,
+			                      p_n.y * p_n.z * o_m_c - p_n.x * s,
+			                      p_n.z * p_n.z * o_m_c + c
+			);
+
+		}
+
+		//Angle Axis
+		inline static RotationMatrix from_angle_axis(const AngleAxis<T> &p_angle_axis) {
+			return from_angle_axis(p_angle_axis.theta, p_angle_axis.n);
+		}
+
 
 		inline RotationMatrix transpose() {
 			RotationMatrix matrix(m_matrix.transpose());

@@ -5,6 +5,7 @@
 #include "Logger.hpp"
 #include <iostream>
 #include <sstream>
+#include <auxiliary/time/TimeUtils.hpp>
 
 namespace mach {
 	Logger &Logger::get_instance() {
@@ -14,7 +15,7 @@ namespace mach {
 
 	void Logger::print_log(const std::string &p_prefix, const std::string &p_message) {
 		std::stringstream output;
-		output << "[" << p_prefix << "] " << p_message;
+		output << "[" << TimeUtils::get_time_hh_mm_ss() << "] [" << p_prefix << "] " << p_message;
 		std::cout << output.str() << std::endl;
 	}
 
@@ -22,7 +23,7 @@ namespace mach {
 		//This makes sure that everything printed from cout is done before the cerr is done
 		std::cout << std::flush;
 		std::stringstream output;
-		output << "[" << p_prefix << "] " << p_message;
+		output << "[" << TimeUtils::get_time_hh_mm_ss() << "] [" << p_prefix << "] " << p_message;
 		std::cerr << output.str() << std::endl;
 	}
 
