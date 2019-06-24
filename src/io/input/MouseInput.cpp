@@ -11,7 +11,7 @@ namespace mach {
 	Timer                MouseInput::m_timer;
 	Vec2                 MouseInput::m_position = Vec2::zero();
 
-	void MouseInput::setup(RenderWindow &p_window, double p_time_step) {
+	void MouseInput::setup(gfx::RenderWindow &p_window, double p_time_step) {
 		auto window = p_window.get_raw_window();
 		m_time_step = p_time_step;
 		if (window) {

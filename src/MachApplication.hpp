@@ -15,7 +15,7 @@ namespace mach {
 		void run();
 
 	protected:
-		RenderWindow *m_window;
+		std::shared_ptr<gfx::RenderWindow> m_window;
 
 		void setup_subsystems();
 

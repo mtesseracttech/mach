@@ -10,9 +10,9 @@
 
 namespace mach {
 	template<typename T>
-	static std::string to_str(const T &p_message_object) {
+	static std::string to_str(const T &p_obj) {
 		std::stringstream ss;
-		ss << p_message_object;
+		ss << p_obj;
 		return ss.str();
 	}
 }

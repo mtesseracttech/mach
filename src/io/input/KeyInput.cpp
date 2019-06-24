@@ -10,7 +10,7 @@ namespace mach {
 	std::map<int, float> KeyInput::m_keys;
 	Timer                KeyInput::m_timer;
 
-	void KeyInput::setup(RenderWindow &p_window, double p_time_step) {
+	void KeyInput::setup(gfx::RenderWindow &p_window, double p_time_step) {
 		auto window = p_window.get_raw_window();
 		m_time_step = p_time_step;
 		if (window) {

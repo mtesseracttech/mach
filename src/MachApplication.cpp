@@ -8,7 +8,7 @@
 namespace mach {
 
 	MachApplication::MachApplication() {
-		m_window = new OpenGlWindow();
+		m_window = gfx::RenderWindow::create_window<gfx::OpenGlWindow>();
 		setup_subsystems();
 	}
 
@@ -29,6 +29,11 @@ namespace mach {
 		glBindBuffer(GL_ARRAY_BUFFER, vbo);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
+		unsigned int vertexShader;
+		vertexShader = glCreateShader(GL_VERTEX_SHADER);
+//		glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
+		glCompileShader(vertexShader);
+
 
 		while (!m_window->is_closing()) {
 			if (KeyInput::enter(Escape)) {
@@ -45,7 +50,6 @@ namespace mach {
 
 	void MachApplication::shutdown() {
 		m_window->close();
-		delete m_window;
 	}
 }
 

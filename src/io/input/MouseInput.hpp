@@ -58,7 +58,7 @@ namespace mach {
 		//Technical functionality to be used by gamebase
 		friend class MachApplication;
 
-		static void setup(RenderWindow &p_window, double p_time_step = 1.0 / 60.0);
+		static void setup(gfx::RenderWindow &p_window, double p_time_step = 1.0 / 60.0);
 	};
 }
 

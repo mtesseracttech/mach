@@ -6,7 +6,7 @@
 #include "RenderWindow.hpp"
 
 
-namespace mach {
+namespace mach::gfx {
 	GLFWwindow *RenderWindow::get_raw_window() const {
 		return m_glfw_window;
 	}

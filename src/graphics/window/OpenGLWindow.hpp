@@ -13,9 +13,9 @@
 #include <GLFW/glfw3.h>
 
 
-namespace mach {
+namespace mach::gfx {
 	class OpenGlWindow : public RenderWindow {
-	public:
+	protected:
 		OpenGlWindow() : OpenGlWindow(std::string(mach::Constants::DEF_WIN_NAME)) {}
 
 		explicit OpenGlWindow(std::string p_window_title) : OpenGlWindow(std::move(p_window_title),
@@ -28,6 +28,9 @@ namespace mach {
 
 		OpenGlWindow(std::string p_window_title, uint32_t p_width, uint32_t p_height);
 
+		friend class RenderWindow;
+
+	public:
 		void swap_buffers() override;
 
 		void clear(float p_r, float p_g, float p_b, float p_a) override;
