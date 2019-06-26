@@ -11,6 +11,7 @@
 #include <auxiliary/logging/Logger.hpp>
 #include <cstring>
 #include <sstream>
+#include <filesystem>
 
 
 namespace mach::io {
@@ -32,6 +33,10 @@ namespace mach::io {
 				Logger::log(ss.str(), LogError);
 				return "";
 			}
+		}
+
+		static bool file_exists(const std::string &p_filename) {
+			return std::filesystem::exists(p_filename);
 		}
 	};
 }

@@ -5,61 +5,63 @@
 #include <glad/glad.h>
 #include <io/FileIO.hpp>
 #include <auxiliary/exceptions/NotImplemented.hpp>
+#include <optional>
+#include <iostream>
 #include "OpenGLShader.hpp"
 
 namespace mach::gfx {
-	void OpenGLShader::print_source() {
-		std::stringstream ss;
-		ss << m_program_name << " OpenGL shader sources:\n\n";
-		ss << "Vertex Source:\n\n" << m_vert_src << "\n\n";
-		ss << "Fragment Source:\n\n" << m_frag_src << "\n\n";
-		Logger::log(ss.str(), LogInfo);
-	}
-
 	void OpenGLShader::load_shader_module(const std::string &p_shader_name) {
-
 		const std::string shader_path = "../res/shaders/" + p_shader_name + "/";
 		const std::string vert_shader_name = shader_path + p_shader_name + ".vert";
 		const std::string frag_shader_name = shader_path + p_shader_name + ".frag";
+		const std::string geom_shader_name = shader_path + p_shader_name + ".geom";
 
-		int success;
+		const bool has_vert_shader = io::FileIO::file_exists(vert_shader_name);
+		const bool has_frag_shader = io::FileIO::file_exists(frag_shader_name);
+		const bool has_geom_shader = io::FileIO::file_exists(geom_shader_name);
 
 		m_program_name = p_shader_name;
-
-		m_vert_src = io::FileIO::read_file(vert_shader_name);
-		const char *vert_src_cstring = m_vert_src.c_str();
-		uint32_t m_vert_shader = glCreateShader(GL_VERTEX_SHADER);
-		glShaderSource(m_vert_shader, 1, &vert_src_cstring, nullptr);
-		glCompileShader(m_vert_shader);
-
-		glGetShaderiv(m_vert_shader, GL_COMPILE_STATUS, &success);
-		if (!success) print_shader_error_info(m_vert_shader, vert_shader_name);
-
-		m_frag_src = io::FileIO::read_file(frag_shader_name);
-		const char *frag_src_cstring = m_frag_src.c_str();
-
-		uint32_t m_frag_shader = glCreateShader(GL_FRAGMENT_SHADER);
-		glShaderSource(m_frag_shader, 1, &frag_src_cstring, nullptr);
-		glCompileShader(m_frag_shader);
-
-		glGetShaderiv(m_frag_shader, GL_COMPILE_STATUS, &success);
-		if (!success) print_shader_error_info(m_frag_shader, frag_shader_name);
-
 		m_shader_program = glCreateProgram();
-		glAttachShader(m_shader_program, m_vert_shader);
-		glAttachShader(m_shader_program, m_frag_shader);
-		glLinkProgram(m_shader_program);
 
+		std::optional<uint32_t> vert_shader_handle = has_vert_shader ? compile_shader(GL_VERTEX_SHADER,
+		                                                                              vert_shader_name) : std::nullopt;
+		std::optional<uint32_t> geom_shader_handle = has_geom_shader ? compile_shader(GL_GEOMETRY_SHADER,
+		                                                                              geom_shader_name) : std::nullopt;
+		std::optional<uint32_t> frag_shader_handle = has_frag_shader ? compile_shader(GL_FRAGMENT_SHADER,
+		                                                                              frag_shader_name) : std::nullopt;
+
+		if (vert_shader_handle.has_value()) glAttachShader(m_shader_program, vert_shader_handle.value());
+		if (geom_shader_handle.has_value()) glAttachShader(m_shader_program, geom_shader_handle.value());
+		if (frag_shader_handle.has_value()) glAttachShader(m_shader_program, frag_shader_handle.value());
+
+		glLinkProgram(m_shader_program);
+		int success;
 		glGetProgramiv(m_shader_program, GL_LINK_STATUS, &success);
 		if (!success) print_linking_error_info(m_shader_program, p_shader_name);
 
-		glDeleteShader(m_vert_shader);
-		glDeleteShader(m_frag_shader);
+		if (vert_shader_handle.has_value()) glDeleteShader(vert_shader_handle.value());
+		if (geom_shader_handle.has_value()) glDeleteShader(geom_shader_handle.value());
+		if (frag_shader_handle.has_value()) glDeleteShader(frag_shader_handle.value());
+	}
+
+	std::optional<uint32_t> OpenGLShader::compile_shader(GLenum p_shader_type, const std::string &p_filename) {
+		std::string shader_src = io::FileIO::read_file(p_filename);
+		const char *shader_c_str = shader_src.c_str();
+		uint32_t shader_handle = glCreateShader(p_shader_type);
+		glShaderSource(shader_handle, 1, &shader_c_str, nullptr);
+		glCompileShader(shader_handle);
+		int success;
+		glGetShaderiv(shader_handle, GL_COMPILE_STATUS, &success);
+		if (!success) {
+			print_shader_error_info(shader_handle, p_filename);
+			return {};
+		}
+		return shader_handle;
 	}
 
 	void OpenGLShader::print_shader_error_info(uint32_t p_shader_handle, const std::string &p_filename) {
 		char info_log[512];
-		glGetShaderInfoLog(p_shader_handle, 512, nullptr, info_log);
+		glGetShaderInfoLog(p_shader_handle, sizeof(info_log), nullptr, info_log);
 
 		std::stringstream ss;
 		ss << "OpenGL shader '" << p_filename << "' compilation failed:\n" << info_log;
@@ -68,7 +70,7 @@ namespace mach::gfx {
 
 	void OpenGLShader::print_linking_error_info(uint32_t p_program_handle, const std::string &p_shader_name) {
 		char info_log[512];
-		glGetProgramInfoLog(m_shader_program, 512, NULL, info_log);
+		glGetProgramInfoLog(m_shader_program, 512, nullptr, info_log);
 		std::stringstream ss;
 		ss << "OpenGL shader program '" << p_shader_name << "' linking failed:\n" << info_log;
 		Logger::log(ss.str(), LogError);

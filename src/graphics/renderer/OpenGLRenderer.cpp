@@ -19,7 +19,6 @@ namespace mach::gfx {
 				Vec3(0.0f, 0.5f, 0.0f)
 		};
 		m_base_shader.load_shader_module("base");
-		m_base_shader.print_source();
 	}
 
 	void OpenGLRenderer::render_scene() {
