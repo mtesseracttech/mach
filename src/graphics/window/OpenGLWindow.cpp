@@ -4,7 +4,7 @@
 #include "OpenGLWindow.hpp"
 
 namespace mach::gfx {
-	OpenGlWindow::OpenGlWindow(std::string p_window_title, uint32_t p_width, uint32_t p_height) : RenderWindow(
+	OpenGLWindow::OpenGLWindow(std::string p_window_title, uint32_t p_width, uint32_t p_height) : RenderWindow(
 			p_window_title, p_width, p_height) {
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -31,21 +31,21 @@ namespace mach::gfx {
 		}
 	}
 
-	void OpenGlWindow::swap_buffers() {
+	void OpenGLWindow::swap_buffers() {
 		if (m_glfw_window) {
 			glfwSwapBuffers(m_glfw_window);
 		}
 	}
 
-	void OpenGlWindow::resize_framebuffer(uint32_t p_width, uint32_t p_height) {
+	void OpenGLWindow::resize_framebuffer(uint32_t p_width, uint32_t p_height) {
 		resize_viewport(p_width, p_height);
 	}
 
-	void OpenGlWindow::resize_viewport(uint32_t p_width, uint32_t p_height) {
+	void OpenGLWindow::resize_viewport(uint32_t p_width, uint32_t p_height) {
 		glViewport(0, 0, p_width, p_height);
 	}
 
-	void OpenGlWindow::clear(float p_r, float p_g, float p_b, float p_a) {
+	void OpenGLWindow::clear(float p_r, float p_g, float p_b, float p_a) {
 		glClearColor(p_r, p_g, p_b, p_a);
 		glClear(GL_COLOR_BUFFER_BIT);
 	}

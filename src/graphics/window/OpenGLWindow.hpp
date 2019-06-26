@@ -14,19 +14,9 @@
 
 
 namespace mach::gfx {
-	class OpenGlWindow : public RenderWindow {
+	class OpenGLWindow : public RenderWindow {
 	protected:
-		OpenGlWindow() : OpenGlWindow(std::string(mach::Constants::DEF_WIN_NAME)) {}
-
-		explicit OpenGlWindow(std::string p_window_title) : OpenGlWindow(std::move(p_window_title),
-		                                                                 mach::Constants::DEF_WIN_WIDTH,
-		                                                                 mach::Constants::DEF_WIN_HEIGHT) {}
-
-		OpenGlWindow(uint32_t p_width, uint32_t p_height) : OpenGlWindow(std::string(mach::Constants::DEF_WIN_NAME),
-		                                                                 p_width,
-		                                                                 p_height) {}
-
-		OpenGlWindow(std::string p_window_title, uint32_t p_width, uint32_t p_height);
+		OpenGLWindow(std::string p_window_title, uint32_t p_width, uint32_t p_height);
 
 		friend class RenderWindow;
 

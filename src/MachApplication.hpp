@@ -6,6 +6,8 @@
 #define MACH_MACHAPPLICATION_HPP
 
 #include <io/input/KeyInput.hpp>
+#include <graphics/renderer/Renderer.hpp>
+#include <graphics/window/RenderWindow.hpp>
 
 namespace mach {
 	class MachApplication {
@@ -16,6 +18,7 @@ namespace mach {
 
 	protected:
 		std::shared_ptr<gfx::RenderWindow> m_window;
+		std::shared_ptr<gfx::Renderer> m_renderer;
 
 		void setup_subsystems();
 

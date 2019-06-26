@@ -19,16 +19,6 @@ namespace mach::gfx {
 		GLFWwindow *m_glfw_window = nullptr;
 		bool m_closing = false;
 
-		RenderWindow() : RenderWindow(std::string(mach::Constants::DEF_WIN_NAME)) {}
-
-		RenderWindow(std::string p_window_title) : RenderWindow(p_window_title,
-		                                                        mach::Constants::DEF_WIN_WIDTH,
-		                                                        mach::Constants::DEF_WIN_HEIGHT) {}
-
-		RenderWindow(uint32_t p_width, uint32_t p_height) : RenderWindow(std::string(mach::Constants::DEF_WIN_NAME),
-		                                                                 p_width,
-		                                                                 p_height) {}
-
 		RenderWindow(std::string p_window_title, uint32_t p_width, uint32_t p_height);
 
 		virtual ~RenderWindow();
@@ -82,7 +72,7 @@ namespace mach::gfx {
 		}
 
 		template<typename WindowType>
-		static std::shared_ptr<WindowType> create_window() {
+		static std::shared_ptr<WindowType> create() {
 			return create_window<WindowType>(std::string(mach::Constants::DEF_WIN_NAME));
 		}
 	};
