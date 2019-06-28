@@ -128,27 +128,51 @@ namespace mach {
 			return !((*this) == p_v);
 		}
 
-		inline Base operator+=(const Base &p_v) {
+		inline void operator+=(const Base &p_v) {
 			for (size_t i = 0; i < N; ++i) {
 				(*((Base *) this))[i] += p_v[i];
 			}
 		}
 
-		inline Base operator-=(const Base &p_v) {
+		inline void operator-=(const Base &p_v) {
 			for (size_t i = 0; i < N; ++i) {
 				(*((Base *) this))[i] -= p_v[i];
 			}
 		}
 
-		inline Base operator*=(const Base &p_v) {
+		inline void operator*=(const Base &p_v) {
 			for (size_t i = 0; i < N; ++i) {
 				(*((Base *) this))[i] *= p_v[i];
 			}
 		}
 
-		inline Base operator/=(const Base &p_v) {
+		inline void operator/=(const Base &p_v) {
 			for (size_t i = 0; i < N; ++i) {
 				(*((Base *) this))[i] /= p_v[i];
+			}
+		}
+
+		inline void operator+=(const T &p_s) {
+			for (size_t i = 0; i < N; ++i) {
+				(*((Base *) this))[i] += p_s;
+			}
+		}
+
+		inline void operator-=(const T &p_s) {
+			for (size_t i = 0; i < N; ++i) {
+				(*((Base *) this))[i] -= p_s;
+			}
+		}
+
+		inline void operator*=(const T &p_s) {
+			for (size_t i = 0; i < N; ++i) {
+				(*((Base *) this))[i] *= p_s;
+			}
+		}
+
+		inline void operator/=(const T &p_s) {
+			for (size_t i = 0; i < N; ++i) {
+				(*((Base *) this))[i] /= p_s;
 			}
 		}
 
@@ -200,7 +224,8 @@ namespace mach {
 			T l = length();
 			if (approx_eq<T>(l, 0.0)) {
 				for (size_t i = 0; i < N; ++i) {
-					(*((Base *) this))[i] = 0.0;
+					(*((Base * )
+					this))[i] = 0.0;
 				}
 			}
 			(*this) /= l;
