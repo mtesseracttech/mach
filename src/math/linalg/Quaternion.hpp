@@ -32,6 +32,13 @@ namespace mach {
 
 		Quaternion(const Quaternion &p_q) : w(p_q.w), v(p_q.v) {}
 
+		Quaternion &operator=(const Quaternion &p_rhs) {
+			if (this == &p_rhs) return *this;
+			w = p_rhs.w;
+			v = p_rhs.v;
+			return *this;
+		}
+
 		static constexpr Quaternion identity() {
 			return Quaternion(1.0, 0.0, 0.0, 0.0);
 		}
@@ -174,9 +181,7 @@ namespace mach {
 		static inline Quaternion slerp(const Quaternion &p_start, const Quaternion &p_end, T p_t) {
 
 			Quaternion end = p_end;
-
 			double dot = p_start.dot(p_end);
-
 			if (dot < 0.0f) {
 				end = -end;
 				dot = -dot;

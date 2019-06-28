@@ -11,23 +11,23 @@
 
 namespace mach {
 	enum LogLevel {
-		All = 0,
-		Debug = 1,
-		Info = 2,
-		Error = 3,
-		Off = 4
+		LevelAll = 0,
+		LevelDebug = 1,
+		LevelInfo = 2,
+		LevelError = 3,
+		LevelOff = 4
 	};
 
 	enum LogType {
-		LogDebug = 1,
-		LogInfo = 2,
-		LogError = 3,
+		Debug = 1,
+		Info = 2,
+		Error = 3,
 	};
 
 	class Logger {
 		LogLevel m_level;
 
-		Logger() : m_level(All) {};
+		Logger() : m_level(LevelAll) {};
 
 		~Logger() = default;
 
@@ -38,7 +38,7 @@ namespace mach {
 		static Logger &get_instance();
 
 	public:
-		static void log(const std::string &p_message, LogType p_level = LogInfo);
+		static void log(const std::string &p_message, LogType p_level = Info);
 
 		static void log(std::stringstream &p_os, LogType p_level);
 

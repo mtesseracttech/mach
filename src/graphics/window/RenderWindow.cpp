@@ -43,7 +43,7 @@ namespace mach::gfx {
 	void RenderWindow::glfw_error_callback(int p_err_code, const char *p_err_str) {
 		std::stringstream ss;
 		ss << "GLFW Error: " << p_err_code << " description: " << p_err_str;
-		Logger::log(ss.str(), LogType::LogError);
+		Logger::log(ss.str(), LogType::Error);
 	}
 
 	void RenderWindow::glfw_resize_window_callback(GLFWwindow *p_window, int p_width, int p_height) {
@@ -64,9 +64,9 @@ namespace mach::gfx {
 		glfwSetErrorCallback(glfw_error_callback);
 
 		if (glfwInit() == GL_FALSE) {
-			Logger::log("GLFW Failed to initialize successfully", LogError);
+			Logger::log("GLFW Failed to initialize successfully", Error);
 		} else {
-			Logger::log("GLFW initialized successfully", LogInfo);
+			Logger::log("GLFW initialized successfully", Info);
 		}
 	}
 }

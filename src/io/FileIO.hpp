@@ -12,6 +12,7 @@
 #include <cstring>
 #include <sstream>
 #include <filesystem>
+#include <optional>
 
 
 namespace mach::io {
@@ -30,8 +31,26 @@ namespace mach::io {
 			} else {
 				std::stringstream ss;
 				ss << "Failed to read the file '" << p_filename << "': " << std::strerror(errno);
-				Logger::log(ss.str(), LogError);
+				Logger::log(ss.str(), Error);
 				return "";
+			}
+		}
+
+		static std::optional<std::string> read_file_opt(const std::string &p_filename) {
+			std::ifstream file_stream(p_filename, std::ios::in | std::ios::binary);
+			if (file_stream) {
+				std::string contents;
+				file_stream.seekg(0, std::ios::end);
+				contents.resize(file_stream.tellg());
+				file_stream.seekg(0, std::ios::beg);
+				file_stream.read(&contents[0], contents.size());
+				file_stream.close();
+				return contents;
+			} else {
+				std::stringstream ss;
+				ss << "Failed to read the file, returning an empty optional '" << p_filename << "': "
+				   << std::strerror(errno);
+				return {};
 			}
 		}
 

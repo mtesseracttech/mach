@@ -42,7 +42,7 @@ namespace mach {
 
 		// Log error before throwing
 		void log_error() {
-			Logger::log(m_report, LogError);
+			Logger::log(m_report, Error);
 		}
 
 		MachAssertionException(const char *p_expression, const char *p_file, int p_line, const std::string &p_message)

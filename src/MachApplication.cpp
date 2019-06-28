@@ -26,8 +26,8 @@ namespace mach {
 			if (KeyInput::enter(Escape)) {
 				m_window->close();
 			}
-			m_renderer->render_scene();
 			m_window->clear(0.2, 0.3, 0.3, 1.0);
+			m_renderer->render_scene();
 			m_window->swap_buffers();
 			m_window->poll_events();
 		}

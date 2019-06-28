@@ -16,9 +16,9 @@ namespace mach {
 		if (window) {
 			glfwSetKeyCallback(window, glfw_key_callback);
 			m_prepared = true;
-			Logger::log("Set up the keyboard input handler", LogInfo);
+			Logger::log("Set up the keyboard input handler", Info);
 		} else {
-			Logger::log("Could not set up the keyboard input handler because the GLFW window is null", LogError);
+			Logger::log("Could not set up the keyboard input handler because the GLFW window is null", Error);
 		}
 	}
 

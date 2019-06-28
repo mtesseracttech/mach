@@ -20,12 +20,18 @@ namespace mach {
 
 		Vector2() : m_array{0} {}
 
-
 		explicit Vector2(T p_s) : m_array{p_s, p_s} {}
 
 		Vector2(const Vector2 &p_v) : x(p_v.x), y(p_v.y) {}
 
 		Vector2(T p_x, T p_y) : x(p_x), y(p_y) {}
+
+		Vector2 &operator=(const Vector2 &p_rhs) {
+			if (this == &p_rhs) return *this;
+			x = p_rhs.x;
+			y = p_rhs.y;
+			return *this;
+		}
 
 		T &operator[](size_t p_n) { return m_array[p_n]; }
 

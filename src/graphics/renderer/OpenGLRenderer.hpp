@@ -6,6 +6,8 @@
 #define MACH_OPENGLRENDERER_HPP
 
 #include <graphics/shaders/OpenGLShader.hpp>
+#include <graphics/geometry/Mesh.hpp>
+#include <graphics/model/WaveformObj.hpp>
 #include "Renderer.hpp"
 
 namespace mach::gfx {
@@ -17,8 +19,13 @@ namespace mach::gfx {
 		friend class Renderer;
 
 	protected:
-		std::array<Vec3, 3> m_vertices;
+		uint32_t m_vbo_id = 0;
+		uint32_t m_vao_id = 0;
+		uint32_t m_ebo_id = 0;
+		std::array<Vec3, 4> m_vertices;
+		std::array<uint32_t, 6> m_indices;
 		OpenGLShader m_base_shader;
+		WaveformObj<float> m_model;
 	};
 
 }

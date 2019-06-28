@@ -26,6 +26,15 @@ namespace mach {
 
 		Vector4(T p_x, T p_y, T p_z, T p_w) : x(p_x), y(p_y), z(p_z), w(p_w) {}
 
+		Vector4 &operator=(const Vector4 &p_rhs) {
+			if (this == &p_rhs) return *this;
+			x = p_rhs.x;
+			y = p_rhs.y;
+			z = p_rhs.z;
+			w = p_rhs.w;
+			return *this;
+		}
+
 		T &operator[](size_t p_n) { return m_array[p_n]; }
 
 		const T &operator[](size_t p_n) const { return m_array[p_n]; }

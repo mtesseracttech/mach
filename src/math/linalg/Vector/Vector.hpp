@@ -69,7 +69,7 @@ namespace mach {
 		inline Base bin_op(const T &p_s, Functor &&p_op) const {
 			Base output;
 			for (size_t i = 0; i < N; ++i) {
-				output[i] = p_op(((*reinterpret_cast<const Base *>(this))[i]), p_s);
+				output[i] = p_op(get_n(i), p_s);
 			}
 			return output;
 		}
@@ -124,8 +124,32 @@ namespace mach {
 			return true;
 		}
 
-		inline bool operator!=(const Base &p_v) const {
+		inline bool operator!=(const Base &p_v) {
 			return !((*this) == p_v);
+		}
+
+		inline Base operator+=(const Base &p_v) {
+			for (size_t i = 0; i < N; ++i) {
+				(*((Base *) this))[i] += p_v[i];
+			}
+		}
+
+		inline Base operator-=(const Base &p_v) {
+			for (size_t i = 0; i < N; ++i) {
+				(*((Base *) this))[i] -= p_v[i];
+			}
+		}
+
+		inline Base operator*=(const Base &p_v) {
+			for (size_t i = 0; i < N; ++i) {
+				(*((Base *) this))[i] *= p_v[i];
+			}
+		}
+
+		inline Base operator/=(const Base &p_v) {
+			for (size_t i = 0; i < N; ++i) {
+				(*((Base *) this))[i] /= p_v[i];
+			}
 		}
 
 		friend std::ostream &operator<<(std::ostream &p_os, const Base &p_v) {
@@ -167,12 +191,19 @@ namespace mach {
 		}
 
 		inline Base normalized() const {
+			T l = length();
+			if (approx_eq<T>(l, 0.0)) return zero();
 			return (*this) / length();
 		}
 
 		inline void normalize() const {
-			T length = length();
-
+			T l = length();
+			if (approx_eq<T>(l, 0.0)) {
+				for (size_t i = 0; i < N; ++i) {
+					(*((Base *) this))[i] = 0.0;
+				}
+			}
+			(*this) /= l;
 		}
 
 		static inline Base reflect(const Base &p_incident, const Base &p_normal) {

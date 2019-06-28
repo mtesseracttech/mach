@@ -17,18 +17,18 @@ namespace mach::gfx {
 
 		void compile_shader() override;
 
-		void use() override;
-
 	protected:
 
 		void print_shader_error_info(uint32_t p_shader_handle, const std::string &p_filename);
 
 		void print_linking_error_info(uint32_t p_program_handle, const std::string &p_shader_name);
 
-		std::optional<uint32_t> compile_shader(GLenum p_shader_type, const std::string &p_filename);
+		uint32_t compile_shader(GLenum p_shader_type, const std::string &p_filename);
 
 	public:
 		void load_shader_module(const std::string &p_shader_name) override;
+
+		void use() override;
 	};
 }
 

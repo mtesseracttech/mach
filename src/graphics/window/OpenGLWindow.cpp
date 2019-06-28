@@ -16,18 +16,18 @@ namespace mach::gfx {
 
 		if (!window) {
 			glfwTerminate();
-			Logger::log("Failed to create an OpenGL window", LogError);
+			Logger::log("Failed to create an OpenGL window", Error);
 		} else {
 			glfwMakeContextCurrent(window);
 
 			if (!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress)) {
-				Logger::log("Failed to initialize GLAD", LogError);
+				Logger::log("Failed to initialize GLAD", Error);
 			}
 
 			glfwSetFramebufferSizeCallback(window, glfw_resize_window_callback);
 
 			m_glfw_window = window;
-			Logger::log("Successfully Created a GLFW/OpenGL window!", LogInfo);
+			Logger::log("Successfully Created a GLFW/OpenGL window!", Info);
 		}
 	}
 
