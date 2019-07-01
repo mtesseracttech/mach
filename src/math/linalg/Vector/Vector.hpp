@@ -176,6 +176,10 @@ namespace mach {
 			}
 		}
 
+		inline T *get_value_ptr() const {
+			return ((Base *) this)->m_array.data();
+		}
+
 		friend std::ostream &operator<<(std::ostream &p_os, const Base &p_v) {
 			p_os << std::fixed << std::setprecision(3) << "(" << p_v[0];
 			for (int i = 1; i < N; ++i) {

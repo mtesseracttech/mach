@@ -12,14 +12,6 @@ namespace mach {
 	class VectorUtils {
 	public:
 		template<typename T>
-		static void print(std::vector<T> const &p_v) {
-			for (auto i: p_v) {
-				std::cout << '[' << i << "]";
-			}
-			std::cout << std::endl;
-		}
-
-		template<typename T>
 		static std::vector<T> slice(std::vector<T> const &p_v, size_t p_m, size_t p_n) {
 			auto first = p_v.cbegin() + p_m;
 			auto last = p_v.cbegin() + p_n + 1;
@@ -28,6 +20,16 @@ namespace mach {
 			return vec;
 		}
 	};
+
+	template<class T>
+	std::ostream &operator<<(std::ostream &p_os, const std::vector<T> &p_v) {
+		p_os << "[";
+		for (typename std::vector<T>::const_iterator ii = p_v.begin(); ii != p_v.end(); ++ii) {
+			p_os << " " << *ii;
+		}
+		p_os << "]";
+		return p_os;
+	}
 }
 
 

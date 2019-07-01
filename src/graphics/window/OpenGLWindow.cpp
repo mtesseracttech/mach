@@ -49,12 +49,4 @@ namespace mach::gfx {
 		glClearColor(p_r, p_g, p_b, p_a);
 		glClear(GL_COLOR_BUFFER_BIT);
 	}
-
-//	std::shared_ptr<RenderWindow>
-//	OpenGlWindow::create_window(std::string p_window_title, uint32_t p_width, uint32_t p_height) {
-//		OpenGlWindow *window = new OpenGlWindow(p_window_title, p_width, p_height);
-//		return std::shared_ptr<OpenGlWindow>(window);
-//		//return std::make_shared<OpenGlWindow>(new OpenGlWindow(p_window_title, p_width, p_height));
-//		//return std::shared_ptr<RenderWindow>();
-//	}
 }

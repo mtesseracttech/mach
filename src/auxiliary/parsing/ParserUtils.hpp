@@ -36,6 +36,8 @@ namespace mach {
 		}
 
 
+	public:
+
 		template<typename T>
 		static std::vector<T>
 		numbers_from_strings(const std::vector<std::string> &p_in_strings, int p_base = 10) {

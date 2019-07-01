@@ -6,12 +6,15 @@
 #define MACH_OPENGLSHADER_HPP
 
 #include "GraphicsShader.hpp"
+#include <map>
 
 namespace mach::gfx {
 	class OpenGLShader : public GraphicsShader {
 	protected:
 		uint32_t m_shader_program = 0;
 		std::string m_program_name = "";
+
+		std::map<std::string, int> m_uniform_locations;
 	private:
 		void load_shader_file() override;
 
@@ -26,6 +29,8 @@ namespace mach::gfx {
 		uint32_t compile_shader(GLenum p_shader_type, const std::string &p_filename);
 
 	public:
+		int get_uniform_location(const std::string &p_name);
+
 		void load_shader_module(const std::string &p_shader_name) override;
 
 		void use() override;

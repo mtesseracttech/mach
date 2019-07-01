@@ -8,6 +8,7 @@
 
 #include <ostream>
 #include <string>
+#include "LogUtils.hpp"
 
 namespace mach {
 	enum LogLevel {
@@ -40,7 +41,12 @@ namespace mach {
 	public:
 		static void log(const std::string &p_message, LogType p_level = Info);
 
-		static void log(std::stringstream &p_os, LogType p_level);
+		static void log(std::stringstream &p_os, LogType p_level = Info);
+
+		template<typename T>
+		static void log(const T &p_message_object, LogType p_level = Info) {
+			log(to_str(p_message_object), p_level);
+		}
 
 		static void set_log_level(LogLevel p_level);
 

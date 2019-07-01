@@ -153,7 +153,6 @@ namespace mach {
 			} else {
 				return Quaternion::identity();
 			}
-
 		}
 
 		inline Quaternion log() {

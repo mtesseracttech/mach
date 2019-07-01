@@ -19,13 +19,18 @@ namespace mach::gfx {
 		friend class Renderer;
 
 	protected:
-		uint32_t m_vbo_id = 0;
-		uint32_t m_vao_id = 0;
-		uint32_t m_ebo_id = 0;
-		std::array<Vec3, 4> m_vertices;
+		std::array<uint32_t, 2> m_vbo_ids;
+		std::array<uint32_t, 2> m_vao_ids;
+		std::array<uint32_t, 2> m_ebo_ids;
+		std::array<Vec3, 3> m_vertices;
+		std::array<Vec3, 3> m_vertices2;
+
 		std::array<uint32_t, 6> m_indices;
 		OpenGLShader m_base_shader;
+		OpenGLShader m_base2_shader;
+
 		WaveformObj<float> m_model;
+		Mesh<float> *m_mesh;
 	};
 
 }

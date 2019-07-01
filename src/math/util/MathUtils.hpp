@@ -9,21 +9,22 @@ namespace mach {
 	template<typename T>
 	class MathUtils {
 	public:
-		static constexpr T pi = 3.14159265358979323846;
 		static constexpr T e = 2.71828182845904523536;
+		static constexpr T pi = 3.14159265358979323846;
+		static constexpr T deg_to_rad = pi / 180.0;
+		static constexpr T rad_to_deg = 180.0 / pi;
+
 
 		static inline T lerp(T p_start, T p_end, T p_t) {
 			return p_start + (p_end - p_start) * p_t;
 		}
 
 		static inline T to_rad(T p_deg) {
-			const T rad = pi / 180.0;
-			return p_deg * rad;
+			return p_deg * deg_to_rad;
 		}
 
 		static inline T to_deg(T p_rad) {
-			const T deg = 180.0 / pi;
-			return p_rad * deg;
+			return p_rad * rad_to_deg;
 		}
 	};
 }
