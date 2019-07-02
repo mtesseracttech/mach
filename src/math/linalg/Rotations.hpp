@@ -36,7 +36,7 @@ namespace mach {
 	template<typename T>
 	struct AngleAxis {
 		T theta;
-		Vector3 <T> n;
+		Vector<T, 3> n;
 	};
 
 	template<typename T, RotationOrder O = PHB>
@@ -45,7 +45,7 @@ namespace mach {
 			struct {
 				T pitch, heading, bank;
 			};
-			Vector3 <T> m_angles;
+			Vector<T, 3> m_angles;
 		};
 
 		static constexpr RotationOrder order() {

@@ -6,7 +6,6 @@
 #define MACH_QUATERNION_HPP
 
 #include <auxiliary/exceptions/NotImplemented.hpp>
-#include "Vector/Vector3.hpp"
 #include "Rotations.hpp"
 
 namespace mach {
@@ -18,7 +17,7 @@ namespace mach {
 				T w;
 				union {
 					T x, y, z;
-					Vector3<T> v;
+					Vector<T, 3> v;
 				};
 			};
 			struct {
@@ -28,7 +27,7 @@ namespace mach {
 
 		Quaternion(T p_w, T p_x, T p_y, T p_z) : m_array{p_w, p_x, p_y, p_z} {}
 
-		Quaternion(T p_w, Vector3<T> p_v) : w(p_w), v(p_v) {}
+		Quaternion(T p_w, Vector<T, 3> p_v) : w(p_w), v(p_v) {}
 
 		Quaternion(const Quaternion &p_q) : w(p_q.w), v(p_q.v) {}
 
@@ -70,7 +69,7 @@ namespace mach {
 			return p_q * p_s;
 		}
 
-		friend inline Vector3<T> operator*(const Vector3<T> &p_v, const Quaternion<T> &p_q) {
+		friend inline Vector<T, 3> operator*(const Vector<T, 3> &p_v, const Quaternion<T> &p_q) {
 			Quaternion<T> in(0.0, p_v);
 			Quaternion result = p_q * in * p_q.inverse();
 			return result.v;
@@ -81,7 +80,7 @@ namespace mach {
 		 * Leverages pre-existing code that exists for vectors.
 		 */
 		inline bool operator==(const Quaternion &p_q) const {
-			return (*reinterpret_cast<const Vector4<T> *>(this)) == (*reinterpret_cast<const Vector4<T> *>(&p_q));
+			return (*reinterpret_cast<const Vector<T, 4> *>(this)) == (*reinterpret_cast<const Vector<T, 4> *>(&p_q));
 		}
 
 		inline bool operator!=(const Quaternion &p_q) const {
@@ -95,7 +94,7 @@ namespace mach {
 
 
 		static inline T dot(const Quaternion &p_a, const Quaternion &p_b) {
-			return p_a.w * p_b.w + Vector3<T>::dot(p_a.v, p_b.v);
+			return p_a.w * p_b.w + Vector<T, 3>::dot(p_a.v, p_b.v);
 		}
 
 		inline T dot(const Quaternion &p_q) const {
@@ -217,7 +216,7 @@ namespace mach {
 		}
 
 		//Angle Axis
-		inline static Quaternion from_angle_axis(T p_theta, const Vector3<T> &p_n) {
+		inline static Quaternion from_angle_axis(T p_theta, const Vector<T, 3> &p_n) {
 			mach_assert(p_n.is_unit(), "You can only construct a quaternion from an angle-axis with a normalized axis");
 			T st = std::sin(p_theta / 2.0);
 			T ct = std::cos(p_theta / 2.0);
@@ -251,7 +250,7 @@ namespace mach {
 		}
 
 		//From matrix
-		inline static Quaternion from_matrix(const Matrix<Vector3<T>, Vector3<T>, float, 3, 3> &p_m) {
+		inline static Quaternion from_matrix(const Matrix<T, 3, 3> &p_m) {
 			T four_w_squared_minus_1 = p_m[0][0] + p_m[1][1] + p_m[2][2];
 			T four_x_squared_minus_1 = p_m[0][0] - p_m[1][1] + p_m[2][2];
 			T four_y_squared_minus_1 = p_m[1][1] - p_m[0][0] - p_m[2][2];

@@ -17,12 +17,12 @@ namespace mach {
 	class Model {
 	public:
 		std::vector<uint32_t> m_indices;
-		std::vector<Vector3<T>> m_vertices;
-		std::vector<Vector3<T>> m_normals;
-		std::vector<Vector2<T>> m_texture_coords;
+		std::vector<Vector<T, 3>> m_vertices;
+		std::vector<Vector<T, 3>> m_normals;
+		std::vector<Vector<T, 2>> m_texture_coords;
 
 	protected:
-		Vector3<T> face_to_normal(const Vector3<T> &p_p0, const Vector3<T> &p_p1, const Vector3<T> &p_p2) {
+		Vector3<T> face_to_normal(const Vector<T, 3> &p_p0, const Vector<T, 3> &p_p1, const Vector<T, 3> &p_p2) {
 			Vector3<T> w0 = (p_p1 - p_p0).normalized();
 			Vector3<T> w1 = (p_p2 - p_p0).normalized();
 			return Vector3<T>::cross(w0, w1).normalized();
@@ -33,7 +33,7 @@ namespace mach {
 		virtual bool load_from_file(const std::string &p_filename) = 0;
 
 		void generate_normals() {
-			std::vector<Vector3<T>> normals;
+			std::vector<Vector<T, 3>> normals;
 			normals.reserve(m_indices.size());
 
 			for (size_t i = 0; i < m_indices.size(); i += 3) {
@@ -46,11 +46,11 @@ namespace mach {
 				normals.push_back(n);
 			}
 
-			std::map<uint32_t, Vector3<T>> aggregate_normals_map;
+			std::map<uint32_t, Vector<T, 3>> aggregate_normals_map;
 			for (size_t i = 0; i < normals.size(); ++i) {
 				auto it = aggregate_normals_map.find(m_indices[i]);
 				if (it == aggregate_normals_map.end()) {
-					aggregate_normals_map.insert(std::pair<uint32_t, Vector3<T>>(m_indices[i], normals[i]));
+					aggregate_normals_map.insert(std::pair<uint32_t, Vector<T, 3>>(m_indices[i], normals[i]));
 				} else {
 					it->second += normals[i];
 				}

@@ -7,7 +7,7 @@
 
 #include <algorithm>
 #include <functional>
-#include "../Vector/Vector.hpp"
+#include "math/linalg/Vector.hpp"
 #include <memory>
 
 /*
@@ -15,11 +15,11 @@
  */
 
 namespace mach {
-	template<typename ColVectorBase, typename RowVectorBase, typename T, size_t H, size_t W>
+	template<typename T, size_t H, size_t W>
 	class Matrix {
 		union {
 			std::array<T, H * W> m_data;
-			std::array<RowVectorBase, H> m_rows;
+			std::array<Vector<T, W>, H> m_rows;
 		};
 
 
@@ -33,9 +33,9 @@ namespace mach {
 		template<typename... Args, typename = typename std::enable_if<sizeof...(Args) == W * H>::type>
 		explicit Matrix(Args &&... p_values) : m_data{static_cast<T>(std::forward<Args>(p_values))...} {}
 
-		RowVectorBase &operator[](size_t p_n) { return m_rows[p_n]; };
+		Vector<T, W> &operator[](size_t p_n) { return m_rows[p_n]; };
 
-		const RowVectorBase &operator[](size_t p_n) const { return m_rows[p_n]; };
+		const Vector<T, W> &operator[](size_t p_n) const { return m_rows[p_n]; };
 
 		constexpr size_t width() { return W; }
 
@@ -76,20 +76,20 @@ namespace mach {
 			return p_os;
 		}
 
-		inline RowVectorBase row(size_t p_n) {
+		inline Vector<T, W> row(size_t p_n) {
 			return (*this)[p_n];
 		}
 
-		inline ColVectorBase col(size_t p_n) {
-			ColVectorBase output;
+		inline Vector<T, H> col(size_t p_n) {
+			Vector<T, H> output;
 			for (size_t i = 0; i < H; ++i) {
 				output[i] = (*this)[i][p_n];
 			}
 			return output;
 		}
 
-		inline Matrix<RowVectorBase, ColVectorBase, T, W, H> transpose() const {
-			Matrix<RowVectorBase, ColVectorBase, T, W, H> output;
+		inline Matrix<T, W, H> transpose() const {
+			Matrix<T, W, H> output;
 			for (size_t row = 0; row < H; ++row) {
 				for (size_t col = 0; col < W; ++col) {
 					output[col][row] = (*this)[row][col];
@@ -108,13 +108,11 @@ namespace mach {
 				//Preparing the information for the new matrix
 				constexpr size_t lower_w = (W - 1);
 				constexpr size_t lower_h = (H - 1);
-				using LowerColVectorBase = std::array<T, lower_w>;
-				using LowerRowVectorBase = std::array<T, lower_h>;
 				for (int i = 0; i < W; ++i) {
 					//Going though the top row
 					const T lh = m_rows[0][i];
 					//Constructing smaller matrix
-					Matrix<LowerColVectorBase, LowerRowVectorBase, T, lower_w, lower_h> rh;
+					Matrix<T, lower_w, lower_h> rh;
 					//The column at which we are inserting the cofactors
 					int rhw = 0;
 					for (int w = 0; w < W; ++w) {
@@ -151,12 +149,10 @@ namespace mach {
 				//Preparing the information for the cofactor matrices
 				constexpr size_t lower_w = (W - 1);
 				constexpr size_t lower_h = (H - 1);
-				using LowerColVectorBase = std::array<T, lower_w>;
-				using LowerRowVectorBase = std::array<T, lower_h>;
 				for (size_t r = 0; r < H; ++r) {
 					for (size_t c = 0; c < W; ++c) {
 						//Constructing smaller cofactor matrix to get determinant for cofactors
-						Matrix<LowerColVectorBase, LowerRowVectorBase, T, lower_w, lower_h> small_cof_mat;
+						Matrix<T, lower_w, lower_h> small_cof_mat;
 
 						//Filling in smaller matrix
 						size_t small_idx_row = 0; //"real" index of the row in the cofactor matrix
@@ -198,12 +194,12 @@ namespace mach {
 			}
 		}
 
-		template<typename RColVectorBase, typename RRowVectorBase, typename RT, size_t RH, size_t RW>
-		inline Matrix<ColVectorBase, RRowVectorBase, T, H, RW>
-		operator*(const Matrix<RColVectorBase, RRowVectorBase, RT, RH, RW> &p_m) const {
+
+		template<typename RT, size_t RH, size_t RW>
+		inline Matrix<T, H, RW> operator*(const Matrix<RT, RH, RW> &p_m) const {
 			static_assert(W == RH, "Matrix multiplication is only defined for matrices with matching inner dimensions");
 			auto p_m_t = p_m.transpose();
-			Matrix<ColVectorBase, RRowVectorBase, T, H, RW> output;
+			Matrix<T, H, RW> output;
 			for (size_t row = 0; row < H; ++row) {
 				for (size_t col = 0; col < RW; ++col) {
 					output[row][col] = (*this)[row].dot(p_m_t[col]);
@@ -213,8 +209,8 @@ namespace mach {
 		}
 
 
-		inline RowVectorBase operator*(const RowVectorBase &p_v) const {
-			RowVectorBase output;
+		inline Vector<T, W> operator*(const Vector<T, W> &p_v) const {
+			Vector<T, W> output;
 			for (size_t i = 0; i < output.size(); ++i) {
 				output[i] = (*this)[i].dot(p_v);
 			}
