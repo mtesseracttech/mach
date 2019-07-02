@@ -14,15 +14,16 @@
 #include <functional>
 #include "math/util/NumberTraits.hpp"
 #include "auxiliary/MachAssertion.hpp"
+#include "auxiliary/Properties.hpp"
 
 /*
  * Thanks to Gaztin from the Cherno discord, for helping me with the CRTP and the functor system.
  */
 
 namespace mach {
-#define PROPERTY(_type, _name, _get, _put) __declspec(property(get=_get, put=_put)) _type _name
-#define PROPERTY_READONLY(_type, _name, _get) __declspec(property(get=_get)) _type _name
-#define PROPERTY_WRITEONLY(_type, _name, _set) __declspec(property(put=_put)) _type _name
+//#define PROPERTY(_type, _name, _get, _put) __declspec(property(get=_get, put=_put)) _type _name
+//#define PROPERTY_READONLY(_type, _name, _get) __declspec(property(get=_get)) _type _name
+//#define PROPERTY_WRITEONLY(_type, _name, _set) __declspec(property(put=_put)) _type _name
 
 	template<typename T, size_t N>
 	class Vector {
