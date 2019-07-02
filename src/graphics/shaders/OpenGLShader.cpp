@@ -3,7 +3,7 @@
 //
 
 #include <glad/glad.h>
-#include <io/FileIO.hpp>
+#include <io/files/FileIO.hpp>
 #include <auxiliary/exceptions/NotImplemented.hpp>
 #include <optional>
 #include <iostream>
@@ -83,17 +83,6 @@ namespace mach::gfx {
 	}
 
 	void OpenGLShader::use() {
-		//Logger::log(to_str(m_shader_program), LogInfo);
 		glUseProgram(m_shader_program);
-	}
-
-	int OpenGLShader::get_uniform_location(const std::string &p_name) {
-		int location = glGetUniformLocation(m_shader_program, p_name.data());
-		if (location != -1) {
-			m_uniform_locations.insert(std::make_pair(p_name, location));
-		} else {
-			Logger::log("Could not allocate a location for " + p_name + " in " + m_program_name, Error);
-		}
-		return location;
 	}
 }

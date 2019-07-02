@@ -290,8 +290,8 @@ namespace mach::tests::math {
 		mach_assert(Quat(1, 0, 0, 1).normalized() == q_u, "");
 		Logger::log("Normalization: DONE");
 
-		auto w = MathUtils<float>::lerp(1.0, std::sqrt(2.0) / 2, 0.5);
-		auto z = MathUtils<float>::lerp(0.0, std::sqrt(2.0) / 2, 0.5);
+		auto w = mach::math::lerp(1.0, std::sqrt(2.0) / 2, 0.5);
+		auto z = mach::math::lerp(0.0, std::sqrt(2.0) / 2, 0.5);
 		mach_assert(Quat::lerp(Quat::identity(), q_u, 0.5) == Quat(w, 0, 0, z), "");
 		Logger::log("Lerp: DONE");
 

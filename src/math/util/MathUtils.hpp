@@ -5,28 +5,26 @@
 #ifndef MACH_MATHUTILS_HPP
 #define MACH_MATHUTILS_HPP
 
-namespace mach {
+namespace mach::math {
+	constexpr double e = 2.71828182845904523536;
+	constexpr double pi = 3.14159265358979323846;
+	constexpr double deg_to_rad = pi / 180.0;
+	constexpr double rad_to_deg = 180.0 / pi;
+
 	template<typename T>
-	class MathUtils {
-	public:
-		static constexpr T e = 2.71828182845904523536;
-		static constexpr T pi = 3.14159265358979323846;
-		static constexpr T deg_to_rad = pi / 180.0;
-		static constexpr T rad_to_deg = 180.0 / pi;
+	inline T lerp(T p_start, T p_end, T p_t) {
+		return p_start + (p_end - p_start) * p_t;
+	}
 
+	template<typename T>
+	inline T to_rad(T p_deg) {
+		return p_deg * deg_to_rad;
+	}
 
-		static inline T lerp(T p_start, T p_end, T p_t) {
-			return p_start + (p_end - p_start) * p_t;
-		}
-
-		static inline T to_rad(T p_deg) {
-			return p_deg * deg_to_rad;
-		}
-
-		static inline T to_deg(T p_rad) {
-			return p_rad * rad_to_deg;
-		}
-	};
+	template<typename T>
+	inline T to_deg(T p_rad) {
+		return p_rad * rad_to_deg;
+	}
 }
 
 #endif //MACH_MATHUTILS_HPP

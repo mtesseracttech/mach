@@ -6,10 +6,11 @@
 #define MACH_GRAPHICSSHADER_HPP
 
 #include <string>
+#include <math/linalg/Vector/Vector2.hpp>
 
 namespace mach::gfx {
 	class GraphicsShader {
-
+	public:
 		virtual void load_shader_module(const std::string &p_shader_name) = 0;
 
 		virtual void load_shader_file() = 0;

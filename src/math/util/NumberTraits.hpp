@@ -26,7 +26,7 @@ namespace mach {
 	};
 
 	template<typename T>
-	bool fp_comp(T p_a, T p_b, T p_epsilon) {
+	static bool fp_comp(T p_a, T p_b, T p_epsilon) {
 		const float abs_a = std::abs(p_a);
 		const float abs_b = std::abs(p_b);
 		const float diff = std::abs(p_a - p_b);
@@ -41,7 +41,7 @@ namespace mach {
 	}
 
 	template<typename T>
-	bool int_comp(T p_a, T p_b) {
+	static bool int_comp(T p_a, T p_b) {
 		return p_a == p_b;
 	}
 

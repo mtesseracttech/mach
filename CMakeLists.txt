@@ -6,7 +6,9 @@ set(CMAKE_CXX_STANDARD 17)
 # Adding libdl, which is a dependency for GLAD on non-windows platforms and may not be recognized otherwise
 set(CMAKE_CXX_LINK_EXECUTABLE "${CMAKE_CXX_LINK_EXECUTABLE} -ldl")
 
-add_executable(mach lib/glad.c src/MachApplication.cpp src/graphics/window/RenderWindow.cpp src/graphics/window/RenderWindow.hpp src/graphics/window/OpenGLWindow.cpp src/graphics/window/OpenGLWindow.hpp src/auxiliary/Constants.hpp src/io/input/KeyInput.cpp src/io/input/KeyInput.hpp src/io/input/MouseInput.cpp src/io/input/MouseInput.hpp src/MachApplication.hpp src/auxiliary/logging/Logger.cpp src/auxiliary/logging/Logger.hpp src/math/linalg/Vector/Vector.hpp src/math/linalg/Vector/Vector2.hpp src/math/linalg/Vector/Vector3.hpp src/math/linalg/Vector/Vector4.hpp src/math/linalg/LinAlgTypes.hpp src/math/linalg/Matrix/Matrix.hpp src/math/linalg/Vector/VectorTraits.hpp src/math/linalg/Quaternion.hpp src/math/util/NumberTraits.hpp src/math/linalg/Rotations.hpp src/math/linalg/Matrix/RotationMatrix.hpp src/auxiliary/exceptions/NotImplemented.hpp src/math/util/MathUtils.hpp tests/math/LinearAlgebraTests.hpp tests/TestRunner.hpp src/auxiliary/MachAssertion.hpp src/auxiliary/logging/LogUtils.hpp src/auxiliary/time/Timer.cpp src/auxiliary/time/Timer.hpp src/auxiliary/time/TimeUtils.hpp src/math/linalg/Matrix/ScaleMatrix.hpp src/graphics/shaders/GraphicsShader.cpp src/graphics/shaders/GraphicsShader.hpp src/graphics/shaders/OpenGLShader.cpp src/graphics/shaders/OpenGLShader.hpp src/graphics/debug/OpenGLDebug.hpp src/graphics/renderer/Renderer.cpp src/graphics/renderer/Renderer.hpp src/graphics/renderer/OpenGLRenderer.cpp src/graphics/renderer/OpenGLRenderer.hpp src/io/FileIO.hpp src/graphics/geometry/Mesh.hpp src/auxiliary/parsing/ParserUtils.hpp src/auxiliary/VectorUtils.hpp src/graphics/model/WaveformObj.hpp src/graphics/model/Model.hpp)
+add_executable(mach lib/glad.c src/MachApplication.cpp src/graphics/window/RenderWindow.cpp src/graphics/window/RenderWindow.hpp src/graphics/window/OpenGLWindow.cpp src/graphics/window/OpenGLWindow.hpp src/auxiliary/Constants.hpp src/io/input/KeyInput.cpp src/io/input/KeyInput.hpp src/io/input/MouseInput.cpp src/io/input/MouseInput.hpp src/MachApplication.hpp src/auxiliary/logging/Logger.cpp src/auxiliary/logging/Logger.hpp src/math/linalg/Vector/Vector.hpp src/math/linalg/Vector/Vector2.hpp src/math/linalg/Vector/Vector3.hpp src/math/linalg/Vector/Vector4.hpp src/math/linalg/LinAlgTypes.hpp src/math/linalg/Matrix/Matrix.hpp src/math/linalg/Vector/VectorTraits.hpp src/math/linalg/Quaternion.hpp src/math/util/NumberTraits.hpp src/math/linalg/Rotations.hpp src/math/linalg/Matrix/RotationMatrix.hpp src/auxiliary/exceptions/NotImplemented.hpp src/math/util/MathUtils.hpp tests/math/LinearAlgebraTests.hpp tests/TestRunner.hpp src/auxiliary/MachAssertion.hpp src/auxiliary/logging/LogUtils.hpp src/auxiliary/time/Timer.cpp src/auxiliary/time/Timer.hpp src/auxiliary/time/TimeUtils.hpp src/math/linalg/Matrix/ScaleMatrix.hpp src/graphics/shaders/GraphicsShader.hpp src/graphics/shaders/OpenGLShader.cpp src/graphics/shaders/OpenGLShader.hpp src/graphics/debug/OpenGLDebug.hpp src/graphics/renderer/Renderer.cpp src/graphics/renderer/Renderer.hpp src/graphics/renderer/OpenGLRenderer.cpp src/graphics/renderer/OpenGLRenderer.hpp src/io/files/FileIO.hpp src/graphics/geometry/Mesh.hpp src/auxiliary/parsing/ParserUtils.hpp src/auxiliary/VectorUtils.hpp src/graphics/model/WaveformObj.hpp src/graphics/model/Model.hpp)
+
+target_compile_options(mach PRIVATE -fdeclspec)
 
 # Sets a base path for the includes so that they can be used in the same way as in Visual Studio/Codeblocks
 set(BASEPATH "${CMAKE_SOURCE_DIR}/src")
@@ -25,21 +27,23 @@ if (APPLE)
     endif ()
 endif ()
 
-
 # Setting up PkgConfig
 find_package(PkgConfig REQUIRED)
 
 # Finding and including GLAD
 target_include_directories(mach PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/include/")
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules/")
+
 
 # Finding and linking GLFW3
-find_package(glfw3 3.3 REQUIRED)
+find_package(GLFW3 3.3 REQUIRED)
 if (GLFW3_FOUND)
-    message(STATUS "Found GLFW 3, Including and Linking now")
+    message(STATUS "Found GLFW 3.3, Including and Linking now")
     target_link_libraries(mach glfw)
-endif (GLFW3_FOUND)
+elseif (NOT GLFW_FOUND)
+    message(FATAL_ERROR "Could not find GLFW 3.3")
+endif ()
 
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules/")
 
 # Finding and linking OpenGL
 find_package(OpenGL REQUIRED)
@@ -48,3 +52,12 @@ if (OPENGL_FOUND)
     target_include_directories(mach PUBLIC ${OPENGL_INCLUDE_DIR})
     target_link_libraries(mach ${OPENGL_gl_LIBRARY})
 endif (OPENGL_FOUND)
+
+# Finding and linking GLFW3
+find_package(ASSIMP REQUIRED)
+if (ASSIMP_FOUND)
+    message(STATUS "Found ASSIMP, Including and Linking now")
+    target_link_libraries(mach assimp)
+elseif (NOT ASSIMP_FOUND)
+    message(FATAL_ERROR "Could not find ASSIMP")
+endif ()

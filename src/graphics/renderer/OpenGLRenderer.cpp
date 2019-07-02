@@ -4,7 +4,7 @@
 
 #include <auxiliary/logging/Logger.hpp>
 #include <math/linalg/LinAlgTypes.hpp>
-#include <io/FileIO.hpp>
+#include <io/files/FileIO.hpp>
 #include <glad/glad.h>
 #include "OpenGLRenderer.hpp"
 #include <string>
