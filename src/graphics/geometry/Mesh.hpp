@@ -22,9 +22,9 @@ namespace mach::gfx {
 
 	protected:
 		std::vector<uint32_t> m_indices;
-		std::vector<Vector3<T>> m_vertices;
-		std::vector<Vector3<T>> m_normals;
-		std::vector<Vector2<T>> m_uvs;
+		std::vector<Vector<T, 3>> m_vertices;
+		std::vector<Vector<T, 3>> m_normals;
+		std::vector<Vector<T, 3>> m_uvs;
 
 		uint32_t m_vbo_id = 0;
 		uint32_t m_vao_id = 0;
@@ -39,7 +39,8 @@ namespace mach::gfx {
 			glBindVertexArray(m_vao_id);
 
 			glBindBuffer(GL_ARRAY_BUFFER, m_vbo_id);
-			glBufferData(GL_ARRAY_BUFFER, m_vertices.size() * sizeof(Vector3<T>), m_vertices.data(), GL_STATIC_DRAW);
+			glBufferData(GL_ARRAY_BUFFER, m_vertices.size() * sizeof(Vector<T, 3>), m_vertices.data(),
+			             GL_STATIC_DRAW);
 
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ebo_id);
 			glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_indices.size() * sizeof(uint32_t), m_indices.data(),

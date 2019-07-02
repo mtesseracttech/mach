@@ -12,7 +12,7 @@
 namespace mach {
 	MachApplication::MachApplication() {
 		m_window = gfx::RenderWindow::create<gfx::OpenGLWindow>();
-		m_renderer = gfx::Renderer::create<gfx::OpenGLRenderer>();
+//		m_renderer = gfx::Renderer::create<gfx::OpenGLRenderer>();
 		setup_subsystems();
 	}
 
@@ -87,7 +87,7 @@ namespace mach {
 
 
 			shader.use();
-			shader.set_vec4("ourColor", color);
+			shader.set_val("ourColor", color);
 			shader.set_val("offset", std::sin(time_value));
 
 			//glUniform4f(vertex_color_location, 0.0f, green_value, 0.0f, 1.0f);

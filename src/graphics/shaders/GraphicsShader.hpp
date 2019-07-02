@@ -6,7 +6,7 @@
 #define MACH_GRAPHICSSHADER_HPP
 
 #include <string>
-#include <math/linalg/Vector/Vector2.hpp>
+#include "math/linalg/LinAlgTypes.hpp"
 
 namespace mach::gfx {
 	class GraphicsShader {

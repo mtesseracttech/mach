@@ -7,8 +7,6 @@
 
 #include "GraphicsShader.hpp"
 #include <map>
-#include <math/linalg/Vector/Vector3.hpp>
-#include <math/linalg/Vector/Vector4.hpp>
 
 namespace mach::gfx {
 	class OpenGLShader : public GraphicsShader {
@@ -48,48 +46,46 @@ namespace mach::gfx {
 			}
 		}
 
-		template<typename T>
-		void set_vec2(const std::string &p_name, const Vector2<T> &p_value) const {
-			if constexpr (std::is_same<T, float>::value) {
-				glUniform2fv(glGetUniformLocation(m_shader_program, p_name.c_str()), 1, p_value.get_value_ptr());
-			} else if constexpr(std::is_same<T, int>::value) {
-				glUniform2iv(glGetUniformLocation(m_shader_program, p_name.c_str()), 1, p_value.get_value_ptr());
-			} else if constexpr(std::is_same<T, bool>::value) {
-				glUniform2iv(glGetUniformLocation(m_shader_program, p_name.c_str()), 1,
-				             static_cast<int *>(p_value.get_value_ptr()));
+		template<typename T, size_t N>
+		void set_val(const std::string &p_name, Vector<T, N> p_value) const {
+			if constexpr (N == 2) {
+				if constexpr (std::is_same<T, float>::value) {
+					glUniform2fv(glGetUniformLocation(m_shader_program, p_name.c_str()), 1, p_value.get_value_ptr());
+				} else if constexpr(std::is_same<T, int>::value) {
+					glUniform2iv(glGetUniformLocation(m_shader_program, p_name.c_str()), 1, p_value.get_value_ptr());
+				} else if constexpr(std::is_same<T, bool>::value) {
+					glUniform2iv(glGetUniformLocation(m_shader_program, p_name.c_str()), 1,
+					             static_cast<int *>(p_value.get_value_ptr()));
+				} else {
+					mach_assert(false, "Type: " + std::string(typeid(T).name()) + " in " + m_program_name +
+					                   " does not have an implementation for use in shader uniforms.");
+				}
+			} else if constexpr (N == 3) {
+				if constexpr (std::is_same<T, float>::value) {
+					glUniform3fv(glGetUniformLocation(m_shader_program, p_name.c_str()), 1, p_value.get_value_ptr());
+				} else if constexpr(std::is_same<T, int>::value) {
+					glUniform3iv(glGetUniformLocation(m_shader_program, p_name.c_str()), 1, p_value.get_value_ptr());
+				} else if constexpr(std::is_same<T, bool>::value) {
+					glUniform3iv(glGetUniformLocation(m_shader_program, p_name.c_str()), 1,
+					             static_cast<int *>(p_value.get_value_ptr()));
+				} else {
+					mach_assert(false, "Type: " + std::string(typeid(T).name()) + " in " + m_program_name +
+					                   " does not have an implementation for use in shader uniforms.");
+				}
+			} else if constexpr (N == 4) {
+				if constexpr (std::is_same<T, float>::value) {
+					glUniform4fv(glGetUniformLocation(m_shader_program, p_name.c_str()), 1, p_value.get_value_ptr());
+				} else if constexpr(std::is_same<T, int>::value) {
+					glUniform4iv(glGetUniformLocation(m_shader_program, p_name.c_str()), 1, p_value.get_value_ptr());
+				} else if constexpr(std::is_same<T, bool>::value) {
+					glUniform4iv(glGetUniformLocation(m_shader_program, p_name.c_str()), 1,
+					             static_cast<int *>(p_value.get_value_ptr()));
+				} else {
+					mach_assert(false, "Type: " + std::string(typeid(T).name()) + " in " + m_program_name +
+					                   " does not have an implementation for use in shader uniforms.");
+				}
 			} else {
-				mach_assert(false, "Type: " + std::string(typeid(T).name()) + " in " + m_program_name +
-				                   " does not have an implementation for use in shader uniforms.");
-			}
-		}
-
-		template<typename T>
-		void set_vec3(const std::string &p_name, const Vector3<T> &p_value) const {
-			if constexpr (std::is_same<T, float>::value) {
-				glUniform3fv(glGetUniformLocation(m_shader_program, p_name.c_str()), 1, p_value.get_value_ptr());
-			} else if constexpr(std::is_same<T, int>::value) {
-				glUniform3iv(glGetUniformLocation(m_shader_program, p_name.c_str()), 1, p_value.get_value_ptr());
-			} else if constexpr(std::is_same<T, bool>::value) {
-				glUniform3iv(glGetUniformLocation(m_shader_program, p_name.c_str()), 1,
-				             static_cast<int *>(p_value.get_value_ptr()));
-			} else {
-				mach_assert(false, "Type: " + std::string(typeid(T).name()) + " in " + m_program_name +
-				                   " does not have an implementation for use in shader uniforms.");
-			}
-		}
-
-		template<typename T>
-		void set_vec4(const std::string &p_name, const Vector4<T> &p_value) const {
-			if constexpr (std::is_same<T, float>::value) {
-				glUniform4fv(glGetUniformLocation(m_shader_program, p_name.c_str()), 1, p_value.get_value_ptr());
-			} else if constexpr(std::is_same<T, int>::value) {
-				glUniform4iv(glGetUniformLocation(m_shader_program, p_name.c_str()), 1, p_value.get_value_ptr());
-			} else if constexpr(std::is_same<T, bool>::value) {
-				glUniform4iv(glGetUniformLocation(m_shader_program, p_name.c_str()), 1,
-				             static_cast<int *>(p_value.get_value_ptr()));
-			} else {
-				mach_assert(false, "Type: " + std::string(typeid(T).name()) + " in " + m_program_name +
-				                   " does not have an implementation for use in shader uniforms.");
+				mach_assert(false, "Vectors of size " + to_str(N) + " are not supported by OpenGL uniforms");
 			}
 		}
 	};
