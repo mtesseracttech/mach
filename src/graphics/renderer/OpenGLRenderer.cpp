@@ -16,5 +16,6 @@ namespace mach::gfx {
 	}
 
 	void OpenGLRenderer::render_scene() {
+		Logger::log("Rendering with the OpenGL renderer");
 	}
 }
