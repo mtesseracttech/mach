@@ -43,8 +43,11 @@ namespace mach {
 		gfx::OpenGLShader shader;
 		shader.load_shader_module("base");
 
-		gfx::OpenGLTexture texture;
-		texture.load_from_file("test_kanaal.png");
+		gfx::OpenGLTexture channel_tex;
+		channel_tex.load_from_file("test_kanaal.png");
+
+		gfx::OpenGLTexture other_tex;
+		std::cout << other_tex.load_from_file("") << std::endl;
 
 		Timer timer;
 
@@ -86,7 +89,7 @@ namespace mach {
 			shader.use();
 			shader.set_val("test_color", color);
 
-			texture.bind_texture();
+			channel_tex.bind_texture();
 			glBindVertexArray(vao);
 			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
@@ -103,8 +106,13 @@ namespace mach {
 }
 
 int main() {
-	mach::tests::run_tests();
-	mach::MachApplication app;
-	app.run();
+	try {
+		mach::tests::run_tests();
+		mach::MachApplication app;
+		app.run();
+	} catch (const std::exception &ex) {
+		mach::Logger::log(ex.what(), mach::Error);
+	}
+
 }
 

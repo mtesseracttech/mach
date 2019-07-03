@@ -41,8 +41,8 @@ namespace mach::gfx {
 			} else if constexpr(std::is_same<T, bool>::value) {
 				glUniform1i(glGetUniformLocation(m_shader_program, p_name.c_str()), static_cast<int>(p_value));
 			} else {
-				mach_assert(false, "Type: " + std::string(typeid(T).name()) + " in " + m_program_name +
-				                   " does not have an implementation for use in shader uniforms.");
+				throw NotImplemented("Type: " + std::string(typeid(T).name()) + " in " + m_program_name +
+				                     " does not have an implementation for use in shader uniforms.");
 			}
 		}
 
@@ -57,8 +57,8 @@ namespace mach::gfx {
 					glUniform2iv(glGetUniformLocation(m_shader_program, p_name.c_str()), 1,
 					             static_cast<int *>(p_value.get_value_ptr()));
 				} else {
-					mach_assert(false, "Type: " + std::string(typeid(T).name()) + " in " + m_program_name +
-					                   " does not have an implementation for use in shader uniforms.");
+					throw NotImplemented("Type: " + std::string(typeid(T).name()) + " in " + m_program_name +
+					                     " does not have an implementation for use in shader uniforms.");
 				}
 			} else if constexpr (N == 3) {
 				if constexpr (std::is_same<T, float>::value) {
@@ -69,8 +69,8 @@ namespace mach::gfx {
 					glUniform3iv(glGetUniformLocation(m_shader_program, p_name.c_str()), 1,
 					             static_cast<int *>(p_value.get_value_ptr()));
 				} else {
-					mach_assert(false, "Type: " + std::string(typeid(T).name()) + " in " + m_program_name +
-					                   " does not have an implementation for use in shader uniforms.");
+					throw NotImplemented("Type: " + std::string(typeid(T).name()) + " in " + m_program_name +
+					                     " does not have an implementation for use in shader uniforms.");
 				}
 			} else if constexpr (N == 4) {
 				if constexpr (std::is_same<T, float>::value) {
@@ -81,11 +81,11 @@ namespace mach::gfx {
 					glUniform4iv(glGetUniformLocation(m_shader_program, p_name.c_str()), 1,
 					             static_cast<int *>(p_value.get_value_ptr()));
 				} else {
-					mach_assert(false, "Type: " + std::string(typeid(T).name()) + " in " + m_program_name +
-					                   " does not have an implementation for use in shader uniforms.");
+					throw NotImplemented("Type: " + std::string(typeid(T).name()) + " in " + m_program_name +
+					                     " does not have an implementation for use in shader uniforms.");
 				}
 			} else {
-				mach_assert(false, "Vectors of size " + to_str(N) + " are not supported by OpenGL uniforms");
+				throw NotImplemented("Vectors of size " + to_str(N) + " are not supported by OpenGL uniforms");
 			}
 		}
 	};

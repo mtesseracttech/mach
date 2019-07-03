@@ -27,7 +27,12 @@ namespace mach::gfx {
 			ss << "../res/textures/" << p_filepath;
 			std::string filepath = ss.str();
 
-			if (!io::FileIO::file_exists(filepath)) {
+			bool exists = io::FileIO::file_exists(filepath);
+
+			std::cout << exists << std::endl;
+
+			if (!exists) {
+				std::cout << filepath << std::endl;
 				Logger::log("Texture file '" + p_filepath + "' does not exist", Error);
 				return false;
 			}
