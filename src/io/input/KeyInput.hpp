@@ -6,7 +6,7 @@
 #define MACH_KEYINPUT_HPP
 
 #include <map>
-#include <graphics/window/RenderWindow.hpp>
+#include <graphics/renderer/window/RenderWindow.hpp>
 #include <auxiliary/time/Timer.hpp>
 
 namespace mach {

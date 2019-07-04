@@ -12,7 +12,7 @@
 #include <iterator>
 #include <vector>
 #include "Vertex.hpp"
-#include "graphics/material/Texture.hpp"
+#include "graphics/renderer/material/Texture.hpp"
 
 
 namespace mach::gfx {

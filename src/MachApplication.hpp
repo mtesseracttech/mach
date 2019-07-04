@@ -7,7 +7,7 @@
 
 #include <io/input/KeyInput.hpp>
 #include <graphics/renderer/Renderer.hpp>
-#include <graphics/window/RenderWindow.hpp>
+#include <graphics/renderer/window/RenderWindow.hpp>
 
 namespace mach {
 	class MachApplication {

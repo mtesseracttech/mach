@@ -5,7 +5,7 @@
 #ifndef MACH_OPENGLRENDERER_HPP
 #define MACH_OPENGLRENDERER_HPP
 
-#include <graphics/shaders/OpenGLShader.hpp>
+#include <graphics/renderer/shaders/OpenGLShader.hpp>
 #include "Renderer.hpp"
 
 namespace mach::gfx {

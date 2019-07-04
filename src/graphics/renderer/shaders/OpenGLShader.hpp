@@ -5,32 +5,91 @@
 #ifndef MACH_OPENGLSHADER_HPP
 #define MACH_OPENGLSHADER_HPP
 
-#include "GraphicsShader.hpp"
 #include <map>
+#include <math/linalg/Vector.hpp>
+#include <io/files/FileIO.hpp>
 
 namespace mach::gfx {
-	class OpenGLShader : public GraphicsShader {
+	class OpenGLShader {
 	protected:
 		uint32_t m_shader_program = 0;
 		std::string m_program_name = "";
 
-	private:
-		void load_shader_file() override;
-
-		void compile_shader() override;
-
 	protected:
 
-		static void print_shader_error_info(uint32_t p_shader_handle, const std::string &p_filename);
+		static void print_shader_error_info(uint32_t p_shader_handle, const std::string &p_filename) {
+			char info_log[512];
+			glGetShaderInfoLog(p_shader_handle, sizeof(info_log), nullptr, info_log);
+			std::stringstream ss;
+			ss << "OpenGL shader '" << p_filename << "' compilation failed:\n" << info_log;
+			Logger::log(ss.str(), Error);
+		}
 
-		void print_linking_error_info(uint32_t p_program_handle, const std::string &p_shader_name);
+		void print_linking_error_info(uint32_t p_program_handle, const std::string &p_shader_name) {
+			char info_log[512];
+			glGetProgramInfoLog(m_shader_program, 512, nullptr, info_log);
+			std::stringstream ss;
+			ss << "OpenGL shader program '" << p_shader_name << "' linking failed:\n" << info_log;
+			Logger::log(ss.str(), Error);
+		}
 
-		uint32_t compile_shader(GLenum p_shader_type, const std::string &p_filename);
+		uint32_t compile_shader(GLenum p_shader_type, const std::string &p_filename) {
+			std::string shader_src = io::FileIO::read_file(p_filename);
+			const char *shader_c_str = shader_src.c_str();
+			uint32_t shader_handle = glCreateShader(p_shader_type);
+			glShaderSource(shader_handle, 1, &shader_c_str, nullptr);
+			glCompileShader(shader_handle);
+			int success;
+			glGetShaderiv(shader_handle, GL_COMPILE_STATUS, &success);
+			if (!success) {
+				print_shader_error_info(shader_handle, p_filename);
+				return 0;
+			}
+			return shader_handle;
+		}
 
 	public:
-		void load_shader_module(const std::string &p_shader_name) override;
+		explicit OpenGLShader(const std::string &p_program_name) {
+			const std::string shader_path = "../res/shaders/" + p_program_name + "/";
+			const std::string vert_shader_name = shader_path + p_program_name + ".vert";
+			const std::string frag_shader_name = shader_path + p_program_name + ".frag";
+			const std::string geom_shader_name = shader_path + p_program_name + ".geom";
 
-		void use() override;
+			const bool has_vert_shader = io::FileIO::file_exists(vert_shader_name);
+			const bool has_frag_shader = io::FileIO::file_exists(frag_shader_name);
+			const bool has_geom_shader = io::FileIO::file_exists(geom_shader_name);
+
+			if (!has_vert_shader || !has_frag_shader) {
+				throw std::runtime_error(
+						"The shader " + p_program_name + " is incomplete, it is missing a vertex or fragment file");
+			}
+
+			m_program_name = p_program_name;
+			m_shader_program = glCreateProgram();
+
+			uint32_t vert_shader_handle = compile_shader(GL_VERTEX_SHADER, vert_shader_name);
+			uint32_t frag_shader_handle = compile_shader(GL_FRAGMENT_SHADER, frag_shader_name);
+			uint32_t geom_shader_handle = has_geom_shader ? compile_shader(GL_GEOMETRY_SHADER, geom_shader_name) : 0;
+
+			if (vert_shader_handle != 0) glAttachShader(m_shader_program, vert_shader_handle);
+			if (geom_shader_handle != 0) glAttachShader(m_shader_program, geom_shader_handle);
+			if (frag_shader_handle != 0) glAttachShader(m_shader_program, frag_shader_handle);
+
+			glLinkProgram(m_shader_program);
+			int success;
+			glGetProgramiv(m_shader_program, GL_LINK_STATUS, &success);
+			if (!success) {
+				print_linking_error_info(m_shader_program, p_program_name);
+			}
+
+			if (vert_shader_handle != 0) glDeleteShader(vert_shader_handle);
+			if (geom_shader_handle != 0) glDeleteShader(geom_shader_handle);
+			if (frag_shader_handle != 0) glDeleteShader(frag_shader_handle);
+
+			if (!success) {
+				throw std::runtime_error("Could not correctly link the shaders for " + p_program_name);
+			}
+		}
 
 		template<typename T>
 		void set_val(const std::string &p_name, T p_value) const {
@@ -89,6 +148,10 @@ namespace mach::gfx {
 			} else {
 				throw NotImplemented("Vectors of size " + to_str(N) + " are not supported by OpenGL uniforms");
 			}
+		}
+
+		void use() {
+			glUseProgram(m_shader_program);
 		}
 	};
 }

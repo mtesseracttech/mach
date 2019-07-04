@@ -6,7 +6,7 @@
 #define MACH_MOUSEINPUT_HPP
 
 #include <map>
-#include <graphics/window/RenderWindow.hpp>
+#include <graphics/renderer/window/RenderWindow.hpp>
 #include <math/linalg/LinAlgTypes.hpp>
 #include <auxiliary/time/Timer.hpp>
 

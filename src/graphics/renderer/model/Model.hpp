@@ -6,7 +6,7 @@
 #define MACH_MODEL_HPP
 
 #include <string>
-#include <graphics/shaders/OpenGLShader.hpp>
+#include <graphics/renderer/shaders/OpenGLShader.hpp>
 #include "Mesh.hpp"
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
@@ -18,30 +18,24 @@ namespace mach::gfx {
 	class Model {
 		std::vector<Texture> m_textures_loaded;
 		std::vector<Mesh<T>> m_meshes;
-		std::string m_directory;
+		std::string m_texture_directory;
+		std::string m_model_directory;
 
 	public:
-		Model(const std::string &p_filepath) {
-			load_model(p_filepath);
-		}
+		explicit Model(const std::string &p_model_name) {
+			std::string model_file_path = "../res/models/" + p_model_name;
+			std::string textures_file_path = "../res/textures/" + p_model_name;
 
-		void draw(const OpenGLShader &p_shader) {
-			for (unsigned int i = 0; i < m_meshes.size(); i++)
-				m_meshes[i].draw(p_shader);
-		}
-
-	private:
-		void load_model(const std::string &p_path) {
 			Assimp::Importer import;
-			const aiScene *scene = import.ReadFile(p_path, aiProcess_Triangulate | aiProcess_FlipUVs);
+			const aiScene *scene = import.ReadFile(model_file_path, aiProcess_Triangulate | aiProcess_FlipUVs);
 
 			if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
 				std::stringstream ss;
 				ss << "Assimp: " << import.GetErrorString();
-				Logger::log(ss.str(), Error);
-				return;
+				throw std::runtime_error(ss.str());
 			}
-			m_directory = p_path.substr(0, p_path.find_last_of('/'));
+			m_model_directory = model_file_path.substr(0, model_file_path.find_last_of('/'));
+			m_texture_directory = textures_file_path.substr(0, textures_file_path.find_last_of('/'));
 			process_node(scene->mRootNode, scene);
 		}
 
@@ -56,6 +50,14 @@ namespace mach::gfx {
 			}
 		}
 
+		void draw(const OpenGLShader &p_shader) {
+			for (auto &mesh : m_meshes) {
+				mesh.draw(p_shader);
+			}
+		}
+
+	private:
+
 		unsigned int texture_from_file(const char *p_path, const std::string &p_directory, bool p_gamma) {
 			std::string filename = std::string(p_path);
 			filename = p_directory + '/' + filename;
@@ -66,7 +68,7 @@ namespace mach::gfx {
 			int width, height, nr_components;
 			unsigned char *data = stbi_load(filename.c_str(), &width, &height, &nr_components, 0);
 			if (data) {
-				GLenum format;
+				GLenum format = 0;
 				if (nr_components == 1) {
 					format = GL_RED;
 				} else if (nr_components == 3) {
@@ -86,8 +88,8 @@ namespace mach::gfx {
 
 				stbi_image_free(data);
 			} else {
-				std::cout << "Texture failed to load at path: " << p_path << std::endl;
 				stbi_image_free(data);
+				throw std::runtime_error("Texture failed to load at path: " + std::string(p_path));
 			}
 
 			return texture_id;
@@ -156,7 +158,7 @@ namespace mach::gfx {
 				}
 				if (!skip) {   // if texture hasn't been loaded already, load it
 					Texture texture;
-					texture.m_id = texture_from_file(str.C_Str(), m_directory, false);
+					texture.m_id = texture_from_file(str.C_Str(), m_texture_directory, false);
 					texture.m_type = p_type_name;
 					texture.m_path = str.C_Str();
 					textures.push_back(texture);
