@@ -12,18 +12,93 @@
 #include <iterator>
 #include <vector>
 #include "Vertex.hpp"
+#include "graphics/material/Texture.hpp"
 
 
 namespace mach::gfx {
-	template<typename T, typename = std::enable_if_t<std::is_floating_point<T>::value>>
-	class Mesh {
-		std::vector<Vertex<T>> m_vertices;
-		std::vector<unsigned int> m_indices;
 
+	template<typename AttribType, typename = std::enable_if_t<std::is_floating_point<AttribType>::value>>
+	class Mesh {
 	public:
-		Mesh(std::vector<Vertex<T>> p_vertices, std::vector<uint32_t> p_indices) {
+		std::vector<Vertex<AttribType>> m_vertices;
+		std::vector<unsigned int> m_indices;
+		std::vector<Texture> m_textures;
+
+		Mesh(std::vector<Vertex<AttribType>> p_vertices,
+		     std::vector<uint32_t> p_indices,
+		     std::vector<Texture> p_textures) {
 			m_vertices = p_vertices;
 			m_indices = p_indices;
+			m_textures = p_textures;
+			generate_buffers();
+		}
+
+		void draw(const OpenGLShader &p_shader) {
+			uint32_t diffuse_idx = 1, specular_idx = 1;
+			for (uint32_t i = 0; i < m_textures.size(); i++) {
+				glActiveTexture(GL_TEXTURE0 + i);
+				std::string number;
+				std::string name = m_textures[i].m_type;
+				if (name == "texture_diffuse")
+					number = std::to_string(diffuse_idx++);
+				else if (name == "texture_specular")
+					number = std::to_string(specular_idx++);
+
+				p_shader.set_val<int>(std::string("material.").append(name).append(number), i);
+				glBindTexture(GL_TEXTURE_2D, m_textures[i].m_id);
+			}
+			glActiveTexture(GL_TEXTURE0);
+			glBindVertexArray(m_vao_id);
+			glDrawElements(GL_TRIANGLES, m_indices.size(), GL_UNSIGNED_INT, 0);
+			glBindVertexArray(0);
+		}
+
+	private:
+		uint32_t m_vao_id;
+		uint32_t m_vbo_id;
+		uint32_t m_ebo_id;
+
+		void generate_buffers() {
+			glGenVertexArrays(1, &m_vao_id);
+			glGenBuffers(1, &m_vbo_id);
+			glGenBuffers(1, &m_ebo_id);
+
+			glBindVertexArray(m_vao_id);
+			glBindBuffer(GL_ARRAY_BUFFER, m_vbo_id);
+			glBufferData(GL_ARRAY_BUFFER, m_vertices.size() * sizeof(Vertex<AttribType>), m_vertices.data(),
+			             GL_STATIC_DRAW);
+
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ebo_id);
+			glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_indices.size() * sizeof(uint32_t), m_indices.data(),
+			             GL_STATIC_DRAW);
+
+			if constexpr (std::is_same<AttribType, float>::value) {
+				glEnableVertexAttribArray(0);
+				glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex<AttribType>),
+				                      (void *) offsetof(Vertex<AttribType>, m_position));
+				glEnableVertexAttribArray(1);
+				glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex<AttribType>),
+				                      (void *) offsetof(Vertex<AttribType>, m_normal));
+				glEnableVertexAttribArray(2);
+				glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex<AttribType>),
+				                      (void *) offsetof(Vertex<AttribType>, m_tex_coords));
+
+			} else if constexpr (std::is_same<AttribType, double>::value) {
+				glEnableVertexAttribArray(0);
+				glVertexAttribPointer(0, 3, GL_DOUBLE, GL_FALSE, sizeof(Vertex<AttribType>),
+				                      (void *) offsetof(Vertex<AttribType>, m_position));
+				glEnableVertexAttribArray(1);
+				glVertexAttribPointer(1, 3, GL_DOUBLE, GL_FALSE, sizeof(Vertex<AttribType>),
+				                      (void *) offsetof(Vertex<AttribType>, m_normal));
+				glEnableVertexAttribArray(2);
+				glVertexAttribPointer(2, 2, GL_DOUBLE, GL_FALSE, sizeof(Vertex<AttribType>),
+				                      (void *) offsetof(Vertex<AttribType>, m_tex_coords));
+			} else {
+				throw NotImplemented("No other attribute types except for float and double are implemented");
+			}
+
+//			glBindBuffer(GL_ARRAY_BUFFER, 0);
+			glBindVertexArray(0);
 		}
 
 

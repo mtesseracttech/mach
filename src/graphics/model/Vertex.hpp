@@ -12,7 +12,7 @@ namespace mach::gfx {
 	struct Vertex {
 		Vector3 <T> m_position;
 		Vector3 <T> m_normal;
-		Vector3 <T> m_tex_coords;
+		Vector2 <T> m_tex_coords;
 	};
 }
 

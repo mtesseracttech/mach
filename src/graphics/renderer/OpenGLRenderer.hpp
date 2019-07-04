@@ -6,7 +6,6 @@
 #define MACH_OPENGLRENDERER_HPP
 
 #include <graphics/shaders/OpenGLShader.hpp>
-#include <graphics/geometry/OpenGLModelBuffer.hpp>
 #include "Renderer.hpp"
 
 namespace mach::gfx {

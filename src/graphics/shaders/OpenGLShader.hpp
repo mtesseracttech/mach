@@ -41,8 +41,10 @@ namespace mach::gfx {
 			} else if constexpr(std::is_same<T, bool>::value) {
 				glUniform1i(glGetUniformLocation(m_shader_program, p_name.c_str()), static_cast<int>(p_value));
 			} else {
-				throw NotImplemented("Type: " + std::string(typeid(T).name()) + " in " + m_program_name +
-				                     " does not have an implementation for use in shader uniforms.");
+				std::stringstream ss;
+				ss << "Type: " << typeid(T).name() << " in " << m_program_name
+				   << " does not have an implementation for use in shader uniforms.";
+				throw NotImplemented(ss.str().c_str());
 			}
 		}
 
