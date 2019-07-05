@@ -38,6 +38,7 @@ namespace mach {
 			m_window->clear(0.2, 0.3, 0.3, 1.0);
 
 			model->draw(*shader);
+			shader->use();
 
 
 			m_window->swap_buffers();

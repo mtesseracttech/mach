@@ -146,7 +146,61 @@ namespace mach::gfx {
 					                     " does not have an implementation for use in shader uniforms.");
 				}
 			} else {
-				throw NotImplemented("Vectors of size " + to_str(N) + " are not supported by OpenGL uniforms");
+				throw std::runtime_error("Vectors of size " + to_str(N) + " are not supported by OpenGL uniforms");
+			}
+		}
+
+		template<typename T, size_t H, size_t W>
+		void set_val(const std::string &p_name, Matrix<T, H, W> p_value) const {
+			if constexpr (std::is_same<T, float>::value) {
+				if constexpr (H == 2) {
+					if constexpr (W == 2) {
+						glUniformMatrix2fv(glGetUniformLocation(m_shader_program, p_name.c_str()), 1,
+						                   p_value.get_value_ptr());
+					} else if constexpr (W == 3) {
+						glUniformMatrix2x3fv(glGetUniformLocation(m_shader_program, p_name.c_str()), 1,
+						                     p_value.get_value_ptr());
+					} else if constexpr (W == 4) {
+						glUniformMatrix2x4fv(glGetUniformLocation(m_shader_program, p_name.c_str()), 1,
+						                     p_value.get_value_ptr());
+					} else {
+						throw std::runtime_error(
+								"Only matrices with a width between 2 and 4 are supported in OpenGL uniforms");
+					}
+				} else if constexpr (H == 3) {
+					if constexpr (W == 2) {
+						glUniformMatrix3x2fv(glGetUniformLocation(m_shader_program, p_name.c_str()), 1,
+						                     p_value.get_value_ptr());
+					} else if constexpr (W == 3) {
+						glUniformMatrix3fv(glGetUniformLocation(m_shader_program, p_name.c_str()), 1,
+						                   p_value.get_value_ptr());
+					} else if constexpr (W == 4) {
+						glUniformMatrix3x4fv(glGetUniformLocation(m_shader_program, p_name.c_str()), 1,
+						                     p_value.get_value_ptr());
+					} else {
+						throw std::runtime_error(
+								"Only matrices with a width between 2 and 4 are supported in OpenGL uniforms");
+					}
+				} else if constexpr (H == 4) {
+					if constexpr (W == 2) {
+						glUniformMatrix4x2fv(glGetUniformLocation(m_shader_program, p_name.c_str()), 1,
+						                     p_value.get_value_ptr());
+					} else if constexpr (W == 3) {
+						glUniformMatrix4x3fv(glGetUniformLocation(m_shader_program, p_name.c_str()), 1,
+						                     p_value.get_value_ptr());
+					} else if constexpr (W == 4) {
+						glUniformMatrix4fv(glGetUniformLocation(m_shader_program, p_name.c_str()), 1,
+						                   p_value.get_value_ptr());
+					} else {
+						throw std::runtime_error(
+								"Only matrices with a width between 2 and 4 are supported in OpenGL uniforms");
+					}
+				} else {
+					throw std::runtime_error(
+							"Only matrices with a height between 2 and 4 are supported in OpenGL uniforms");
+				}
+			} else {
+				throw std::runtime_error("You cannot load matrices of any other type than float into OpenGL uniforms");
 			}
 		}
 

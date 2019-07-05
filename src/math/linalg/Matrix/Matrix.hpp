@@ -43,6 +43,10 @@ namespace mach {
 
 		constexpr size_t size() { return W * H; }
 
+		inline const T *get_value_ptr() const {
+			return m_data.data();
+		}
+
 		//template<typename = typename std::enable_if_t<W == H>>
 		static constexpr Matrix identity() {
 			static_assert(W == H, "Identity matrices only exist can only be created for square matrices");

@@ -6,29 +6,24 @@
 #define MACH_ROTATIONMATRIX_HPP
 
 #include <math/linalg/Quaternion.hpp>
-#include <math/linalg/Vector/Vector3.hpp>
-#include <math/linalg/Vector/Vector4.hpp>
 #include <auxiliary/exceptions/NotImplemented.hpp>
+#include <math/linalg/LinAlgTypes.hpp>
 #include "Matrix.hpp"
 
 
 namespace mach {
 	template<typename T>
 	class RotationMatrix {
-		using Mat3 = Matrix<Vector3<T>, Vector3<T>, T, 3, 3>;
-		using Mat4 = Matrix<Vector4<T>, Vector4<T>, T, 4, 4>;
+		Matrix<T, 3, 3> m_matrix;
 
-
-		Mat3 m_matrix;
-
-		explicit RotationMatrix(Mat3 p_matrix) : m_matrix(p_matrix) {}
+		explicit RotationMatrix(Matrix<T, 3, 3> p_matrix) : m_matrix(p_matrix) {}
 
 		template<typename... Args, typename = typename std::enable_if<sizeof...(Args) == 9>::type>
 		explicit RotationMatrix(Args &&... p_values) : m_matrix(static_cast<T>(std::forward<Args>(p_values))...) {}
 
 	public:
 
-		RotationMatrix() : m_matrix(Mat3::identity()) {}
+		RotationMatrix() : m_matrix(Matrix<T, 3, 3>::identity()) {}
 
 		template<RotationOrder O = BPH>
 		inline static RotationMatrix from_euler(const EulerAngles<T, O> &p_angles) {
@@ -39,15 +34,15 @@ namespace mach {
 			T sb = std::sin(p_angles.bank);
 			T cb = std::cos(p_angles.bank);
 
-			Mat3 b(cb, sb, 0.0,
-			       -sb, cb, 0.0,
-			       0.0, 0.0, 1.0);
-			Mat3 h(ch, 0.0, -sh,
-			       0.0, 1.0, 0.0,
-			       sh, 0.0, ch);
-			Mat3 p(1.0, 0.0, 0.0,
-			       0.0, cp, sp,
-			       0.0, -sp, cp);
+			Matrix<T, 3, 3> b(cb, sb, 0.0,
+			                  -sb, cb, 0.0,
+			                  0.0, 0.0, 1.0);
+			Matrix<T, 3, 3> h(ch, 0.0, -sh,
+			                  0.0, 1.0, 0.0,
+			                  sh, 0.0, ch);
+			Matrix<T, 3, 3> p(1.0, 0.0, 0.0,
+			                  0.0, cp, sp,
+			                  0.0, -sp, cp);
 
 			RotationMatrix result;
 			result.m_matrix = combine_rotations<O>(p, h, b);
@@ -115,11 +110,11 @@ namespace mach {
 			m_matrix *= RotationMatrix(p_q);
 		}
 
-		inline Mat4 to_mat4() const {
-			Mat4 result(m_matrix[0][0], m_matrix[0][1], m_matrix[0][2], 0.0,
-			            m_matrix[1][0], m_matrix[1][1], m_matrix[1][2], 0.0,
-			            m_matrix[2][0], m_matrix[2][1], m_matrix[2][2], 0.0,
-			            0.0, 0.0, 0.0, 1.0);
+		inline Matrix<T, 4, 4> to_mat4() const {
+			Matrix<T, 4, 4> result(m_matrix[0][0], m_matrix[0][1], m_matrix[0][2], 0.0,
+			                       m_matrix[1][0], m_matrix[1][1], m_matrix[1][2], 0.0,
+			                       m_matrix[2][0], m_matrix[2][1], m_matrix[2][2], 0.0,
+			                       0.0, 0.0, 0.0, 1.0);
 			return result;
 		}
 
