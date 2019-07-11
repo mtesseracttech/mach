@@ -10,6 +10,7 @@
 #include <auxiliary/logging/LogUtils.hpp>
 #include <auxiliary/MachAssertion.hpp>
 #include <math/util/MathUtils.hpp>
+#include <graphics/renderer/Transform.hpp>
 
 namespace mach::tests::math {
 	class LinearAlgebraTests {
@@ -220,6 +221,7 @@ namespace mach::tests::math {
 		            0, 2, 0, 0,
 		            0, 0, 2, 0,
 		            0, 0, 0, 2);
+
 		mach_assert(m_4_2i * v_4 == v_4 * 2, "");
 		Logger::log("Matrix-Vector product: DONE");
 
@@ -339,6 +341,14 @@ namespace mach::tests::math {
 	}
 
 	void LinearAlgebraTests::other_tests() {
+		auto transform = Transform<float>::create();
+		Logger::log(transform->local_position);
+		transform->local_position = Vec3(1, 2, 3);
+		transform->local_rotation = Quat(std::sqrt(2) / 2, 0, 0, std::sqrt(2) / 2);
+		transform->local_scale = Vec3(2, 3, 4);
+		Logger::log(transform->position);
+		Logger::log(transform->rotation);
+		Logger::log(transform->scale);
 		Logger::log("MISCELLANEOUS LINEAR ALGEBRA TESTS");
 		Logger::log("MISCELLANEOUS LINEAR ALGEBRA TESTS: PASSED");
 	}

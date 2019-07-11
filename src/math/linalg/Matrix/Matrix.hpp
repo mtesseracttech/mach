@@ -15,7 +15,7 @@
  */
 
 namespace mach {
-	template<typename T, size_t H, size_t W>
+	template<typename T, std::size_t H, std::size_t W>
 	class Matrix {
 		union {
 			std::array<T, H * W> m_data;
@@ -30,18 +30,40 @@ namespace mach {
 
 		Matrix(const Matrix &p_m) : m_data(p_m.m_data) {}
 
+		template<typename T2, std::size_t H2, std::size_t W2>
+		explicit Matrix(const Matrix<T2, H2, W2> &p_m) {
+			if constexpr(H == W) {
+				m_data = identity().m_data;
+			} else {
+				m_data = {0};
+			}
+			for (std::size_t r = 0; r < std::min(H, H2); ++r) {
+				for (std::size_t c = 0; c < std::min(W, W2); ++c) {
+					m_data[r][c] = p_m[r][c];
+				}
+			}
+		}
+
 		template<typename... Args, typename = typename std::enable_if<sizeof...(Args) == W * H>::type>
 		explicit Matrix(Args &&... p_values) : m_data{static_cast<T>(std::forward<Args>(p_values))...} {}
 
-		Vector<T, W> &operator[](size_t p_n) { return m_rows[p_n]; };
+		Vector<T, W> &operator[](std::size_t p_n) { return m_rows[p_n]; };
 
-		const Vector<T, W> &operator[](size_t p_n) const { return m_rows[p_n]; };
+		const Vector<T, W> &operator[](std::size_t p_n) const { return m_rows[p_n]; };
 
-		constexpr size_t width() { return W; }
+		Matrix &operator=(const Matrix &p_rhs) {
+			if (this == &p_rhs) return *this;
+			for (std::size_t i = 0; i < size(); ++i) {
+				m_data[i] = p_rhs.m_data[i];
+			}
+			return *this;
+		}
 
-		constexpr size_t height() { return H; }
+		constexpr std::size_t width() { return W; }
 
-		constexpr size_t size() { return W * H; }
+		constexpr std::size_t height() { return H; }
+
+		constexpr std::size_t size() { return W * H; }
 
 		inline const T *get_value_ptr() const {
 			return m_data.data();
@@ -49,7 +71,7 @@ namespace mach {
 
 		//template<typename = typename std::enable_if_t<W == H>>
 		static constexpr Matrix identity() {
-			static_assert(W == H, "Identity matrices only exist can only be created for square matrices");
+			static_assert(W == H, "Identity matrices only exist for square matrices");
 			Matrix output;
 			for (size_t row = 0; row < H; ++row) {
 				for (size_t col = 0; col < W; ++col) {
@@ -69,6 +91,7 @@ namespace mach {
 
 
 		friend std::ostream &operator<<(std::ostream &p_os, const Matrix &p_m) {
+			p_os << '\n';
 			for (int i = 0; i < H; ++i) {
 				p_os << std::fixed << std::setprecision(3) << "[" << p_m[i][0];
 				for (int j = 1; j < W; ++j) {
@@ -99,6 +122,21 @@ namespace mach {
 					output[col][row] = (*this)[row][col];
 				}
 			}
+			return output;
+		}
+
+		inline Matrix normalized() const {
+			Matrix output;
+			for (size_t row = 0; row < H; ++row) {
+				output[row] = (*this)[row].normalized();
+			}
+			return output;
+		}
+
+		inline Matrix orthogonalized() const {
+			static_assert(W == H && W == 3, "Orthonormalization only exists for 3D vectors");
+			Matrix output;
+
 			return output;
 		}
 

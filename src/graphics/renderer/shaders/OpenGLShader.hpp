@@ -92,7 +92,7 @@ namespace mach::gfx {
 		}
 
 		template<typename T>
-		void set_val(const std::string &p_name, T p_value) const {
+		inline void set_val(const std::string &p_name, T p_value) const {
 			if constexpr (std::is_same<T, float>::value) {
 				glUniform1f(glGetUniformLocation(m_shader_program, p_name.c_str()), p_value);
 			} else if constexpr(std::is_same<T, int>::value) {
@@ -108,7 +108,7 @@ namespace mach::gfx {
 		}
 
 		template<typename T, size_t N>
-		void set_val(const std::string &p_name, Vector<T, N> p_value) const {
+		inline void set_val(const std::string &p_name, Vector<T, N> p_value) const {
 			if constexpr (N == 2) {
 				if constexpr (std::is_same<T, float>::value) {
 					glUniform2fv(glGetUniformLocation(m_shader_program, p_name.c_str()), 1, p_value.get_value_ptr());
@@ -151,7 +151,7 @@ namespace mach::gfx {
 		}
 
 		template<typename T, size_t H, size_t W>
-		void set_val(const std::string &p_name, Matrix<T, H, W> p_value) const {
+		inline void set_val(const std::string &p_name, Matrix<T, H, W> p_value) const {
 			if constexpr (std::is_same<T, float>::value) {
 				if constexpr (H == 2) {
 					if constexpr (W == 2) {

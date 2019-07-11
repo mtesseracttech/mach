@@ -16,7 +16,9 @@ namespace mach {
 			struct {
 				T w;
 				union {
-					T x, y, z;
+					struct {
+						T x, y, z;
+					};
 					Vector<T, 3> v;
 				};
 			};

@@ -13,14 +13,19 @@ namespace mach {
 	template<typename T>
 	class ScaleMatrix {
 
-		Matrix<T, 3, 3> m_matrix;
+		Matrix3<T> m_matrix;
 
-		explicit ScaleMatrix(Matrix<T, 3, 3> p_matrix) : m_matrix(p_matrix) {}
+		explicit ScaleMatrix(Matrix3<T> p_matrix) : m_matrix(p_matrix) {}
 
 		template<typename... Args, typename = typename std::enable_if<sizeof...(Args) == 9>::type>
 		explicit ScaleMatrix(Args &&... p_values) : m_matrix(static_cast<T> (std::forward<Args>(p_values))...) {}
 
 	public:
+
+		static constexpr ScaleMatrix identity() {
+			return ScaleMatrix(Matrix3<T>::identity());
+		}
+
 
 		inline static ScaleMatrix uniform_scale(T p_s) {
 			return ScaleMatrix(p_s, 0.0, 0.0,
@@ -43,11 +48,11 @@ namespace mach {
 			                   km * p_n.x, *p_n.z, km * p_n.y, *p_n.z, 1.0 + km * p_n.z * p_n.z);
 		}
 
-		inline Matrix<T, 4, 4> to_mat4() const {
-			Matrix<T, 4, 4> result(m_matrix[0][0], m_matrix[0][1], m_matrix[0][2], 0.0,
-			                       m_matrix[1][0], m_matrix[1][1], m_matrix[1][2], 0.0,
-			                       m_matrix[2][0], m_matrix[2][1], m_matrix[2][2], 0.0,
-			                       0.0, 0.0, 0.0, 1.0);
+		inline Matrix4<T> to_mat4() const {
+			Matrix4<T> result(m_matrix[0][0], m_matrix[0][1], m_matrix[0][2], 0.0,
+			                  m_matrix[1][0], m_matrix[1][1], m_matrix[1][2], 0.0,
+			                  m_matrix[2][0], m_matrix[2][1], m_matrix[2][2], 0.0,
+			                  0.0, 0.0, 0.0, 1.0);
 			return result;
 		}
 	};

@@ -25,7 +25,7 @@ namespace mach {
 //#define PROPERTY_READONLY(_type, _name, _get) __declspec(property(get=_get)) _type _name
 //#define PROPERTY_WRITEONLY(_type, _name, _set) __declspec(property(put=_put)) _type _name
 
-	template<typename T, size_t N>
+	template<typename T, std::size_t N>
 	class Vector {
 		std::array<T, N> m_data;
 	public:
@@ -35,6 +35,14 @@ namespace mach {
 
 		Vector(const Vector &p_v) {
 			m_data = p_v.m_data;
+		}
+
+		template<typename T2, std::size_t N2>
+		explicit Vector(const Vector<T2, N2> &p_v) {
+			m_data = {0};
+			for (std::size_t i = 0; i < std::min(N, N2); ++i) {
+				m_data[i] = p_v[i];
+			}
 		}
 
 		template<typename... Args, typename = typename std::enable_if<sizeof...(Args) == N>::type>
@@ -72,15 +80,15 @@ namespace mach {
 			return res;
 		}
 
-		constexpr size_t size() { return N; }
+		constexpr std::size_t size() { return N; }
 
-		T &operator[](size_t p_n) { return m_data[p_n]; }
+		T &operator[](std::size_t p_n) { return m_data[p_n]; }
 
-		const T &operator[](size_t p_n) const { return m_data[p_n]; }
+		const T &operator[](std::size_t p_n) const { return m_data[p_n]; }
 
 		Vector &operator=(const Vector &p_rhs) {
 			if (this == &p_rhs) return *this;
-			for (size_t i = 0; i < N; ++i) {
+			for (std::size_t i = 0; i < N; ++i) {
 				m_data[i] = p_rhs[i];
 			}
 			return *this;
@@ -95,42 +103,42 @@ namespace mach {
 		PROPERTY(T, z, get_z, set_z);
 		PROPERTY(T, w, get_w, set_w);
 
-		T get_x() const {
+		constexpr T get_x() const {
 			static_assert(N > 0, "Cannot call x on an lower than 1d vector");
 			return m_data[0];
 		}
 
-		void set_x(T p_x) {
+		constexpr void set_x(T p_x) {
 			static_assert(N > 0, "Cannot call x on an lower than 1d vector");
 			m_data[0] = p_x;
 		}
 
-		T get_y() const {
+		constexpr T get_y() const {
 			static_assert(N > 1, "Cannot call y on an lower than 2d vector");
 			return m_data[1];
 		}
 
-		void set_y(T p_y) {
+		constexpr void set_y(T p_y) {
 			static_assert(N > 1, "Cannot call y on an lower than 2d vector");
 			m_data[1] = p_y;
 		}
 
-		T get_z() const {
+		constexpr T get_z() const {
 			static_assert(N > 2, "Cannot call z on an lower than 3d vector");
 			return m_data[2];
 		}
 
-		void set_z(T p_z) {
+		constexpr void set_z(T p_z) {
 			static_assert(N > 2, "Cannot call z on an lower than 3d vector");
 			m_data[2] = p_z;
 		}
 
-		T get_w() const {
+		constexpr T get_w() const {
 			static_assert(N > 3, "Cannot call w on an lower than 4d vector");
 			return m_data[3];
 		}
 
-		void set_w(T p_w) {
+		constexpr void set_w(T p_w) {
 			static_assert(N > 3, "Cannot call w on an lower than 4d vector");
 			m_data[3] = p_w;
 		}
@@ -141,7 +149,7 @@ namespace mach {
 		template<typename Functor>
 		inline Vector un_op(Functor &&p_op) const {
 			Vector output;
-			for (size_t i = 0; i < N; ++i) {
+			for (std::size_t i = 0; i < N; ++i) {
 				output[i] = p_op((*this)[i]);
 			}
 			return output;
@@ -150,7 +158,7 @@ namespace mach {
 		template<typename Functor>
 		inline Vector bin_op(const Vector &p_v, Functor &&p_op) const {
 			Vector output;
-			for (size_t i = 0; i < N; ++i) {
+			for (std::size_t i = 0; i < N; ++i) {
 				output[i] = p_op((*this)[i], p_v[i]);
 			}
 			return output;
@@ -160,7 +168,7 @@ namespace mach {
 		template<typename Functor>
 		inline Vector bin_op(const T &p_s, Functor &&p_op) const {
 			Vector output;
-			for (size_t i = 0; i < N; ++i) {
+			for (std::size_t i = 0; i < N; ++i) {
 				output[i] = p_op((*this)[i], p_s);
 			}
 			return output;
@@ -209,7 +217,7 @@ namespace mach {
 		}
 
 		inline bool operator==(const Vector &p_v) const {
-			for (size_t i = 0; i < N; ++i) {
+			for (std::size_t i = 0; i < N; ++i) {
 				if (!approx_eq<T>(m_data[i], p_v[i])) {
 					return false;
 				}
@@ -222,49 +230,49 @@ namespace mach {
 		}
 
 		inline void operator+=(const Vector &p_v) {
-			for (size_t i = 0; i < N; ++i) {
+			for (std::size_t i = 0; i < N; ++i) {
 				m_data[i] += p_v[i];
 			}
 		}
 
 		inline void operator-=(const Vector &p_v) {
-			for (size_t i = 0; i < N; ++i) {
+			for (std::size_t i = 0; i < N; ++i) {
 				m_data[i] -= p_v[i];
 			}
 		}
 
 		inline void operator*=(const Vector &p_v) {
-			for (size_t i = 0; i < N; ++i) {
+			for (std::size_t i = 0; i < N; ++i) {
 				m_data[i] *= p_v[i];
 			}
 		}
 
 		inline void operator/=(const Vector &p_v) {
-			for (size_t i = 0; i < N; ++i) {
+			for (std::size_t i = 0; i < N; ++i) {
 				m_data[i] /= p_v[i];
 			}
 		}
 
 		inline void operator+=(const T &p_s) {
-			for (size_t i = 0; i < N; ++i) {
+			for (std::size_t i = 0; i < N; ++i) {
 				m_data[i] += p_s;
 			}
 		}
 
 		inline void operator-=(const T &p_s) {
-			for (size_t i = 0; i < N; ++i) {
+			for (std::size_t i = 0; i < N; ++i) {
 				m_data[i] -= p_s;
 			}
 		}
 
 		inline void operator*=(const T &p_s) {
-			for (size_t i = 0; i < N; ++i) {
+			for (std::size_t i = 0; i < N; ++i) {
 				m_data[i] *= p_s;
 			}
 		}
 
 		inline void operator/=(const T &p_s) {
-			for (size_t i = 0; i < N; ++i) {
+			for (std::size_t i = 0; i < N; ++i) {
 				m_data[i] /= p_s;
 			}
 		}
@@ -280,7 +288,7 @@ namespace mach {
 
 		static inline T dot(const Vector &p_v1, const Vector &p_v2) {
 			T result = 0;
-			for (size_t i = 0; i < N; ++i) {
+			for (std::size_t i = 0; i < N; ++i) {
 				result += p_v1[i] * p_v2[i];
 			}
 			return result;
@@ -352,7 +360,7 @@ namespace mach {
 
 		static inline Vector clamp(const Vector &p_v, const T p_low, const T p_high) {
 			Vector result;
-			for (size_t i = 0; i < N; ++i) {
+			for (std::size_t i = 0; i < N; ++i) {
 				result[i] = std::clamp(p_v[i], p_low, p_high);
 			}
 			return result;
@@ -360,7 +368,7 @@ namespace mach {
 
 		static inline Vector clamp(const Vector &p_v, const Vector &p_low, const Vector &p_high) {
 			Vector result;
-			for (size_t i = 0; i < N; ++i) {
+			for (std::size_t i = 0; i < N; ++i) {
 				result[i] = std::clamp(p_v[i], p_low[i], p_high[i]);
 			}
 			return result;
@@ -368,7 +376,7 @@ namespace mach {
 
 		inline T get_largest() const {
 			T largest = m_data[0];
-			for (size_t i = 1; i < N; ++i) {
+			for (std::size_t i = 1; i < N; ++i) {
 				if (m_data[i] > largest) largest = m_data[i];
 			}
 			return largest;
@@ -376,23 +384,23 @@ namespace mach {
 
 		inline T get_smallest() const {
 			T smallest = m_data[0];
-			for (size_t i = 1; i < N; ++i) {
+			for (std::size_t i = 1; i < N; ++i) {
 				if (m_data[i] < smallest) smallest = m_data[i];
 			}
 			return smallest;
 		}
 
-		inline size_t get_largest_index() const {
-			size_t largest = 0;
-			for (size_t i = 1; i < N; ++i) {
+		inline std::size_t get_largest_index() const {
+			std::size_t largest = 0;
+			for (std::size_t i = 1; i < N; ++i) {
 				if (m_data[i] > largest) largest = i;
 			}
 			return largest;
 		}
 
-		inline size_t get_smallest_index() const {
-			size_t smallest = 0;
-			for (size_t i = 1; i < N; ++i) {
+		inline std::size_t get_smallest_index() const {
+			std::size_t smallest = 0;
+			for (std::size_t i = 1; i < N; ++i) {
 				if (m_data[i] < smallest) smallest = i;
 			}
 			return smallest;

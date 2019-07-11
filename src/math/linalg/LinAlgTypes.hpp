@@ -10,6 +10,7 @@
 #include "Quaternion.hpp"
 
 namespace mach {
+	//Common Vector Templates
 	template<typename T>
 	using Vector2 = Vector<T, 2>;
 
@@ -39,37 +40,77 @@ namespace mach {
 	typedef Vector3<unsigned int> UVec3;
 	typedef Vector4<unsigned int> UVec4;
 
-	//Standard Precision, short form
-	typedef Matrix<float, 2, 2> Mat2;
-	typedef Matrix<float, 3, 3> Mat3;
-	typedef Matrix<float, 4, 4> Mat4;
+	//Common Square Matrix Templates
+	template<typename T>
+	using Matrix2 = Matrix<T, 2, 2>;
 
-	//Standard Precision, full form
-	typedef Matrix<float, 2, 2> Mat2x2;
-	typedef Matrix<float, 2, 3> Mat2x3;
-	typedef Matrix<float, 2, 4> Mat2x4;
-	typedef Matrix<float, 3, 2> Mat3x2;
-	typedef Matrix<float, 3, 3> Mat3x3;
-	typedef Matrix<float, 3, 4> Mat3x4;
-	typedef Matrix<float, 4, 2> Mat4x2;
-	typedef Matrix<float, 4, 3> Mat4x3;
-	typedef Matrix<float, 4, 4> Mat4x4;
+	template<typename T>
+	using Matrix3 = Matrix<T, 3, 3>;
+
+	template<typename T>
+	using Matrix4 = Matrix<T, 4, 4>;
+
+	//Standard Precision, short form
+	typedef Matrix2<float> Mat2;
+	typedef Matrix3<float> Mat3;
+	typedef Matrix4<float> Mat4;
 
 	//High Precision, short form
-	typedef Matrix<double, 2, 2> Mat2h;
-	typedef Matrix<double, 3, 3> Mat3h;
-	typedef Matrix<double, 4, 4> Mat4h;
+	typedef Matrix2<double> Mat2h;
+	typedef Matrix3<double> Mat3h;
+	typedef Matrix4<double> Mat4h;
+
+
+	//Common Matrix Templates
+	template<typename T>
+	using Matrix2x2 = Matrix<T, 2, 2>;
+
+	template<typename T>
+	using Matrix2x3 = Matrix<T, 2, 3>;
+
+	template<typename T>
+	using Matrix2x4 = Matrix<T, 2, 4>;
+
+	template<typename T>
+	using Matrix3x2 = Matrix<T, 3, 2>;
+
+	template<typename T>
+	using Matrix3x3 = Matrix<T, 3, 3>;
+
+	template<typename T>
+	using Matrix3x4 = Matrix<T, 3, 4>;
+
+	template<typename T>
+	using Matrix4x2 = Matrix<T, 4, 2>;
+
+	template<typename T>
+	using Matrix4x3 = Matrix<T, 4, 3>;
+
+	template<typename T>
+	using Matrix4x4 = Matrix<T, 4, 4>;
+
+
+	//Standard Precision, full form
+	typedef Matrix2x2<float> Mat2x2;
+	typedef Matrix2x3<float> Mat2x3;
+	typedef Matrix2x4<float> Mat2x4;
+	typedef Matrix3x2<float> Mat3x2;
+	typedef Matrix3x3<float> Mat3x3;
+	typedef Matrix3x4<float> Mat3x4;
+	typedef Matrix4x2<float> Mat4x2;
+	typedef Matrix4x3<float> Mat4x3;
+	typedef Matrix4x4<float> Mat4x4;
 
 	//High Precision, full form
-	typedef Matrix<double, 2, 2> Mat2x2h;
-	typedef Matrix<double, 2, 3> Mat2x3h;
-	typedef Matrix<double, 2, 4> Mat2x4h;
-	typedef Matrix<double, 3, 2> Mat3x2h;
-	typedef Matrix<double, 3, 3> Mat3x3h;
-	typedef Matrix<double, 3, 4> Mat3x4h;
-	typedef Matrix<double, 4, 2> Mat4x2h;
-	typedef Matrix<double, 4, 3> Mat4x3h;
-	typedef Matrix<double, 4, 4> Mat4x4h;
+	typedef Matrix2x2<double> Mat2x2h;
+	typedef Matrix2x3<double> Mat2x3h;
+	typedef Matrix2x4<double> Mat2x4h;
+	typedef Matrix3x2<double> Mat3x2h;
+	typedef Matrix3x3<double> Mat3x3h;
+	typedef Matrix3x4<double> Mat3x4h;
+	typedef Matrix4x2<double> Mat4x2h;
+	typedef Matrix4x3<double> Mat4x3h;
+	typedef Matrix4x4<double> Mat4x4h;
 
 	//Quaternions
 	typedef Quaternion<float> Quat;
