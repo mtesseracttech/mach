@@ -341,19 +341,23 @@ namespace mach::tests::math {
 	}
 
 	void LinearAlgebraTests::other_tests() {
-		auto transform = Transform<float>::create();
-		Logger::log(transform->local_position);
-		transform->local_position = Vec3(1, 2, 3);
-		transform->local_rotation = Quat(std::sqrt(2) / 2, 0, 0, std::sqrt(2) / 2);
-		transform->local_scale = Vec3(2, 3, 4);
-		Logger::log(transform->position);
-		Logger::log(transform->rotation);
-		Logger::log(transform->scale);
+		auto t1 = Transform<float>::create(Vec3::zero());
+		Logger::log(t1->local_position);
+		t1->local_position = Vec3(1, 2, 3);
+		t1->local_rotation = Quat(std::sqrt(2) / 2, 0, 0, std::sqrt(2) / 2);
+		t1->local_scale = Vec3(2, 3, 4);
+		Logger::log(t1->position);
+		Logger::log(t1->rotation);
+		Logger::log(t1->scale);
+		auto t2 = Transform<float>::create(Vec3::zero(), Quat::identity(), Vec3::one(), t1);
+		t2->local_position = Vec3(1, 2, 3);
+		Logger::log(t2->position);
+		Logger::log(t2->rotation);
+		Logger::log(t2->scale);
+
 		Logger::log("MISCELLANEOUS LINEAR ALGEBRA TESTS");
 		Logger::log("MISCELLANEOUS LINEAR ALGEBRA TESTS: PASSED");
 	}
-
-
 }
 
 #endif //MACH_LINEARALGEBRATESTS_HPP
