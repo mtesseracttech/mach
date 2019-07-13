@@ -34,47 +34,47 @@ namespace mach {
 
 		void notify_children() {
 			for (int i = m_children.size() - 1; i >= 0; --i) {
-				try {
-					auto child = m_children[i].lock();
-					child->mark_changed();
-				}
-
-				catch (std::bad_weak_ptr &ptr) {
-					Logger::log("Null Child Found", Error);
-				}
+				auto child = m_children[i].lock();
+				child->mark_changed();
 			}
 		}
 
 		void update_transform() {
-			m_local_transform = math::translate(m_local_position) *
-			                    RotationMatrix<T>::from_quat(m_local_rotation).to_mat4() *
-			                    ScaleMatrix<T>::scale_along_cardinal_axes(m_local_scale).to_mat4();
+			m_local_transform = math::compose_trs(m_local_position, m_local_rotation, m_local_scale);
 			if (m_parent) {
 				m_world_transform = m_parent->get_mat() * m_local_transform;
-				Logger::log("Yes parent");
 			} else {
 				m_world_transform = m_local_transform;
-				Logger::log("No parent");
 			}
-			math::decompose_trs(m_world_transform, &m_world_position, &m_world_rotation, &m_world_scale);
+			update_world_vars();
 			notify_children();
 			m_changed = false;
 		}
 
-		explicit Transform(std::shared_ptr<Transform> p_parent,
-		                   const Vector3<T> &p_position,
-		                   const Quaternion<T> &p_rotation = Quaternion<T>::identity(),
-		                   const Vector3<T> &p_scale = Vector3<T>::one()) :
-				m_local_position(p_position),
-				m_local_rotation(p_rotation),
-				m_local_scale(p_scale),
-				m_local_transform(Matrix4<T>::identity()),
-				m_world_position(Vector3<T>::zero()),
-				m_world_rotation(Quaternion<T>::identity()),
-				m_world_scale(Vector3<T>::one()),
-				m_world_transform(Matrix4<T>::identity()),
-				m_changed(true),
-				m_parent(p_parent) {
+		//To be used in conjunction with the world pos/rot/scale setters
+		Matrix4<T> create_local_transform(const Matrix4<T> &p_world_transform) {
+			if (m_parent) {
+				return m_local_transform = m_parent->get_mat().inverse() * p_world_transform;
+			} else {
+				return m_local_transform = p_world_transform;
+			}
+		}
+
+		void update_world_vars() {
+			math::decompose_trs(m_world_transform, &m_world_position, &m_world_rotation, &m_world_scale);
+		}
+
+		void update_local_vars() {
+			math::decompose_trs(m_local_transform, &m_local_position, &m_local_rotation, &m_local_scale);
+		}
+
+		void add_child(std::weak_ptr<Transform> p_child) {
+			auto it = std::find(m_children.begin(), m_children.end(),
+			                    p_child); //This line will not work for some reason
+			if (it == m_children.end()) {
+				m_children.push_back(p_child);
+				p_child.lock()->m_parent = this; //This line will not work
+			}
 		}
 
 		void check_mat() {
@@ -88,24 +88,32 @@ namespace mach {
 			notify_children();
 		}
 
-		void add_child(const std::weak_ptr<Transform> p_child) {
-			m_children.push_back(p_child);
+	public:
+
+		Transform(const Vector3<T> &p_position = Vector3<T>::zero(),
+		          const Quaternion<T> &p_rotation = Quaternion<T>::identity(),
+		          const Vector3<T> &p_scale = Vector3<T>::one()) :
+				m_local_position(p_position),
+				m_local_rotation(p_rotation),
+				m_local_scale(p_scale),
+				m_local_transform(Matrix4<T>::identity()),
+				m_world_position(Vector3<T>::zero()),
+				m_world_rotation(Quaternion<T>::identity()),
+				m_world_scale(Vector3<T>::one()),
+				m_world_transform(Matrix4<T>::identity()),
+				m_changed(true),
+				m_parent(nullptr) {
 		}
 
-	public:
-		static std::shared_ptr<Transform> create(const Vector3<T> &p_position,
-		                                         const Quaternion<T> &p_rotation = Quaternion<T>::identity(),
-		                                         const Vector3<T> &p_scale = Vector3<T>::one(),
-		                                         std::shared_ptr<Transform> p_parent = nullptr) {
-			auto new_transform = std::make_shared<Transform>(Transform(p_parent, p_position, p_rotation, p_scale));
-			if (p_parent) {
-				p_parent->add_child(new_transform);
+		static void add_child(std::shared_ptr<Transform> p_parent, std::weak_ptr<Transform> p_child) {
+			if (p_parent && !p_child.expired()) {
+				p_parent->m_children.push_back(p_child);
+				p_child.lock()->m_parent = p_parent;
 			}
-			return new_transform;
 		}
 
 		PROPERTY_READONLY(Quaternion<T>, rotation, get_world_rotation);
-		PROPERTY_READONLY(Vector3<T>, position, get_world_position);
+		PROPERTY(Vector3<T>, position, get_world_position, set_world_position);
 		PROPERTY_READONLY(Vector3<T>, scale, get_world_scale);
 		PROPERTY(Quaternion<T>, local_rotation, get_local_rotation, set_local_rotation);
 		PROPERTY(Vector3<T>, local_position, get_local_position, set_local_position);
@@ -115,6 +123,22 @@ namespace mach {
 			check_mat();
 			return m_local_transform;
 		}
+
+		void set_world_position(const Vector3<T> &p_position) {
+			m_world_position = p_position;
+			m_world_transform[3] = Vector4<T>(p_position.x, p_position.y, p_position.z, m_world_transform[3][3]);
+			create_local_transform(m_world_transform);
+			update_local_vars();
+			notify_children();
+		};
+
+		void set_world_position(const Quaternion<T> &p_rotation) {
+			m_world_rotation = p_rotation;
+			//m_world_transform[3] = Vector4<T>(p_position.x, p_position.y, p_position.z, m_world_transform[3][3]);
+			create_local_transform(m_world_transform);
+			update_local_vars();
+			notify_children();
+		};
 
 		Quaternion<T> get_world_rotation() {
 			check_mat();

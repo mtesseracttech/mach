@@ -22,9 +22,7 @@ namespace mach {
 					Vector<T, 3> v;
 				};
 			};
-			struct {
-				std::array<T, 4> m_array;
-			};
+			std::array<T, 4> m_array;
 		};
 
 		Quaternion(T p_w, T p_x, T p_y, T p_z) : m_array{p_w, p_x, p_y, p_z} {}

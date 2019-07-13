@@ -20,6 +20,47 @@ namespace mach::math {
 	}
 
 	template<typename T>
+	Matrix4 <T>
+	view(const Vector3 <T> &p_position, const Vector3 <T> &p_right, const Vector3 <T> &p_up,
+	     const Vector3 <T> &p_direction) {
+		Matrix4<T> direction(p_right.x, p_up.x, p_direction.x, 0.0,
+		                     p_right.y, p_up.y, p_direction.y, 0.0,
+		                     p_right.z, p_up.z, p_direction.z, 0.0,
+		                     0.0, 0.0, 0.0, 1.0);
+
+		Matrix4<T> position(1.0, 0.0, 0.0, 0.0,
+		                    0.0, 1.0, 0.0, 0.0,
+		                    0.0, 0.0, 1.0, 0.0,
+		                    -p_position.x, -p_position.y, -p_position.z, 1.0);
+		return direction * position;
+	}
+
+	template<typename T>
+	Matrix4 <T> look_at(const Vector3 <T> &p_origin, const Vector3 <T> &p_target, const Vector3 <T> &p_up) {
+		Vector3<T> forward = (p_target - p_origin).normalized();
+		Vector3<T> right = Vector3<T>::cross(forward, p_up).normalized();
+		Vector3<T> up = Vector3<T>::cross(forward, right).normalized();
+		return view(p_origin, right, up, forward);
+	}
+
+	template<typename T>
+	Matrix4 <T>
+	compose_trs(const Vector3 <T> &p_position, const Quaternion <T> &p_rotation, const Vector3 <T> &p_scale) {
+		return translate(p_position) *
+		       RotationMatrix<T>::from_quat(p_rotation).to_mat4() *
+		       ScaleMatrix<T>::scale_along_cardinal_axes(p_scale).to_mat4();
+	}
+
+	template<typename T>
+	Matrix4 <T>
+	compose_trs(const Vector3 <T> &p_position, const RotationMatrix <T> &p_rotation, const Vector3 <T> &p_scale) {
+		return translate(p_position) *
+		       p_rotation.to_mat4() *
+		       ScaleMatrix<T>::scale_along_cardinal_axes(p_scale).to_mat4();
+	}
+
+
+	template<typename T>
 	void decompose_trs(const Matrix4 <T> p_trs_matrix,
 	                   Vector3 <T> *p_translation,
 	                   Quaternion <T> *p_rotation,
@@ -37,14 +78,7 @@ namespace mach::math {
 		rotation[1] = Vector3<T>(p_trs_matrix[1] / p_scale->y);
 		rotation[2] = Vector3<T>(p_trs_matrix[2] / p_scale->z);
 
-		//Logger::log(p_trs_matrix);
-
 		*p_rotation = Quaternion<T>::from_matrix(rotation);
-
-		//Logger::log(*p_translation);
-		//Logger::log(*p_rotation);
-		//Logger::log(*p_scale);
-		//Logger::log(p_trs_matrix);
 	}
 
 	template<typename T>
