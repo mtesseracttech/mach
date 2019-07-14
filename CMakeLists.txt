@@ -99,6 +99,8 @@ if (OPENGL_FOUND)
     message(STATUS "Found OpenGL, Including and Linking now")
     target_include_directories(mach PUBLIC ${OPENGL_INCLUDE_DIR})
     target_link_libraries(mach ${OPENGL_gl_LIBRARY})
+elseif (NOT OPENGL_FOUND)
+    message(FATAL_ERROR "Could not find OpenGL")
 endif (OPENGL_FOUND)
 
 # Finding and linking GLFW3

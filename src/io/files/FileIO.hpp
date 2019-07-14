@@ -11,7 +11,6 @@
 #include <auxiliary/logging/Logger.hpp>
 #include <cstring>
 #include <sstream>
-#include <filesystem>
 #include <optional>
 
 
@@ -55,7 +54,12 @@ namespace mach::io {
 		}
 
 		static bool file_exists(const std::string &p_filename) {
-			return std::filesystem::exists(p_filename);
+			if (FILE *file = fopen(p_filename.c_str(), "r")) {
+				fclose(file);
+				return true;
+			} else {
+				return false;
+			}
 		}
 	};
 }
