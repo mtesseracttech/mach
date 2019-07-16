@@ -9,6 +9,7 @@
 #include <functional>
 #include "math/linalg/Vector.hpp"
 #include <memory>
+#include <auxiliary/exceptions/NotImplemented.hpp>
 
 /*
  * Access is [row][column]
@@ -134,11 +135,19 @@ namespace mach {
 		}
 
 		inline Matrix orthogonalized() const {
-			static_assert(W == H && W == 3, "Orthonormalization only exists for 3D vectors");
+			static_assert(W == H && W == 3, "Orthogonalization only exists for 3D vectors");
 			Matrix output;
-
+			throw NotImplemented("Orthogonalization has not been implemented yet.");
 			return output;
 		}
+
+		inline Matrix orthonomalized() const {
+			static_assert(W == H && W == 3, "Orthonormalization only exists for 3D vectors");
+			Matrix output;
+			throw NotImplemented("Orthonormalization has not been implemented yet.");
+			return output;
+		}
+
 
 		inline T determinant() const {
 			static_assert(W == H, "Determinants can only be created from square matrices");

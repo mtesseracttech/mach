@@ -2,19 +2,20 @@
 // Created by mtesseract on 7/5/19.
 //
 
-#ifndef MACH_TRANSFORM_HPP
-#define MACH_TRANSFORM_HPP
+#ifndef MACH_TRANSFORMCOMPOUND_HPP
+#define MACH_TRANSFORMCOMPOUND_HPP
 
 #include <math/linalg/LinAlgTypes.hpp>
 #include <math/linalg/Matrix/RotationMatrix.hpp>
 #include <math/linalg/Matrix/ScaleMatrix.hpp>
 #include <math/linalg/Matrix/MatrixUtils.hpp>
 #include <auxiliary/Properties.hpp>
+#include <auxiliary/Memory.hpp>
 
 
 namespace mach {
 	template<typename T>
-	class Transform {
+	class TransformCompound {
 		Matrix4<T> m_local_transform;
 
 		Vector3<T> m_local_position;
@@ -29,8 +30,8 @@ namespace mach {
 
 		bool m_changed;
 
-		std::vector<std::weak_ptr<Transform>> m_children;
-		std::shared_ptr<Transform> m_parent;
+		std::vector<std::weak_ptr<TransformCompound>> m_children;
+		std::shared_ptr<TransformCompound> m_parent;
 
 		void notify_children() {
 			for (int i = m_children.size() - 1; i >= 0; --i) {
@@ -68,15 +69,6 @@ namespace mach {
 			math::decompose_trs(m_local_transform, &m_local_position, &m_local_rotation, &m_local_scale);
 		}
 
-		void add_child(std::weak_ptr<Transform> p_child) {
-			auto it = std::find(m_children.begin(), m_children.end(),
-			                    p_child); //This line will not work for some reason
-			if (it == m_children.end()) {
-				m_children.push_back(p_child);
-				p_child.lock()->m_parent = this; //This line will not work
-			}
-		}
-
 		void check_mat() {
 			if (m_changed) {
 				update_transform();
@@ -90,9 +82,9 @@ namespace mach {
 
 	public:
 
-		Transform(const Vector3<T> &p_position = Vector3<T>::zero(),
-		          const Quaternion<T> &p_rotation = Quaternion<T>::identity(),
-		          const Vector3<T> &p_scale = Vector3<T>::one()) :
+		TransformCompound(const Vector3<T> &p_position = Vector3<T>::zero(),
+		                  const Quaternion<T> &p_rotation = Quaternion<T>::identity(),
+		                  const Vector3<T> &p_scale = Vector3<T>::one()) :
 				m_local_position(p_position),
 				m_local_rotation(p_rotation),
 				m_local_scale(p_scale),
@@ -105,8 +97,21 @@ namespace mach {
 				m_parent(nullptr) {
 		}
 
-		static void add_child(std::shared_ptr<Transform> p_parent, std::weak_ptr<Transform> p_child) {
-			if (p_parent && !p_child.expired()) {
+		std::weak_ptr<TransformCompound<T>> &operator[](std::size_t p_n) { return m_children[p_n]; };
+
+		const std::weak_ptr<TransformCompound<T>> &operator[](std::size_t p_n) const { return m_children[p_n]; };
+
+		std::size_t get_child_count() {
+			return m_children.size();
+		}
+
+		static void add_child(std::shared_ptr<TransformCompound> p_parent, std::weak_ptr<TransformCompound> p_child) {
+			auto it = std::find_if(p_parent->m_children.begin(), p_parent->m_children.end(),
+			                       [p_child](std::weak_ptr<TransformCompound> p_member_child) {
+				                       return equals(p_child, p_member_child);
+			                       }
+			);
+			if (it == p_parent->m_children.end()) {
 				p_parent->m_children.push_back(p_child);
 				p_child.lock()->m_parent = p_parent;
 			}
@@ -182,6 +187,9 @@ namespace mach {
 			m_local_scale = p_scale;
 		};
 	};
+
+	typedef TransformCompound<float> Transform;
+	typedef TransformCompound<double> Transform_d;
 }
 
-#endif //MACH_TRANSFORM_HPP
+#endif //MACH_TRANSFORMCOMPOUND_HPP

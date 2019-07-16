@@ -61,8 +61,7 @@ add_executable(mach lib/glad.c
         src/graphics/renderer/material/Texture.hpp
         src/caching/AssetCache.hpp
         src/math/linalg/Matrix/MatrixUtils.hpp
-        src/graphics/renderer/Camera.hpp
-        src/graphics/renderer/Transform.hpp)
+        src/graphics/renderer/Camera.hpp src/math/linalg/TransformCompound.hpp src/auxiliary/Memory.hpp)
 
 target_compile_options(mach PRIVATE -fdeclspec)
 

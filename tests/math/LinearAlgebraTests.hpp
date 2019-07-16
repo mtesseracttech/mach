@@ -10,7 +10,7 @@
 #include <auxiliary/logging/LogUtils.hpp>
 #include <auxiliary/MachAssertion.hpp>
 #include <math/util/MathUtils.hpp>
-#include <graphics/renderer/Transform.hpp>
+#include <math/linalg/TransformCompound.hpp>
 
 namespace mach::tests::math {
 	class LinearAlgebraTests {
@@ -341,7 +341,7 @@ namespace mach::tests::math {
 	}
 
 	void LinearAlgebraTests::other_tests() {
-		auto t1 = std::make_shared<Transform<float>>(Transform<float>());
+		auto t1 = std::make_shared<Transform>(Transform());
 		Logger::log(t1->local_position);
 		t1->local_position = Vec3(1, 2, 3);
 		t1->local_rotation = Quat(std::sqrt(2) / 2, 0, 0, std::sqrt(2) / 2);
@@ -349,8 +349,12 @@ namespace mach::tests::math {
 		Logger::log(t1->position);
 		Logger::log(t1->rotation);
 		Logger::log(t1->scale);
-		auto t2 = std::make_shared<Transform<float>>(Transform<float>(Vec3::zero(), Quat::identity(), Vec3::one()));
-		Transform<float>::add_child(t1, t2);
+		auto t2 = std::make_shared<Transform>(Transform(Vec3::zero(), Quat::identity(), Vec3::one()));
+		Transform::add_child(t1, t2);
+		auto child_cnt = t1->get_child_count();
+		Transform::add_child(t1, t2);
+		mach_assert(child_cnt == 1 && child_cnt == t1->get_child_count(),
+		            "Child count should not change when same child is added twice");
 		t2->local_scale = Vec3(2, 2, 2);
 		t2->local_position = Vec3(1, 2, 3);
 		t2->local_rotation = Quat(std::sqrt(2) / 2, 0, 0, std::sqrt(2) / 2);

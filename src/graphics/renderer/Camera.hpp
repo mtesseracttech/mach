@@ -5,12 +5,12 @@
 #ifndef MACH_CAMERA_HPP
 #define MACH_CAMERA_HPP
 
-#include "Transform.hpp"
+#include "math/linalg/TransformCompound.hpp"
 
 namespace mach::gfx {
 	template<typename T>
 	class Camera {
-		Transform <T> m_transform;
+		TransformCompound <T> m_transform;
 		Matrix4<T> m_view;
 	};
 }
