@@ -103,3 +103,5 @@ fabric.properties
 
 # making sure not to ignore models
 !/res/models/*.obj
+
+.conan

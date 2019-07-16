@@ -40,7 +40,7 @@ if (ASSIMP_LIBRARIES)
 
     # Like the found path
     set(ASSIMP_FOUND TRUE)
-    message("-- Found ASSIMP")
+    #message("-- Found ASSIMP")
 else ()
     find_library(ASSIMP_LIBRARIES
             NAMES assimp

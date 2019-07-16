@@ -1,0 +1,8 @@
+[requires]
+glfw/3.3@bincrafters/stable
+Assimp/4.1.0@jacmoe/stable
+stb/20190512@conan/stable
+
+
+[generators]
+cmake
