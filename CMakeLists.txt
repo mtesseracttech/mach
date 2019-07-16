@@ -9,6 +9,7 @@ include(.conan/conanbuildinfo.cmake)
 #conan_basic_setup(NO_OUTPUT_DIRS)
 conan_basic_setup()
 
+
 # Adding libdl, which is a dependency for GLAD on non-windows platforms and may not be recognized otherwise
 set(CMAKE_CXX_LINK_EXECUTABLE "${CMAKE_CXX_LINK_EXECUTABLE} -ldl")
 
