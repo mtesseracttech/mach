@@ -21,6 +21,7 @@ CC=/usr/bin/clang
 CXX=/usr/bin/clang++
 ******************************
 
+
 OSX
 In case of error relating to not being able to find certain basic files like cmath, reinstall the SDK headers.
 
@@ -46,9 +47,8 @@ build_type=Release
 [env]
 ******************************
 
-build arguments:
+building:
 cd to project root (folder this file is in)
-
 mkdir .conan && cd .conan
 conan install .. --profile clang --build=missing
 
