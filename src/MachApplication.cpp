@@ -54,13 +54,8 @@ namespace mach {
 }
 
 int main() {
-//	try {
+	std::cout << mach::get_execution_path() << std::endl;
 	mach::tests::run_tests();
 	mach::MachApplication app;
 	app.run();
-//	} catch (const std::exception &ex) {
-//		mach::Logger::log(ex.what(), mach::Error);
-//	}
-
 }
-

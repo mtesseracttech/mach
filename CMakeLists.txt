@@ -3,11 +3,10 @@ project(mach)
 
 set(CMAKE_CXX_STANDARD 17)
 
-if (EXISTS ${CMAKE_SOURCE_DIR}/.conan/conanbuildinfo.cmake)
-    include(${CMAKE_SOURCE_DIR}/.conan/conanbuildinfo.cmake)
-else ()
-    include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
-endif ()
+include(.conan/conanbuildinfo.cmake)
+
+# NO_OUTPUT_DIRS is there to prevent conan from setting the output directory within cmake-build-debug to bin/mach instead of just mach
+#conan_basic_setup(NO_OUTPUT_DIRS)
 conan_basic_setup()
 
 # Adding libdl, which is a dependency for GLAD on non-windows platforms and may not be recognized otherwise
@@ -69,18 +68,8 @@ target_compile_options(mach PRIVATE -fdeclspec)
 set(BASEPATH "${CMAKE_SOURCE_DIR}/src")
 include_directories("${BASEPATH}")
 
-
-# Fix(es) for platform specific problems
-#if (APPLE)
-#    exec_program(uname ARGS -v OUTPUT_VARIABLE DARWIN_VERSION)
-#    string(REGEX MATCH "[0-9]+" DARWIN_VERSION ${DARWIN_VERSION})
-#    message(STATUS "OSX Version=${DARWIN_VERSION}")
-#    if (DARWIN_VERSION GREATER 17)
-#        message(STATUS "Running on OSX Mojave or higher, adding /usr/local/lib to link directories")
-#        # Fix linking on 10.14+. See https://stackoverflow.com/questions/54068035
-#        link_directories(/usr/local/lib)
-#    endif ()
-#endif ()
+# Copies the res folder to the build folder
+file(COPY res DESTINATION ${CMAKE_BINARY_DIR})
 
 # Setting up PkgConfig
 find_package(PkgConfig REQUIRED)
@@ -88,17 +77,6 @@ find_package(PkgConfig REQUIRED)
 # Finding and including GLAD
 target_include_directories(mach PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/include/")
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules/")
-
-
-# Finding and linking GLFW3
-#find_package(GLFW3 3.3 REQUIRED)
-#if (GLFW3_FOUND)
-#    message(STATUS "Found GLFW 3.3, Including and Linking now")
-#    target_link_libraries(mach glfw)
-#elseif (NOT GLFW_FOUND)
-#    message(FATAL_ERROR "Could not find GLFW 3.3")
-#endif ()
-
 
 # Finding and linking OpenGL
 find_package(OpenGL REQUIRED)
@@ -110,14 +88,5 @@ elseif (NOT OPENGL_FOUND)
     message(FATAL_ERROR "Could not find OpenGL")
 endif (OPENGL_FOUND)
 
-# Finding and linking ASSIMP
-#find_package(ASSIMP REQUIRED)
-#if (ASSIMP_FOUND)
-#    message(STATUS "Found ASSIMP, Including and Linking now")
-#    target_include_directories(mach PUBLIC ${ASSIMP_INCLUDE_DIRS})
-#    target_link_libraries(mach ${ASSIMP_LIBRARIES})
-#elseif (NOT ASSIMP_FOUND)
-#    message(FATAL_ERROR "Could not find ASSIMP")
-#endif ()
 
-target_link_libraries(md5 ${CONAN_LIBS})
+target_link_libraries(mach ${CONAN_LIBS})
