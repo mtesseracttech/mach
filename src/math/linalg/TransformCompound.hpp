@@ -30,6 +30,9 @@ namespace mach {
 
 		bool m_changed;
 
+		//The user of the transform, that likely needs to be updated in case it gets
+		void *m_user = nullptr;
+
 		std::vector<std::weak_ptr<TransformCompound>> m_children;
 		std::shared_ptr<TransformCompound> m_parent;
 
@@ -80,6 +83,11 @@ namespace mach {
 			notify_children();
 		}
 
+		Vector3<T> get_world_matrix_dir(std::size_t m_row) {
+			check_mat();
+			return Vector3<T>(m_world_transform[m_row]).normalized();
+		}
+
 	public:
 
 		TransformCompound(const Vector3<T> &p_position = Vector3<T>::zero(),
@@ -94,7 +102,8 @@ namespace mach {
 				m_world_scale(Vector3<T>::one()),
 				m_world_transform(Matrix4<T>::identity()),
 				m_changed(true),
-				m_parent(nullptr) {
+				m_parent(nullptr),
+				m_owner(m_) {
 		}
 
 		std::weak_ptr<TransformCompound<T>> &operator[](std::size_t p_n) { return m_children[p_n]; };
@@ -126,7 +135,7 @@ namespace mach {
 
 		Matrix4<T> get_mat() {
 			check_mat();
-			return m_local_transform;
+			return m_world_transform;
 		}
 
 		void set_world_position(const Vector3<T> &p_position) {
@@ -186,6 +195,37 @@ namespace mach {
 			mark_changed();
 			m_local_scale = p_scale;
 		};
+
+		PROPERTY_READONLY(Vector3<T>, up, get_up);
+		PROPERTY_READONLY(Vector3<T>, down, get_down);
+		PROPERTY_READONLY(Vector3<T>, left, get_left);
+		PROPERTY_READONLY(Vector3<T>, right, get_right);
+		PROPERTY_READONLY(Vector3<T>, forward, get_forward);
+		PROPERTY_READONLY(Vector3<T>, backward, get_backward);
+
+		Vector3<T> get_forward() {
+			return get_world_matrix_dir(2);
+		}
+
+		Vector3<T> get_backward() {
+			return -get_world_matrix_dir(2);
+		}
+
+		Vector3<T> get_up() {
+			return get_world_matrix_dir(1);
+		}
+
+		Vector3<T> get_down() {
+			return -get_world_matrix_dir(1);
+		}
+
+		Vector3<T> get_left() {
+			return get_world_matrix_dir(0);
+		}
+
+		Vector3<T> get_right() {
+			return -get_world_matrix_dir(0);
+		}
 	};
 
 	typedef TransformCompound<float> Transform;

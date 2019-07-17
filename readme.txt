@@ -6,11 +6,14 @@ profile filename: ~/.conan/profiles/clang
 contents:
 ******************************
 [settings]
+os=Linux
+os_build=Linux
+arch=x86_64
+arch_build=x86_64
 compiler=clang
 compiler.version=8
 compiler.libcxx=libstdc++11
-arch=x86_64
-os=Linux
+build_type=Release
 
 [options]
 
