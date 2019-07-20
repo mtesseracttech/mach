@@ -63,6 +63,21 @@ namespace mach::math {
 		       ScaleMatrix<T>::scale_along_cardinal_axes(p_scale).to_mat4();
 	}
 
+	template<typename T>
+	Matrix4 <T>
+	compose_trs_direct(const Vector3 <T> &p_position, const Quaternion <T> &p_rotation, const Vector3 <T> &p_scale) {
+		Matrix4<T> result = RotationMatrix<T>::from_quat(p_rotation).to_mat4();
+
+		for (std::size_t i = 0; i < p_scale.size(); ++i) {
+			result[i] *= p_scale[i];
+		}
+		for (std::size_t i = 0; i < p_position.size(); ++i) {
+			result[3][i] = p_position[i];
+		}
+
+		return result;
+	}
+
 
 	template<typename T>
 	void decompose_trs(const Matrix4 <T> p_trs_matrix,

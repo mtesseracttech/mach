@@ -341,6 +341,9 @@ namespace mach::tests::math {
 	}
 
 	void LinearAlgebraTests::other_tests() {
+		std::cout << "Size of Transform: " << sizeof(Transform) << " bytes" << std::endl;
+		std::cout << "Size of TransformD: " << sizeof(TransformD) << " bytes" << std::endl;
+
 		auto t1 = std::make_shared<Transform>(Transform());
 		Logger::log(t1->local_position);
 		t1->local_position = Vec3(1, 2, 3);

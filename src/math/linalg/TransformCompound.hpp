@@ -12,29 +12,37 @@
 #include <auxiliary/Properties.hpp>
 #include <auxiliary/Memory.hpp>
 
-
 namespace mach {
+	enum CoordinateSpace {
+		World,
+		Local
+	};
+
+	namespace core {
+		template<typename T>
+		class SceneNode;
+	}
+
 	template<typename T>
 	class TransformCompound {
-		Matrix4<T> m_local_transform;
+		Matrix4<T> m_local_transform = Matrix4<T>::identity();
 
-		Vector3<T> m_local_position;
-		Quaternion<T> m_local_rotation;
-		Vector3<T> m_local_scale;
+		Vector3<T> m_local_position = Vector3<T>::zero();
+		Quaternion<T> m_local_rotation = Quaternion<T>::identity();
+		Vector3<T> m_local_scale = Vector3<T>::one();
 
-		Matrix4<T> m_world_transform;
+		Matrix4<T> m_world_transform = Matrix4<T>::identity();
 
-		Vector3<T> m_world_position;
-		Quaternion<T> m_world_rotation;
-		Vector3<T> m_world_scale;
+		Vector3<T> m_world_position = Vector3<T>::zero();
+		Quaternion<T> m_world_rotation = Quaternion<T>::identity();
+		Vector3<T> m_world_scale = Vector3<T>::one();
 
-		bool m_changed;
-
-		//The user of the transform, that likely needs to be updated in case it gets
-		void *m_user = nullptr;
+		bool m_changed = true;
 
 		std::vector<std::weak_ptr<TransformCompound>> m_children;
 		std::shared_ptr<TransformCompound> m_parent;
+
+		std::unique_ptr<mach::core::SceneNode<T>> m_scene_node;
 
 		void notify_children() {
 			for (int i = m_children.size() - 1; i >= 0; --i) {
@@ -92,19 +100,29 @@ namespace mach {
 
 		TransformCompound(const Vector3<T> &p_position = Vector3<T>::zero(),
 		                  const Quaternion<T> &p_rotation = Quaternion<T>::identity(),
-		                  const Vector3<T> &p_scale = Vector3<T>::one()) :
-				m_local_position(p_position),
-				m_local_rotation(p_rotation),
-				m_local_scale(p_scale),
-				m_local_transform(Matrix4<T>::identity()),
-				m_world_position(Vector3<T>::zero()),
-				m_world_rotation(Quaternion<T>::identity()),
-				m_world_scale(Vector3<T>::one()),
-				m_world_transform(Matrix4<T>::identity()),
-				m_changed(true),
-				m_parent(nullptr),
-				m_owner(m_) {
+		                  const Vector3<T> &p_scale = Vector3<T>::one(),
+		                  CoordinateSpace p_space = Local) {
+			switch (p_space) {
+				case World:
+					m_world_position = p_position;
+					m_world_rotation = p_rotation;
+					m_world_scale = p_scale;
+					m_world_transform = math::compose_trs(m_world_position, m_world_rotation, m_world_scale);
+					create_local_transform(m_world_transform);
+					update_local_vars();
+					break;
+				case Local:
+					m_local_position = p_position;
+					m_local_rotation = p_rotation;
+					m_local_scale = p_scale;
+					m_changed = true;
+					break;
+			}
 		}
+
+		TransformCompound(const TransformCompound &p_transform) = delete;
+
+		TransformCompound &operator=(const TransformCompound &) = delete;
 
 		std::weak_ptr<TransformCompound<T>> &operator[](std::size_t p_n) { return m_children[p_n]; };
 
@@ -126,7 +144,7 @@ namespace mach {
 			}
 		}
 
-		PROPERTY_READONLY(Quaternion<T>, rotation, get_world_rotation);
+		PROPERTY(Quaternion<T>, rotation, get_world_rotation, set_world_rotation);
 		PROPERTY(Vector3<T>, position, get_world_position, set_world_position);
 		PROPERTY_READONLY(Vector3<T>, scale, get_world_scale);
 		PROPERTY(Quaternion<T>, local_rotation, get_local_rotation, set_local_rotation);
@@ -144,57 +162,57 @@ namespace mach {
 			create_local_transform(m_world_transform);
 			update_local_vars();
 			notify_children();
-		};
+		}
 
-		void set_world_position(const Quaternion<T> &p_rotation) {
+		void set_world_rotation(const Quaternion<T> &p_rotation) {
 			m_world_rotation = p_rotation;
-			//m_world_transform[3] = Vector4<T>(p_position.x, p_position.y, p_position.z, m_world_transform[3][3]);
+			m_world_transform[3] = Vector4<T>(position.x, position.y, position.z, m_world_transform[3][3]);
 			create_local_transform(m_world_transform);
 			update_local_vars();
 			notify_children();
-		};
+		}
 
 		Quaternion<T> get_world_rotation() {
 			check_mat();
 			return m_world_rotation;
-		};
+		}
 
 		Vector3<T> get_world_position() {
 			check_mat();
 			return m_world_position;
-		};
+		}
 
 		Vector3<T> get_world_scale() {
 			check_mat();
 			return m_world_scale;
-		};
+		}
 
 		Quaternion<T> get_local_rotation() const {
 			return m_local_rotation;
-		};
+		}
 
 		Vector3<T> get_local_position() const {
 			return m_local_position;
-		};
+		}
 
 		Vector3<T> get_local_scale() const {
 			return m_local_scale;
-		};
+		}
 
 		void set_local_rotation(const Quaternion<T> &p_rotation) {
 			mark_changed();
 			m_local_rotation = p_rotation;
-		};
+		}
 
 		void set_local_position(const Vector3<T> &p_position) {
 			mark_changed();
 			m_local_position = p_position;
-		};
+		}
 
 		void set_local_scale(const Vector3<T> &p_scale) {
 			mark_changed();
 			m_local_scale = p_scale;
-		};
+		}
 
 		PROPERTY_READONLY(Vector3<T>, up, get_up);
 		PROPERTY_READONLY(Vector3<T>, down, get_down);
@@ -226,10 +244,17 @@ namespace mach {
 		Vector3<T> get_right() {
 			return -get_world_matrix_dir(0);
 		}
+
+		PROPERTY_READONLY(bool, changed, get_changed);
+
+		bool get_changed() {
+			return m_changed;
+		}
+
 	};
 
 	typedef TransformCompound<float> Transform;
-	typedef TransformCompound<double> Transform_d;
+	typedef TransformCompound<double> TransformD;
 }
 
 #endif //MACH_TRANSFORMCOMPOUND_HPP
