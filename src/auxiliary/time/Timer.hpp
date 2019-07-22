@@ -16,11 +16,15 @@ namespace mach {
 		std::chrono::time_point<ChronoClock> m_start;
 
 	public:
-		Timer();
+		Timer() : m_start(ChronoClock::now()) {}
 
-		void reset();
+		void reset() {
+			m_start = ChronoClock::now();
+		}
 
-		double get_elapsed() const;
+		double get_elapsed() const {
+			return std::chrono::duration_cast<ChronoSecond>(ChronoClock::now() - m_start).count();
+		}
 	};
 }
 

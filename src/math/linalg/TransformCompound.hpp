@@ -39,22 +39,22 @@ namespace mach {
 
 		bool m_changed = true;
 
-		std::vector<std::weak_ptr<TransformCompound>> m_children;
-		std::shared_ptr<TransformCompound> m_parent;
+		std::vector<std::shared_ptr<TransformCompound>> m_children;
+		std::weak_ptr<TransformCompound> m_parent;
 
-		std::unique_ptr<mach::core::SceneNode<T>> m_scene_node;
+		core::SceneNode<T> *m_user = nullptr;
 
 		void notify_children() {
 			for (int i = m_children.size() - 1; i >= 0; --i) {
-				auto child = m_children[i].lock();
-				child->mark_changed();
+				m_children[i]->mark_changed();
 			}
 		}
 
 		void update_transform() {
 			m_local_transform = math::compose_trs(m_local_position, m_local_rotation, m_local_scale);
-			if (m_parent) {
-				m_world_transform = m_parent->get_mat() * m_local_transform;
+			auto parent = m_parent.lock();
+			if (parent) {
+				m_world_transform = parent->get_mat() * m_local_transform;
 			} else {
 				m_world_transform = m_local_transform;
 			}
@@ -65,8 +65,9 @@ namespace mach {
 
 		//To be used in conjunction with the world pos/rot/scale setters
 		Matrix4<T> create_local_transform(const Matrix4<T> &p_world_transform) {
-			if (m_parent) {
-				return m_local_transform = m_parent->get_mat().inverse() * p_world_transform;
+			auto parent = m_parent.lock();
+			if (parent) {
+				return m_local_transform = parent->get_mat().inverse() * p_world_transform;
 			} else {
 				return m_local_transform = p_world_transform;
 			}
@@ -91,7 +92,7 @@ namespace mach {
 			notify_children();
 		}
 
-		Vector3<T> get_world_matrix_dir(std::size_t m_row) {
+		Vector3<T> get_world_dir(std::size_t m_row) {
 			check_mat();
 			return Vector3<T>(m_world_transform[m_row]).normalized();
 		}
@@ -120,32 +121,37 @@ namespace mach {
 			}
 		}
 
-		TransformCompound(const TransformCompound &p_transform) = delete;
-
 		TransformCompound &operator=(const TransformCompound &) = delete;
 
-		std::weak_ptr<TransformCompound<T>> &operator[](std::size_t p_n) { return m_children[p_n]; };
+		std::shared_ptr<TransformCompound<T>> &operator[](std::size_t p_n) { return m_children[p_n]; };
 
-		const std::weak_ptr<TransformCompound<T>> &operator[](std::size_t p_n) const { return m_children[p_n]; };
+		const std::shared_ptr<TransformCompound<T>> &operator[](std::size_t p_n) const { return m_children[p_n]; };
 
-		std::size_t get_child_count() {
+		std::size_t get_child_count() const {
 			return m_children.size();
 		}
 
-		static void add_child(std::shared_ptr<TransformCompound> p_parent, std::weak_ptr<TransformCompound> p_child) {
-			auto it = std::find_if(p_parent->m_children.begin(), p_parent->m_children.end(),
-			                       [p_child](std::weak_ptr<TransformCompound> p_member_child) {
-				                       return equals(p_child, p_member_child);
-			                       }
-			);
-			if (it == p_parent->m_children.end()) {
-				p_parent->m_children.push_back(p_child);
-				p_child.lock()->m_parent = p_parent;
+		std::size_t get_children_count_deep() const {
+			std::size_t total = get_child_count();
+			for (const auto &child : m_children) {
+				total += get_children_count_deep();
+			}
+			return total;
+		}
+
+		static void add_child(std::weak_ptr<TransformCompound> p_parent, std::shared_ptr<TransformCompound> p_child) {
+			if (p_child) {
+				auto parent = p_parent.lock();
+				auto it = std::find(parent->m_children.begin(), parent->m_children.end(), p_child);
+				if (it == parent->m_children.end()) {
+					parent->m_children.push_back(p_child);
+					p_child->m_parent = p_parent;
+				}
 			}
 		}
 
-		PROPERTY(Quaternion<T>, rotation, get_world_rotation, set_world_rotation);
-		PROPERTY(Vector3<T>, position, get_world_position, set_world_position);
+		PROPERTY_READONLY(Quaternion<T>, rotation, get_world_rotation);
+		PROPERTY_READONLY(Vector3<T>, position, get_world_position);
 		PROPERTY_READONLY(Vector3<T>, scale, get_world_scale);
 		PROPERTY(Quaternion<T>, local_rotation, get_local_rotation, set_local_rotation);
 		PROPERTY(Vector3<T>, local_position, get_local_position, set_local_position);
@@ -156,21 +162,6 @@ namespace mach {
 			return m_world_transform;
 		}
 
-		void set_world_position(const Vector3<T> &p_position) {
-			m_world_position = p_position;
-			m_world_transform[3] = Vector4<T>(p_position.x, p_position.y, p_position.z, m_world_transform[3][3]);
-			create_local_transform(m_world_transform);
-			update_local_vars();
-			notify_children();
-		}
-
-		void set_world_rotation(const Quaternion<T> &p_rotation) {
-			m_world_rotation = p_rotation;
-			m_world_transform[3] = Vector4<T>(position.x, position.y, position.z, m_world_transform[3][3]);
-			create_local_transform(m_world_transform);
-			update_local_vars();
-			notify_children();
-		}
 
 		Quaternion<T> get_world_rotation() {
 			check_mat();
@@ -222,27 +213,27 @@ namespace mach {
 		PROPERTY_READONLY(Vector3<T>, backward, get_backward);
 
 		Vector3<T> get_forward() {
-			return get_world_matrix_dir(2);
+			return get_world_dir(2);
 		}
 
 		Vector3<T> get_backward() {
-			return -get_world_matrix_dir(2);
+			return -get_world_dir(2);
 		}
 
 		Vector3<T> get_up() {
-			return get_world_matrix_dir(1);
+			return get_world_dir(1);
 		}
 
 		Vector3<T> get_down() {
-			return -get_world_matrix_dir(1);
+			return -get_world_dir(1);
 		}
 
 		Vector3<T> get_left() {
-			return get_world_matrix_dir(0);
+			return get_world_dir(0);
 		}
 
 		Vector3<T> get_right() {
-			return -get_world_matrix_dir(0);
+			return -get_world_dir(0);
 		}
 
 		PROPERTY_READONLY(bool, changed, get_changed);
@@ -251,6 +242,25 @@ namespace mach {
 			return m_changed;
 		}
 
+		PROPERTY(core::SceneNode<T> *, user, get_user, set_user);
+
+		core::SceneNode<T> *get_user() {
+			return m_user;
+		}
+
+		void set_user(core::SceneNode<T> *p_user) {
+			m_user = p_user;
+		}
+
+		PROPERTY(std::weak_ptr<TransformCompound>, parent, get_parent, set_parent);
+
+		std::weak_ptr<TransformCompound> get_parent() {
+			return m_parent;
+		}
+
+		void set_parent(std::weak_ptr<TransformCompound> p_parent) {
+			m_parent = p_parent;
+		}
 	};
 
 	typedef TransformCompound<float> Transform;

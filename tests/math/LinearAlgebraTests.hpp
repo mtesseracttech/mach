@@ -1,3 +1,5 @@
+#include <memory>
+
 //
 // Created by mtesseract on 22-6-19.
 //
@@ -11,6 +13,7 @@
 #include <auxiliary/MachAssertion.hpp>
 #include <math/util/MathUtils.hpp>
 #include <math/linalg/TransformCompound.hpp>
+#include <core/Scene/SceneHierarchy.hpp>
 
 namespace mach::tests::math {
 	class LinearAlgebraTests {
@@ -365,6 +368,14 @@ namespace mach::tests::math {
 		Logger::log(t2->position);
 		Logger::log(t2->rotation);
 		Logger::log(t2->scale);
+
+		auto scene = std::make_shared<mach::core::SceneHierarchy>();
+		auto node0 = std::make_shared<mach::core::SceneNode<float>>(t1, scene, "Node0");
+		auto node1 = std::make_shared<mach::core::SceneNode<float>>(t2, scene, "Node1");
+		mach::core::SceneHierarchy::add_node(scene, node0);
+		Transform::add_child(node0->transform, node1->transform);
+
+		scene->update();
 
 		Logger::log("MISCELLANEOUS LINEAR ALGEBRA TESTS");
 		Logger::log("MISCELLANEOUS LINEAR ALGEBRA TESTS: PASSED");

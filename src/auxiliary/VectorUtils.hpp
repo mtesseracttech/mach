@@ -19,6 +19,11 @@ namespace mach {
 			std::vector<T> vec(first, last);
 			return vec;
 		}
+
+		template<typename T>
+		static void remove_all_instances_of_val(std::vector<T> &p_vec, const T &p_val) {
+			p_vec.erase(std::remove(p_vec.begin(), p_vec.end(), p_val), p_vec.end());
+		}
 	};
 
 	template<class T>
@@ -30,6 +35,8 @@ namespace mach {
 		p_os << "]";
 		return p_os;
 	}
+
+
 }
 
 

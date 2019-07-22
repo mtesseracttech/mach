@@ -40,7 +40,6 @@ add_executable(mach lib/glad.c
         tests/TestRunner.hpp
         src/auxiliary/MachAssertion.hpp
         src/auxiliary/logging/LogUtils.hpp
-        src/auxiliary/time/Timer.cpp
         src/auxiliary/time/Timer.hpp
         src/auxiliary/time/TimeUtils.hpp
         src/math/linalg/Matrix/ScaleMatrix.hpp
@@ -65,7 +64,7 @@ add_executable(mach lib/glad.c
         src/math/linalg/TransformCompound.hpp
         src/auxiliary/Memory.hpp
         src/core/Scene/SceneNode.hpp
-        src/core/Scene/Behaviour/SceneBehaviour.hpp)
+        src/core/Scene/Behaviour/SceneBehaviour.hpp src/core/Scene/SceneHierarchy.hpp)
 
 target_compile_options(mach PRIVATE -fdeclspec)
 

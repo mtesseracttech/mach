@@ -7,15 +7,19 @@
 
 namespace mach::core {
 	class SceneBehaviour {
-		std::shared_ptr <SceneNode> m_parent;
+		std::weak_ptr<SceneNode < float>> m_parent;
 
-		void start() = 0;
+	public:
+		virtual void start() = 0;
 
-		void update() = 0;
+		virtual void update() = 0;
 
-		void fixed_update() = 0;
+		virtual void fixed_update() = 0;
 
-		void destroy() = 0;
+		virtual void destroy() = 0;
+
+
+		virtual ~SceneBehaviour() = default;;
 	};
 }
 
