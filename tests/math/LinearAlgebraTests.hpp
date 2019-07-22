@@ -347,33 +347,40 @@ namespace mach::tests::math {
 		std::cout << "Size of Transform: " << sizeof(Transform) << " bytes" << std::endl;
 		std::cout << "Size of TransformD: " << sizeof(TransformD) << " bytes" << std::endl;
 
-		auto t1 = std::make_shared<Transform>(Transform());
-		Logger::log(t1->local_position);
-		t1->local_position = Vec3(1, 2, 3);
-		t1->local_rotation = Quat(std::sqrt(2) / 2, 0, 0, std::sqrt(2) / 2);
-		t1->local_scale = Vec3(2, 3, 4);
-		Logger::log(t1->position);
-		Logger::log(t1->rotation);
-		Logger::log(t1->scale);
-		auto t2 = std::make_shared<Transform>(Transform(Vec3::zero(), Quat::identity(), Vec3::one()));
-		Transform::add_child(t1, t2);
-		auto child_cnt = t1->get_child_count();
-		Transform::add_child(t1, t2);
-		mach_assert(child_cnt == 1 && child_cnt == t1->get_child_count(),
-		            "Child count should not change when same child is added twice");
-		t2->local_scale = Vec3(2, 2, 2);
-		t2->local_position = Vec3(1, 2, 3);
-		t2->local_rotation = Quat(std::sqrt(2) / 2, 0, 0, std::sqrt(2) / 2);
+//		auto t1 = std::make_shared<Transform>();
+		//Logger::log(t1->local_position);
+//		t1->local_position = Vec3(1, 2, 3);
+//		t1->local_rotation = Quat(std::sqrt(2) / 2, 0, 0, std::sqrt(2) / 2);
+//		t1->local_scale = Vec3(2, 3, 4);
+		//Logger::log(t1->position);
+		//Logger::log(t1->rotation);
+		//Logger::log(t1->scale);
+//		auto t2 = std::make_shared<Transform>();
+		//t1->add_child(t2);
+		//auto child_cnt = t1->get_child_count();
+		//t1->add_child(t2);
+		//mach_assert(child_cnt == 1 && child_cnt == t1->get_child_count(),
+		//            "Child count should not change when same child is added twice");
+//		t2->local_scale = Vec3(2, 2, 2);
+//		t2->local_position = Vec3(1, 2, 3);
+//		t2->local_rotation = Quat(std::sqrt(2) / 2, 0, 0, std::sqrt(2) / 2);
 
-		Logger::log(t2->position);
-		Logger::log(t2->rotation);
-		Logger::log(t2->scale);
+//		Logger::log(t2->position);
+//		Logger::log(t2->rotation);
+//		Logger::log(t2->scale);
 
-		auto scene = std::make_shared<mach::core::SceneHierarchy>();
-		auto node0 = std::make_shared<mach::core::SceneNode<float>>(t1, scene, "Node0");
-		auto node1 = std::make_shared<mach::core::SceneNode<float>>(t2, scene, "Node1");
-		mach::core::SceneHierarchy::add_node(scene, node0);
-		Transform::add_child(node0->transform, node1->transform);
+
+		auto scene = std::make_shared<core::SceneHierarchy>(core::SceneHierarchy());
+		auto node0 = core::SceneNode<float>::create(scene, "Node0");
+		auto node1 = core::SceneNode<float>::create(node0, "Node1");
+
+		std::cout << scene->get_base_node_count() << std::endl;
+		std::cout << scene->get_total_nodes() << std::endl;
+
+		//auto node0 = std::make_shared<core::SceneNode<float>>(scene, "Node0");
+		//auto node1 = std::make_shared<core::SceneNode<float>>(node0, "Node1");
+		//scene->add_node(node0);
+		//node0->transform->add_child(node1->transform);
 
 		scene->update();
 

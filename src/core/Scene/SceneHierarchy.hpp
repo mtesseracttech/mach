@@ -12,10 +12,10 @@
 namespace mach::core {
 	class SceneHierarchy;
 
-	typedef std::shared_ptr<SceneHierarchy> ScenePtr;
+	//typedef std::shared_ptr<SceneHierarchy> ScenePtr;
 	typedef std::shared_ptr<SceneNode<float>> NodePtr;
 
-	class SceneHierarchy {
+	class SceneHierarchy : std::enable_shared_from_this<SceneHierarchy> {
 		std::vector<NodePtr> m_base_nodes;
 
 		std::shared_ptr<Camera<float>> m_main_camera;
@@ -23,17 +23,19 @@ namespace mach::core {
 	public:
 		explicit SceneHierarchy(
 				const std::shared_ptr<Camera<float>> &p_main_camera = std::make_shared<Camera<float>>())
-				: m_main_camera(
-				p_main_camera) {
-
+				: m_main_camera(p_main_camera) {
 		}
 
-		static void add_node(ScenePtr &p_hierarchy, NodePtr &p_node) {
-			if (p_hierarchy && p_node) {
-				auto it = std::find(p_hierarchy->m_base_nodes.begin(), p_hierarchy->m_base_nodes.end(), p_node);
-				if (it == p_hierarchy->m_base_nodes.end()) {
-					p_hierarchy->m_base_nodes.push_back(p_node);
-					p_node->scene = p_hierarchy;
+		std::shared_ptr<SceneHierarchy> get_ptr() {
+			return shared_from_this();
+		}
+
+		void add_node(NodePtr &p_node) {
+			if (p_node) {
+				auto it = std::find(m_base_nodes.begin(), m_base_nodes.end(), p_node);
+				if (it == m_base_nodes.end()) {
+					m_base_nodes.push_back(p_node);
+					p_node->scene = weak_from_this();
 					p_node->transform->parent = std::weak_ptr<TransformCompound<float>>(); //Basically a nullptr
 				}
 			}
@@ -48,7 +50,7 @@ namespace mach::core {
 		}
 
 		std::size_t get_total_nodes() {
-			std::size_t total = 0;
+			std::size_t total = get_base_node_count();
 			for (const auto &node: m_base_nodes) {
 				total += node->transform->get_children_count_deep();
 			}

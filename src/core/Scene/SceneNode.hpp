@@ -14,7 +14,7 @@ namespace mach::core {
 	class SceneHierarchy;
 
 	template<typename T>
-	class SceneNode {
+	class SceneNode : public std::enable_shared_from_this<SceneNode<T>> {
 	protected:
 		std::shared_ptr<TransformCompound<T>> m_transform;
 		std::vector<SceneBehaviour> m_behaviours;
@@ -22,12 +22,38 @@ namespace mach::core {
 		std::string m_name;
 
 	public:
-		SceneNode(const std::shared_ptr<TransformCompound<T>> &p_transform,
-		          const std::weak_ptr<SceneHierarchy> &p_scene,
-		          const std::string &p_name = "N/A") : m_transform(p_transform),
-		                                               m_name(p_name),
-		                                               m_scene(p_scene) {
-			p_transform->user = this;
+		explicit SceneNode(std::shared_ptr<SceneHierarchy> p_scene,
+		                   const std::string &p_name = "N/A") :
+				m_transform(std::make_shared<TransformCompound<T>>(TransformCompound<T>())),
+				m_name(p_name),
+				m_scene(p_scene) {
+		}
+
+		explicit SceneNode(std::shared_ptr<SceneNode> p_parent,
+		                   const std::string &p_name = "N/A") :
+				m_transform(std::make_shared<TransformCompound<T>>(TransformCompound<T>())),
+				m_name(p_name),
+				m_scene(p_parent->scene) {
+		}
+
+		static std::shared_ptr<SceneNode> create(std::shared_ptr<SceneHierarchy> p_scene,
+		                                         const std::string &p_name = "N/A") {
+			std::shared_ptr<SceneNode> node = std::make_shared<SceneNode>(p_scene, p_name);
+			node->m_transform->user = node->weak_from_this();
+			node->m_scene.lock()->add_node(node);
+			return node;
+		}
+
+		static std::shared_ptr<SceneNode> create(std::shared_ptr<SceneNode> p_parent,
+		                                         const std::string &p_name = "N/A") {
+			std::shared_ptr<SceneNode> node = std::make_shared<SceneNode>(p_parent, p_name);
+			node->m_transform->user = node->weak_from_this();
+			p_parent->transform->add_child(node->m_transform);
+			return node;
+		}
+
+		~SceneNode() {
+			std::cout << m_name << " getting destroyed" << std::endl;
 		}
 
 		void add_behaviour(const SceneBehaviour &p_behaviour) {
@@ -65,14 +91,16 @@ namespace mach::core {
 		}
 
 		void update() {
+			std::cout << m_name << " is updating!" << std::endl;
 			for (int i = m_behaviours.size() - 1; i >= 0; --i) {
 				m_behaviours[i].update();
 			}
 			for (int i = m_transform->get_child_count() - 1; i >= 0; --i) {
 				std::shared_ptr<TransformCompound<T>> child_transform = (*m_transform)[i];
 				if (child_transform) {
-					if (child_transform->user) {
-						child_transform->user->update();
+					auto child = child_transform->user.lock();
+					if (child) {
+						child->update();
 					}
 				}
 			}

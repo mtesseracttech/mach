@@ -24,7 +24,7 @@ namespace mach {
 	}
 
 	template<typename T>
-	class TransformCompound {
+	class TransformCompound : public std::enable_shared_from_this<TransformCompound<T>> {
 		Matrix4<T> m_local_transform = Matrix4<T>::identity();
 
 		Vector3<T> m_local_position = Vector3<T>::zero();
@@ -42,7 +42,7 @@ namespace mach {
 		std::vector<std::shared_ptr<TransformCompound>> m_children;
 		std::weak_ptr<TransformCompound> m_parent;
 
-		core::SceneNode<T> *m_user = nullptr;
+		std::weak_ptr<core::SceneNode<T>> m_user = std::weak_ptr<core::SceneNode<T>>();
 
 		void notify_children() {
 			for (int i = m_children.size() - 1; i >= 0; --i) {
@@ -134,18 +134,17 @@ namespace mach {
 		std::size_t get_children_count_deep() const {
 			std::size_t total = get_child_count();
 			for (const auto &child : m_children) {
-				total += get_children_count_deep();
+				total += child->get_children_count_deep();
 			}
 			return total;
 		}
 
-		static void add_child(std::weak_ptr<TransformCompound> p_parent, std::shared_ptr<TransformCompound> p_child) {
+		void add_child(std::shared_ptr<TransformCompound> p_child) {
 			if (p_child) {
-				auto parent = p_parent.lock();
-				auto it = std::find(parent->m_children.begin(), parent->m_children.end(), p_child);
-				if (it == parent->m_children.end()) {
-					parent->m_children.push_back(p_child);
-					p_child->m_parent = p_parent;
+				auto it = std::find(m_children.begin(), m_children.end(), p_child);
+				if (it == m_children.end()) {
+					m_children.push_back(p_child);
+					p_child->m_parent = this->weak_from_this();
 				}
 			}
 		}
@@ -242,13 +241,13 @@ namespace mach {
 			return m_changed;
 		}
 
-		PROPERTY(core::SceneNode<T> *, user, get_user, set_user);
+		PROPERTY(std::weak_ptr<core::SceneNode<T>>, user, get_user, set_user);
 
-		core::SceneNode<T> *get_user() {
+		std::weak_ptr<core::SceneNode<T>> get_user() {
 			return m_user;
 		}
 
-		void set_user(core::SceneNode<T> *p_user) {
+		void set_user(std::weak_ptr<core::SceneNode<T>> p_user) {
 			m_user = p_user;
 		}
 
