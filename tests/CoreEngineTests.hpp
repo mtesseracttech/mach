@@ -29,7 +29,8 @@ namespace mach::tests::core {
 
 		using namespace mach::core;
 
-		auto scene = SceneHierarchy<float>::create(std::make_shared<Camera<float>>());
+		std::shared_ptr<Camera<float>> camera = std::make_shared<Camera<float>>();
+		auto scene = SceneHierarchy<float>::create(camera);
 		auto node0 = SceneNode<float>::create(scene, "Node0");
 		auto node1 = SceneNode<float>::create(node0, "Node1");
 		mach_assert(scene->get_total_nodes() == 3, "Total nodes should be 3 at this point, 2 nodes, 1 camera");

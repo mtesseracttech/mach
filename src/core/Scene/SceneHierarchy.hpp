@@ -44,6 +44,12 @@ namespace mach::core {
 			}
 		}
 
+		void add_main_camera(std::shared_ptr<Camera<T>> p_camera) {
+			if (!p_camera->transform->get_parent()) {
+				add_node(p_camera);
+			}
+		}
+
 		std::shared_ptr<Camera<T>> get_main_camera() {
 			return m_main_camera;
 		}
