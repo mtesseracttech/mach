@@ -49,9 +49,9 @@ namespace mach::tests::math {
 		Vec3 v_b(10.5, -10, 30);
 		float s = 100.0f;
 
-		std::string info =
-				"Test variables: v_a = " + to_str(v_a) + ", v_b = " + to_str(v_b) + ", s = " + to_str(s) + ".";
-		Logger::log(info);
+		//std::string info =
+		//		"Test variables: v_a = " + to_str(v_a) + ", v_b = " + to_str(v_b) + ", s = " + to_str(s) + ".";
+		//Logger::log(info);
 
 		Vec2 vec2(10, -15);
 		mach_assert(vec2.x == 10.f && vec2.y == -15.f, "");
@@ -177,7 +177,7 @@ namespace mach::tests::math {
 				", \nm_23 = \n" + to_str(m_23) +
 				", \nm_32 = \n" + to_str(m_32) +
 				", \nm_3 = \n" + to_str(m_3) + ".";
-		Logger::log(info);
+		//Logger::log(info);
 
 		static_assert(sizeof(Mat2) == sizeof(float) * 4, "");
 		static_assert(sizeof(Mat3) == sizeof(float) * 9, "");

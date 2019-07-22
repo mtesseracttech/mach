@@ -29,13 +29,16 @@ namespace mach::tests::core {
 
 		using namespace mach::core;
 
-		auto scene = SceneHierarchy<float>::create();
+		auto scene = SceneHierarchy<float>::create(std::make_shared<Camera<float>>());
 		auto node0 = SceneNode<float>::create(scene, "Node0");
 		auto node1 = SceneNode<float>::create(node0, "Node1");
-
-		mach_assert(scene->get_total_nodes() == 3, "Total nodes should be 3 at this point");
+		mach_assert(scene->get_total_nodes() == 3, "Total nodes should be 3 at this point, 2 nodes, 1 camera");
 		node0->transform->add_child(node1->transform);
 		mach_assert(scene->get_total_nodes() == 3, "And Now as well");
+		auto node2 = SceneNode<float>::create(node1, "Node2");
+		mach_assert(scene->get_total_nodes() == 4, "Total nodes should be 4 at this point, 4, ");
+		auto node3 = SceneNode<float>::create(node1, "Node3");
+		mach_assert(scene->get_total_nodes() == 5, "Total nodes should be 5 at this point, 4, ");
 
 
 		scene->update();
