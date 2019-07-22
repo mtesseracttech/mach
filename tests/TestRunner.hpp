@@ -5,15 +5,15 @@
 #ifndef MACH_TESTRUNNER_HPP
 #define MACH_TESTRUNNER_HPP
 
-#include "math/LinearAlgebraTests.hpp"
+#include "LinearAlgebraTests.hpp"
+#include "CoreEngineTests.hpp"
 
-namespace mach {
-	namespace tests {
-		static void run_tests() {
-			Logger::log("RUNNING TEST SUITES:");
+namespace mach::tests {
+	static void run_tests() {
+		Logger::log("RUNNING TEST SUITES:");
 
-			math::LinearAlgebraTests::run_tests();
-		}
+		math::LinearAlgebraTests::run_tests();
+		core::CoreEngineTests::run_tests();
 	}
 }
 

@@ -11,7 +11,7 @@ namespace mach::core {
 	template<typename T>
 	class Camera : public SceneNode<T> {
 	public:
-		Camera(std::shared_ptr<SceneHierarchy> p_scene = std::shared_ptr<SceneHierarchy>(),
+		Camera(std::weak_ptr<SceneHierarchy<T>> p_scene = std::weak_ptr<SceneHierarchy<T>>(),
 		       const std::string &p_name = "Camera") : SceneNode<T>(p_scene, p_name) {
 		}
 
