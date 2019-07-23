@@ -72,8 +72,10 @@ target_compile_options(mach PRIVATE -fdeclspec)
 set(BASEPATH "${CMAKE_SOURCE_DIR}/src")
 include_directories("${BASEPATH}")
 
+
 # Copies the res folder to the build folder
-file(COPY res DESTINATION ${CMAKE_BINARY_DIR})
+file(COPY res DESTINATION "${CMAKE_BINARY_DIR}")
+
 
 # Setting up PkgConfig
 find_package(PkgConfig REQUIRED)

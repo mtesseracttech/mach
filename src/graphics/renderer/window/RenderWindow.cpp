@@ -61,6 +61,9 @@ namespace mach::gfx {
 	}
 
 	RenderWindow::RenderWindow(std::string p_window_title, uint32_t p_width, uint32_t p_height) {
+		m_width = p_width;
+		m_height = p_height;
+
 		glfwSetErrorCallback(glfw_error_callback);
 
 		if (glfwInit() == GL_FALSE) {
@@ -68,5 +71,9 @@ namespace mach::gfx {
 		} else {
 			Logger::log("GLFW initialized successfully", Info);
 		}
+	}
+
+	IVec2 RenderWindow::get_window_dimensions() {
+		return IVec2(m_width, m_height);
 	}
 }

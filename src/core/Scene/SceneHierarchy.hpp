@@ -24,8 +24,7 @@ namespace mach::core {
 	public:
 		explicit SceneHierarchy(const std::shared_ptr<Camera<T>> &p_main_camera) : m_main_camera(p_main_camera) {}
 
-		static std::shared_ptr<SceneHierarchy>
-		create(const std::shared_ptr<Camera<T>> &p_main_camera = nullptr) {
+		static std::shared_ptr<SceneHierarchy> create(const std::shared_ptr<Camera<T>> &p_main_camera = nullptr) {
 			return std::make_shared<SceneHierarchy>(p_main_camera);
 		}
 

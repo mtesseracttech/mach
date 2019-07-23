@@ -11,6 +11,7 @@
 #include "io/input/MouseInput.hpp"
 #include "MachApplication.hpp"
 #include "../tests/TestRunner.hpp"
+#include "math/linalg/Matrix/MatrixUtils.hpp"
 
 namespace mach {
 	MachApplication::MachApplication() {
@@ -29,7 +30,12 @@ namespace mach {
 		auto shader = cache::AssetCache<gfx::OpenGLShader>::get().load_asset("base");
 		auto model = cache::AssetCache<gfx::Model<float>>::get().load_asset("nanosuit/nanosuit.obj");
 
+		std::cout << shader << std::endl;
+
 		Timer timer;
+
+		auto scene = core::SceneHierarchy<float>::create(std::make_shared<core::Camera<float>>());
+		scene->get_main_camera()->transform->local_position = Vec3(0.0, 0.0, 10.0);
 
 		while (!m_window->is_closing()) {
 			if (KeyInput::enter(Escape)) {
@@ -37,8 +43,14 @@ namespace mach {
 			}
 			m_window->clear(0.2, 0.3, 0.3, 1.0);
 
-			model->draw(*shader);
+			auto win_dims = m_window->get_window_dimensions();
+			float aspect_ratio = (float) win_dims.x / (float) win_dims.y;
+
 			shader->use();
+			shader->set_val("model", Mat4::identity());
+			shader->set_val("view", scene->get_main_camera()->get_view());
+			shader->set_val("perspective", math::perspective<float>(0.0001, 1000, 90, aspect_ratio));
+			model->draw(*shader);
 
 
 			m_window->swap_buffers();

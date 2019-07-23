@@ -42,6 +42,8 @@ namespace mach::gfx {
 	}
 
 	void OpenGLWindow::resize_viewport(uint32_t p_width, uint32_t p_height) {
+		m_width = p_width;
+		m_height = p_height;
 		glViewport(0, 0, p_width, p_height);
 	}
 

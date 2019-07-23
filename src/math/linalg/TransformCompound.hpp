@@ -228,11 +228,11 @@ namespace mach {
 		}
 
 		Vector3<T> get_left() {
-			return get_world_dir(0);
+			return -get_world_dir(0);
 		}
 
 		Vector3<T> get_right() {
-			return -get_world_dir(0);
+			return get_world_dir(0);
 		}
 
 		PROPERTY_READONLY(bool, changed, get_changed);

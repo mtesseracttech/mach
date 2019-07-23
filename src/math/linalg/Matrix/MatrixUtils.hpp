@@ -27,16 +27,14 @@ namespace mach::math {
 		mach_assert(p_up.is_unit(), "Up vector needs to be unit");
 		mach_assert(p_direction.is_unit(), "Direction vector needs to be unit");
 
-		Matrix4<T> direction(p_right.x, p_up.x, p_direction.x, 0.0,
-		                     p_right.y, p_up.y, p_direction.y, 0.0,
-		                     p_right.z, p_up.z, p_direction.z, 0.0,
-		                     0.0, 0.0, 0.0, 1.0);
+		Vector3<T> pos((-p_position.dot(p_right)),
+		               (-p_position.dot(p_up)),
+		               (-p_position.dot(p_direction)));
 
-		Matrix4<T> position(1.0, 0.0, 0.0, 0.0,
-		                    0.0, 1.0, 0.0, 0.0,
-		                    0.0, 0.0, 1.0, 0.0,
-		                    -p_position.x, -p_position.y, -p_position.z, 1.0);
-		return direction * position;
+		return Matrix4<T>(p_right.x, p_up.x, p_direction.x, 0.0,
+		                  p_right.y, p_up.y, p_direction.y, 0.0,
+		                  p_right.z, p_up.z, p_direction.z, 0.0,
+		                  pos.x, pos.y, pos.z, 1.0);
 	}
 
 	template<typename T>
@@ -123,12 +121,15 @@ namespace mach::math {
 	Matrix4 <T> perspective(const T &p_z_near, const T &p_z_far, const T &p_fov_y, const T &p_aspect_ratio) {
 		mach_assert(p_z_near > 0.0, "Near clipping distance must be positive");
 		mach_assert(p_z_far > p_z_near, "Far clipping distance must further than the near clipping distance");
-		T fov_x = p_aspect_ratio * p_fov_y;
-		return Matrix4<T>(p_z_near / fov_x, 0.0, 0.0, 0.0,
-		                  0.0, p_z_near / p_fov_y, 0.0, 0.0,
-		                  0.0, 0.0, -(p_z_far + p_z_near) / (p_z_far - p_z_near),
-		                  (-2.0 * p_z_far * p_z_near) / (p_z_far - p_z_near),
-		                  0.0, 0.0 - 1.0, 0.0);
+
+		T f = 1.0 / std::tan(math::to_rad(p_fov_y) / 2.0); //cot(fovy/2)
+		Matrix4<T> m;
+		m[0][0] = f / p_aspect_ratio;
+		m[1][1] = f;
+		m[2][2] = (p_z_far + p_z_near) / (p_z_near - p_z_far);
+		m[2][3] = -1.0;
+		m[3][2] = 2.0 * (p_z_far * p_z_near) / (p_z_near - p_z_far);
+		return m;
 	}
 
 	template<typename T>

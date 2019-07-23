@@ -19,6 +19,9 @@ namespace mach::gfx {
 		GLFWwindow *m_glfw_window = nullptr;
 		bool m_closing = false;
 
+		uint32_t m_width = 0;
+		uint32_t m_height = 0;
+
 		RenderWindow(std::string p_window_title, uint32_t p_width, uint32_t p_height);
 
 		virtual ~RenderWindow();
@@ -40,6 +43,8 @@ namespace mach::gfx {
 		virtual void set_window_title(std::string p_window_title);
 
 		virtual void set_window_dimensions(uint32_t p_width, uint32_t p_height);
+
+		IVec2 get_window_dimensions();
 
 	protected:
 		virtual void resize_framebuffer(uint32_t p_width, uint32_t p_height) = 0;

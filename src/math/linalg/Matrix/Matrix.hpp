@@ -60,11 +60,11 @@ namespace mach {
 			return *this;
 		}
 
-		constexpr std::size_t width() { return W; }
+		constexpr std::size_t width() const { return W; }
 
-		constexpr std::size_t height() { return H; }
+		constexpr std::size_t height() const { return H; }
 
-		constexpr std::size_t size() { return W * H; }
+		constexpr std::size_t size() const { return W * H; }
 
 		inline const T *get_value_ptr() const {
 			return m_data.data();
