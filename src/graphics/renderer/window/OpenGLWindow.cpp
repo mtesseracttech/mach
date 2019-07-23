@@ -49,6 +49,6 @@ namespace mach::gfx {
 
 	void OpenGLWindow::clear(float p_r, float p_g, float p_b, float p_a) {
 		glClearColor(p_r, p_g, p_b, p_a);
-		glClear(GL_COLOR_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
 }

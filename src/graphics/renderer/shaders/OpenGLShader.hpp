@@ -155,13 +155,13 @@ namespace mach::gfx {
 			if constexpr (std::is_same<T, float>::value) {
 				if constexpr (H == 2) {
 					if constexpr (W == 2) {
-						glUniformMatrix2fv(glGetUniformLocation(m_shader_program, p_name.c_str()), 1, true,
+						glUniformMatrix2fv(glGetUniformLocation(m_shader_program, p_name.c_str()), 1, false,
 						                   p_value.get_value_ptr());
 					} else if constexpr (W == 3) {
-						glUniformMatrix2x3fv(glGetUniformLocation(m_shader_program, p_name.c_str()), 1, true,
+						glUniformMatrix2x3fv(glGetUniformLocation(m_shader_program, p_name.c_str()), 1, false,
 						                     p_value.get_value_ptr());
 					} else if constexpr (W == 4) {
-						glUniformMatrix2x4fv(glGetUniformLocation(m_shader_program, p_name.c_str()), 1, true,
+						glUniformMatrix2x4fv(glGetUniformLocation(m_shader_program, p_name.c_str()), 1, false,
 						                     p_value.get_value_ptr());
 					} else {
 						throw std::runtime_error(
@@ -169,13 +169,13 @@ namespace mach::gfx {
 					}
 				} else if constexpr (H == 3) {
 					if constexpr (W == 2) {
-						glUniformMatrix3x2fv(glGetUniformLocation(m_shader_program, p_name.c_str()), 1, true,
+						glUniformMatrix3x2fv(glGetUniformLocation(m_shader_program, p_name.c_str()), 1, false,
 						                     p_value.get_value_ptr());
 					} else if constexpr (W == 3) {
-						glUniformMatrix3fv(glGetUniformLocation(m_shader_program, p_name.c_str()), 1, true,
+						glUniformMatrix3fv(glGetUniformLocation(m_shader_program, p_name.c_str()), 1, false,
 						                   p_value.get_value_ptr());
 					} else if constexpr (W == 4) {
-						glUniformMatrix3x4fv(glGetUniformLocation(m_shader_program, p_name.c_str()), 1, true,
+						glUniformMatrix3x4fv(glGetUniformLocation(m_shader_program, p_name.c_str()), 1, false,
 						                     p_value.get_value_ptr());
 					} else {
 						throw std::runtime_error(
@@ -183,10 +183,10 @@ namespace mach::gfx {
 					}
 				} else if constexpr (H == 4) {
 					if constexpr (W == 2) {
-						glUniformMatrix4x2fv(glGetUniformLocation(m_shader_program, p_name.c_str()), 1, true,
+						glUniformMatrix4x2fv(glGetUniformLocation(m_shader_program, p_name.c_str()), 1, false,
 						                     p_value.get_value_ptr());
 					} else if constexpr (W == 3) {
-						glUniformMatrix4x3fv(glGetUniformLocation(m_shader_program, p_name.c_str()), 1, true,
+						glUniformMatrix4x3fv(glGetUniformLocation(m_shader_program, p_name.c_str()), 1, false,
 						                     p_value.get_value_ptr());
 					} else if constexpr (W == 4) {
 						glUniformMatrix4fv(glGetUniformLocation(m_shader_program, p_name.c_str()), 1, false,

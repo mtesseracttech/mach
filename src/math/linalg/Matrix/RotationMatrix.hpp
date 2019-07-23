@@ -144,6 +144,10 @@ namespace mach {
 			return result;
 		}
 
+		inline Matrix3 <T> to_mat3() const {
+			return m_matrix;
+		}
+
 		inline Vector3 <T> right() {
 			return m_matrix[0];
 		}
