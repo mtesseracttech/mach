@@ -45,6 +45,8 @@ namespace mach {
 		Vec2 old_mouse_pos;
 
 		while (!m_window->is_closing()) {
+			m_window->clear(0.1, 0.1, 0.1, 1.0);
+
 			auto win_dims = m_window->get_window_dimensions();
 			float aspect_ratio = (float) win_dims.x / (float) win_dims.y;
 			float delta_time = timer.get_elapsed();
@@ -72,30 +74,18 @@ namespace mach {
 			if (MouseInput::pressed(Button1)) {
 				float mouse_speed = delta_time * 0.001;
 				Vec2 rotation_deltas = Vec2(mouse_delta.x, mouse_delta.y) * mouse_speed;
-				RotationMatrix<float> cur_rotation = RotationMatrix<float>::from_quat(camera->transform->rotation);
-				RotationMatrix<float> around_x = RotationMatrix<float>::from_angle_axis(rotation_deltas.y,
-				                                                                        cur_rotation.right().normalized());
-				RotationMatrix<float> around_y = RotationMatrix<float>::from_angle_axis(rotation_deltas.x,
-				                                                                        cur_rotation.up().normalized());
-				camera->transform->local_rotation *= Quat::from_matrix(around_x.to_mat3() * around_y.to_mat3());
-
-//				Quat around_x = Quat::from_angle_axis(rotation_deltas.y, Vec3::right());
-//				Quat around_y = Quat::from_angle_axis(rotation_deltas.x, Vec3::up());
-//				Quat added_rotation = around_x * around_y;
-//
-//				camera->transform->local_rotation *= added_rotation;
-//
-//				std::cout << camera->transform->local_rotation << std::endl;
-//				std::cout << camera->transform->local_rotation.magnitude_squared() << std::endl;
+				Quat around_x = Quat::from_angle_axis(rotation_deltas.y, Vec3::right());
+				Quat around_y = Quat::from_angle_axis(rotation_deltas.x, Vec3::up());
+				camera->transform->local_rotation = camera->transform->local_rotation * around_x * around_y;
+				std::cout << camera->transform->position << std::endl;
 			}
 
-			m_window->clear(0.2, 0.3, 0.3, 1.0);
 
 			old_mouse_pos = cur_pos;
 
 			shader->use();
 			shader->set_val("model", Mat4::identity());
-			shader->set_val("view", scene->get_main_camera()->get_view());
+			shader->set_val("view", scene->get_main_camera()->get_view().transpose());
 			shader->set_val("perspective", math::perspective<float>(0.0001, 1000, 90, aspect_ratio));
 			model->draw(*shader);
 

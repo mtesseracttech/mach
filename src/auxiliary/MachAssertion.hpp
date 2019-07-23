@@ -90,7 +90,7 @@ namespace mach {
 		~MachAssertionException() noexcept {}
 
 		static void
-		__mach_assert_fail(const char *p_expression, const char *p_file, int p_line, const std::string &p_message) {
+		mach_assert_fail(const char *p_expression, const char *p_file, int p_line, const std::string &p_message) {
 			throw MachAssertionException(p_expression, p_file, p_line, p_message);
 		}
 
@@ -102,7 +102,7 @@ namespace mach {
 #define mach_assert(expr, message) \
     (static_cast<bool> (expr) \
     ? (void(0)) \
-    : mach::MachAssertionException::__mach_assert_fail(#expr, __FILE__, __LINE__, (mach::MachAssertionException::StreamFormatter() << message)))
+    : mach::MachAssertionException::mach_assert_fail(#expr, __FILE__, __LINE__, (mach::MachAssertionException::StreamFormatter() << message)))
 #endif
 	};
 }

@@ -21,7 +21,9 @@ namespace mach::math {
 
 	template<typename T>
 	Matrix4 <T>
-	view(const Vector3 <T> &p_position, const Vector3 <T> &p_right, const Vector3 <T> &p_up,
+	view(const Vector3 <T> &p_position,
+	     const Vector3 <T> &p_right,
+	     const Vector3 <T> &p_up,
 	     const Vector3 <T> &p_direction) {
 		mach_assert(p_right.is_unit(), "Right vector needs to be unit");
 		mach_assert(p_up.is_unit(), "Up vector needs to be unit");
@@ -31,9 +33,9 @@ namespace mach::math {
 		               (-p_position.dot(p_up)),
 		               (-p_position.dot(p_direction)));
 
-		return Matrix4<T>(p_right.x, p_up.x, p_direction.x, 0.0,
-		                  p_right.y, p_up.y, p_direction.y, 0.0,
-		                  p_right.z, p_up.z, p_direction.z, 0.0,
+		return Matrix4<T>(p_right.x, p_right.y, p_right.z, 0.0,
+		                  p_up.x, p_up.y, p_up.z, 0.0,
+		                  p_direction.x, p_direction.y, p_direction.z, 0.0,
 		                  pos.x, pos.y, pos.z, 1.0);
 	}
 
@@ -48,9 +50,9 @@ namespace mach::math {
 	template<typename T>
 	Matrix4 <T>
 	compose_trs(const Vector3 <T> &p_position, const Quaternion <T> &p_rotation, const Vector3 <T> &p_scale) {
-		return translate(p_position) *
+		return ScaleMatrix<T>::scale_along_cardinal_axes(p_scale).to_mat4() *
 		       RotationMatrix<T>::from_quat(p_rotation).to_mat4() *
-		       ScaleMatrix<T>::scale_along_cardinal_axes(p_scale).to_mat4();
+		       translate(p_position);
 	}
 
 	template<typename T>
@@ -123,12 +125,12 @@ namespace mach::math {
 		mach_assert(p_z_far > p_z_near, "Far clipping distance must further than the near clipping distance");
 
 		T f = 1.0 / std::tan(math::to_rad(p_fov_y) / 2.0); //cot(fovy/2)
-		Matrix4<T> m;
+		Matrix4<T> m = Matrix4<T>::zero();
 		m[0][0] = f / p_aspect_ratio;
 		m[1][1] = f;
 		m[2][2] = (p_z_far + p_z_near) / (p_z_near - p_z_far);
-		m[2][3] = -1.0;
-		m[3][2] = 2.0 * (p_z_far * p_z_near) / (p_z_near - p_z_far);
+		m[3][2] = -1.0;
+		m[2][3] = 2.0 * (p_z_far * p_z_near) / (p_z_near - p_z_far);
 		return m;
 	}
 

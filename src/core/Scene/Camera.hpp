@@ -18,10 +18,14 @@ namespace mach::core {
 		PROPERTY_READONLY(Matrix4<T>, view_matrix, get_view);
 
 		Matrix4<T> get_view() {
+			Vector3<T> right = this->m_transform->forward.cross(Vector3<T>::up()).normalized();
+			Vector3<T> up = right.cross(this->m_transform->forward).normalized();
+			Vector3<T> forward = this->m_transform->forward;
+
 			return math::view(this->m_transform->position,
-			                  this->m_transform->right,
-			                  Vector3<T>::up(),
-			                  this->m_transform->forward);
+			                  right,
+			                  up,
+			                  forward);
 		}
 	};
 }
