@@ -32,8 +32,9 @@ namespace mach {
 
 		auto shader = cache::AssetCache<gfx::OpenGLShader>::get().load_asset("base");
 		auto model = cache::AssetCache<gfx::Model<float>>::get().load_asset("nanosuit/nanosuit.obj");
+		Transform model_transform;
 
-		float camera_speed = 1.0;
+		float camera_speed = 20.0;
 
 		Timer timer;
 
@@ -44,12 +45,15 @@ namespace mach {
 
 		Vec2 old_mouse_pos;
 
+		float previous_time = 0.0;
+
 		while (!m_window->is_closing()) {
 			m_window->clear(0.1, 0.1, 0.1, 1.0);
 
 			auto win_dims = m_window->get_window_dimensions();
 			float aspect_ratio = (float) win_dims.x / (float) win_dims.y;
-			float delta_time = timer.get_elapsed();
+			float current_time = timer.get_elapsed();
+			float delta_time = current_time - previous_time;
 			auto cur_pos = MouseInput::position();
 			auto mouse_delta = cur_pos - old_mouse_pos;
 
@@ -57,38 +61,41 @@ namespace mach {
 				m_window->close();
 			}
 
-			float movement_speed = delta_time * 0.1;
+			float movement_speed = delta_time * camera_speed;
 			if (KeyInput::pressed(W)) {
-				camera->transform->local_position += camera->transform->backward * movement_speed;
+				camera->transform->local_position += -camera->transform->forward * movement_speed;
 			}
 			if (KeyInput::pressed(S)) {
-				camera->transform->local_position += camera->transform->forward * movement_speed;
+				camera->transform->local_position += -camera->transform->backward * movement_speed;
 			}
 			if (KeyInput::pressed(A)) {
-				camera->transform->local_position += camera->transform->left * movement_speed;
-			}
-			if (KeyInput::pressed(D)) {
 				camera->transform->local_position += camera->transform->right * movement_speed;
 			}
+			if (KeyInput::pressed(D)) {
+				camera->transform->local_position += camera->transform->left * movement_speed;
+			}
+
 
 			if (MouseInput::pressed(Button1)) {
-				float mouse_speed = delta_time * 0.001;
+				float mouse_speed = delta_time * 0.5;
 				Vec2 rotation_deltas = Vec2(mouse_delta.x, mouse_delta.y) * mouse_speed;
-				Quat around_x = Quat::from_angle_axis(rotation_deltas.y, Vec3::right());
+				Quat around_x = Quat::from_angle_axis(rotation_deltas.y, camera->transform->left);
+				//Quat around_x = Quat::from_angle_axis(rotation_deltas.y, -Vec3::right());
 				Quat around_y = Quat::from_angle_axis(rotation_deltas.x, Vec3::up());
 				camera->transform->local_rotation = camera->transform->local_rotation * around_x * around_y;
-				std::cout << camera->transform->position << std::endl;
+				//std::cout << camera->transform->position << std::endl;
 			}
 
 
 			old_mouse_pos = cur_pos;
 
 			shader->use();
-			shader->set_val("model", Mat4::identity());
-			shader->set_val("view", scene->get_main_camera()->get_view().transpose());
+			shader->set_val("model", model_transform.get_mat());
+			shader->set_val("view", scene->get_main_camera()->get_view());
 			shader->set_val("perspective", math::perspective<float>(0.0001, 1000, 90, aspect_ratio));
 			model->draw(*shader);
 
+			previous_time = current_time;
 
 			m_window->swap_buffers();
 			m_window->poll_events();

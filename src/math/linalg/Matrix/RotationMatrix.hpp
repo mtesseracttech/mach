@@ -72,7 +72,7 @@ namespace mach {
 
 			return RotationMatrix(1 - 2 * (sq_y + sq_z), 2 * (xy - zw), 2 * (xz + yw),
 			                      2 * (xy + zw), 1 - 2 * (sq_x + sq_z), 2 * (yz - xw),
-			                      2 * (xz - yw), 2 * (xz - yw), 1 - 2 * (sq_x + sq_y));
+			                      2 * (xz - yw), 2 * (yz + xw), 1 - 2 * (sq_x + sq_y));
 		}
 
 		//Angle Axis

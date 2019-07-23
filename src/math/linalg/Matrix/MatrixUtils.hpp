@@ -33,10 +33,10 @@ namespace mach::math {
 		               (-p_position.dot(p_up)),
 		               (-p_position.dot(p_direction)));
 
-		return Matrix4<T>(p_right.x, p_right.y, p_right.z, 0.0,
-		                  p_up.x, p_up.y, p_up.z, 0.0,
-		                  p_direction.x, p_direction.y, p_direction.z, 0.0,
-		                  pos.x, pos.y, pos.z, 1.0);
+		return Matrix4<T>(p_right.x, p_right.y, p_right.z, pos.x,
+		                  p_up.x, p_up.y, p_up.z, pos.y,
+		                  p_direction.x, p_direction.y, p_direction.z, pos.z,
+		                  0.0, 0.0, 0.0, 1.0);
 	}
 
 	template<typename T>

@@ -12,6 +12,7 @@
 namespace mach::cache {
 	template<typename T>
 	class AssetCache {
+	protected:
 		std::map<std::string, std::shared_ptr<T>> m_lookup_map;
 
 		AssetCache() = default;
@@ -40,7 +41,7 @@ namespace mach::cache {
 					m_lookup_map.insert(std::make_pair(p_name, asset));
 					return asset;
 				} catch (std::exception &ex) {
-					Logger::log("Asset Loader: " + std::string(ex.what()));
+					Logger::log("Asset Loader: " + std::string(ex.what()), Error);
 					return nullptr;
 				}
 			}

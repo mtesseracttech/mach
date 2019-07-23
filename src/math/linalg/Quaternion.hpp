@@ -177,7 +177,6 @@ namespace mach {
 		}
 
 		static inline Quaternion slerp(const Quaternion &p_start, const Quaternion &p_end, T p_t) {
-
 			Quaternion end = p_end;
 			double dot = p_start.dot(p_end);
 			if (dot < 0.0f) {
@@ -185,7 +184,7 @@ namespace mach {
 				dot = -dot;
 			}
 
-			if (dot > 0.9995) return lerp(p_start, p_end, p_t);
+			if (dot > 0.9995) return lerp(p_start, end, p_t);
 
 			T theta_0 = std::acos(dot);
 			T theta = theta_0 * p_t;
@@ -195,7 +194,7 @@ namespace mach {
 			T s_0 = std::cos(theta) - dot * sin_theta / sin_theta_0;
 			T s_1 = sin_theta / sin_theta_0;
 
-			return (s_0 * p_start) + (s_1 * p_end);
+			return (s_0 * p_start) + (s_1 * end);
 		}
 
 		inline AngleAxis<T> to_angle_axis() {
@@ -217,10 +216,11 @@ namespace mach {
 
 		//Angle Axis
 		inline static Quaternion from_angle_axis(T p_theta, const Vector<T, 3> &p_n) {
-			mach_assert(p_n.is_unit(), "You can only construct a quaternion from an angle-axis with a normalized axis");
+			Vector<T, 3> n = p_n.normalized();
+			//mach_assert(p_n.is_unit(), "You can only construct a quaternion from an angle-axis with a normalized axis");
 			T st = std::sin(p_theta / 2.0);
 			T ct = std::cos(p_theta / 2.0);
-			return Quaternion(ct, p_n * st);
+			return Quaternion(ct, n * st);
 		}
 
 		//Angle Axis
