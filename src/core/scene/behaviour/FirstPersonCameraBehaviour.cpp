@@ -17,24 +17,23 @@ namespace mach::core {
 				Vec2 rotation_deltas = Vec2(mouse_delta.x, mouse_delta.y) * camera_rotation_speed;
 				Quat around_x = Quat::from_angle_axis(rotation_deltas.y, camera->transform->right);
 				Quat around_y = Quat::from_angle_axis(-rotation_deltas.x, Vec3::up());
-				camera->transform->local_rotation = camera->transform->local_rotation * around_x * around_y;
+				camera->transform->local_rotation *= around_x * around_y;
 			}
 
 			float cam_movement_speed = p_delta_time * m_camera_rotation_speed;
 			if (KeyInput::pressed(W)) {
-				camera->transform->local_position += camera->transform->backward * cam_movement_speed;
+				camera->transform->local_position -= camera->transform->forward * cam_movement_speed;
 			}
 			if (KeyInput::pressed(S)) {
-				camera->transform->local_position += camera->transform->forward * cam_movement_speed;
+				camera->transform->local_position -= camera->transform->backward * cam_movement_speed;
 			}
 			if (KeyInput::pressed(A)) {
-				camera->transform->local_position += camera->transform->right * cam_movement_speed;
+				camera->transform->local_position -= camera->transform->left * cam_movement_speed;
 			}
 			if (KeyInput::pressed(D)) {
-				camera->transform->local_position += camera->transform->left * cam_movement_speed;
+				camera->transform->local_position -= camera->transform->right * cam_movement_speed;
 			}
 		}
 		m_mouse_last_pos = mouse_cur_pos;
-
 	}
 }

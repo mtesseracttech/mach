@@ -61,6 +61,11 @@ namespace mach {
 
 			scene->update(delta_time);
 
+
+			model_transform.local_rotation *=
+					Quat::from_angle_axis(delta_time, Vec3(1,0,0).normalized()) *
+					Quat::from_angle_axis(delta_time, Vec3(0,1,0).normalized());
+
 			old_mouse_pos = cur_pos;
 
 			shader->use();
