@@ -64,7 +64,7 @@ add_executable(mach lib/glad.c
         src/math/linalg/TransformCompound.hpp
         src/auxiliary/Memory.hpp
         src/core/scene/SceneNode.hpp
-        src/core/scene/behaviour/NodeBehaviour.hpp src/core/scene/SceneHierarchy.hpp tests/CoreEngineTests.hpp src/core/scene/behaviour/FirstPersonCameraBehaviour.hpp src/core/scene/behaviour/FirstPersonCameraBehaviour.cpp)
+        src/core/scene/NodeBehaviour.hpp src/core/scene/SceneHierarchy.hpp tests/CoreEngineTests.hpp src/behaviour/camera/FirstPersonCameraBehaviour.hpp src/behaviour/camera/FirstPersonCameraBehaviour.cpp src/behaviour/camera/LookAtCameraBehaviour.cpp src/behaviour/camera/LookAtCameraBehaviour.hpp)
 
 target_compile_options(mach PRIVATE -fdeclspec)
 

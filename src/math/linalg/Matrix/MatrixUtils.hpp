@@ -30,14 +30,14 @@ namespace mach::math {
 		mach_assert(p_up.is_unit(), "Up vector needs to be unit");
 		mach_assert(p_direction.is_unit(), "Direction vector needs to be unit");
 
-		Vector3<T> pos((-p_position.dot(p_right)),
-		               (-p_position.dot(p_up)),
-		               (-p_position.dot(p_direction)));
+		Vector3<T> pos(-p_position.dot(p_right),
+		               -p_position.dot(p_up),
+		               -p_position.dot(p_direction));
 
-		return Matrix4<T>(p_right.x, p_right.y, p_right.z, pos.x,
-		                  p_up.x, p_up.y, p_up.z, pos.y,
-		                  p_direction.x, p_direction.y, p_direction.z, pos.z,
-		                  0.0, 0.0, 0.0, 1.0);
+		return Matrix4<T>(p_right.x, p_up.x, p_direction.x, 0.0,
+		                  p_right.y, p_up.y, p_direction.y, 0.0,
+		                  p_right.z, p_up.z, p_direction.z, 0.0,
+		                  pos.x, pos.y,  pos.z, 1.0);
 	}
 
 	template<typename T>
@@ -117,7 +117,7 @@ namespace mach::math {
 		rotation[0] = Vector3<T>(p_trs_matrix[0] / p_scale->x);
 		rotation[1] = Vector3<T>(p_trs_matrix[1] / p_scale->y);
 		rotation[2] = Vector3<T>(p_trs_matrix[2] / p_scale->z);
-		*rotation = RotationMatrix<T>::from_mat3(rotation);
+		*p_rotation = RotationMatrix<T>::from_mat3(rotation);
 	}
 
 	template<typename T>
@@ -130,8 +130,8 @@ namespace mach::math {
 		m[0][0] = f / p_aspect_ratio;
 		m[1][1] = f;
 		m[2][2] = (p_z_far + p_z_near) / (p_z_near - p_z_far);
-		m[3][2] = -1.0;
-		m[2][3] = 2.0 * (p_z_far * p_z_near) / (p_z_near - p_z_far);
+		m[2][3] = -1.0;
+		m[3][2] = 2.0 * (p_z_far * p_z_near) / (p_z_near - p_z_far);
 		return m;
 	}
 

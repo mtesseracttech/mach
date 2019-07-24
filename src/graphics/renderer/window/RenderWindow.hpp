@@ -21,6 +21,7 @@ namespace mach::gfx {
 
 		uint32_t m_width = 0;
 		uint32_t m_height = 0;
+		float m_aspect_ratio = 0;
 
 		RenderWindow(std::string p_window_title, uint32_t p_width, uint32_t p_height);
 
@@ -45,6 +46,8 @@ namespace mach::gfx {
 		virtual void set_window_dimensions(uint32_t p_width, uint32_t p_height);
 
 		IVec2 get_window_dimensions();
+
+		float get_aspect_ratio();
 
 	protected:
 		virtual void resize_framebuffer(uint32_t p_width, uint32_t p_height) = 0;

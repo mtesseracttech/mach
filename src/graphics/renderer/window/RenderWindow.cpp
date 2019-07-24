@@ -76,4 +76,8 @@ namespace mach::gfx {
 	IVec2 RenderWindow::get_window_dimensions() {
 		return IVec2(m_width, m_height);
 	}
+
+	float RenderWindow::get_aspect_ratio() {
+		return (float)m_width / (float)m_height;
+	}
 }

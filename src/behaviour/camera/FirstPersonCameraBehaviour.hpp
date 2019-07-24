@@ -7,10 +7,10 @@
 
 
 #include <math/linalg/LinAlgTypes.hpp>
-#include "NodeBehaviour.hpp"
+#include "core/scene/NodeBehaviour.hpp"
 
-namespace mach::core {
-	class FirstPersonCameraBehaviour : public NodeBehaviour {
+namespace mach::behaviour {
+	class FirstPersonCameraBehaviour : public core::NodeBehaviour {
 		Vec2 m_mouse_last_pos = MouseInput::position();
 
 		float m_camera_movement_speed = 0;

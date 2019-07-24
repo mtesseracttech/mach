@@ -13,7 +13,7 @@
 #include "../tests/TestRunner.hpp"
 #include "math/linalg/Matrix/MatrixUtils.hpp"
 #include "math/linalg/Rotations.hpp"
-#include "core/scene/behaviour/FirstPersonCameraBehaviour.hpp"
+#include "behaviour/camera/FirstPersonCameraBehaviour.hpp"
 
 namespace mach {
 	MachApplication::MachApplication() {
@@ -34,7 +34,10 @@ namespace mach {
 		auto shader = cache::AssetCache<gfx::OpenGLShader>::get().load_asset("base");
 		auto model = cache::AssetCache<gfx::Model<float>>::get().load_asset("nanosuit/nanosuit.obj");
 
-		Transform model_transform;
+		auto model_transform = std::make_shared<Transform>();
+		auto model2_transform = std::make_shared<Transform>();
+		model_transform->add_child(model2_transform);
+		model2_transform->local_position = Vec3(10,10,10);
 
 		float camera_speed = 20.0;
 
@@ -44,35 +47,48 @@ namespace mach {
 		auto camera = scene->get_main_camera();
 
 		camera->transform->local_position = Vec3(0.0, 8.0, 10.0);
-		camera->add_behaviour(std::make_unique<core::FirstPersonCameraBehaviour>(core::FirstPersonCameraBehaviour(5, 50)));
+		camera->add_behaviour(std::make_unique<behaviour::FirstPersonCameraBehaviour>(behaviour::FirstPersonCameraBehaviour(5, 50)));
 
 		Vec2 old_mouse_pos = MouseInput::position();
 		float previous_time = 0.0;
 
 		while (!m_window->is_closing()) {
-			m_window->clear(0.1, 0.1, 0.1, 1.0);
-
-			auto win_dims = m_window->get_window_dimensions();
-			float aspect_ratio = (float) win_dims.x / (float) win_dims.y;
 			float current_time = timer.get_elapsed();
 			float delta_time = current_time - previous_time;
 			auto cur_pos = MouseInput::position();
 			auto mouse_delta = cur_pos - old_mouse_pos;
 
+			m_window->clear(0.1, 0.1, 0.1, 1.0);
+
 			scene->update(delta_time);
-
-
-			model_transform.local_rotation *=
-					Quat::from_angle_axis(delta_time, Vec3(1,0,0).normalized()) *
-					Quat::from_angle_axis(delta_time, Vec3(0,1,0).normalized());
 
 			old_mouse_pos = cur_pos;
 
+			//model_transform.local_position = Vec3(.5, -.5,.5);
+//			shader->use();
+//			shader->set_val("view", scene->get_main_camera()->get_view());
+//			shader->set_val("perspective", math::perspective<float>(0.0001, 1000, 90, m_window->get_aspect_ratio()));
+//			shader->set_val("model", model_transform.get_mat());
+//			model->draw(*shader);
+
+			//std::cout << model_transform.get_mat() << std::endl;
+
+			model_transform->local_rotation *= Quat::from_angle_axis(delta_time, Vec3::up());
+
 			shader->use();
-			shader->set_val("model", model_transform.get_mat());
 			shader->set_val("view", scene->get_main_camera()->get_view());
-			shader->set_val("perspective", math::perspective<float>(0.0001, 1000, 90, aspect_ratio));
+			shader->set_val("perspective", math::perspective<float>(0.0001, 1000, 90, m_window->get_aspect_ratio()));
+			shader->set_val("model", model_transform->get_mat());
 			model->draw(*shader);
+
+			shader->use();
+			shader->set_val("view", scene->get_main_camera()->get_view());
+			shader->set_val("perspective", math::perspective<float>(0.0001, 1000, 90, m_window->get_aspect_ratio()));
+			shader->set_val("model", model2_transform->get_mat());
+			model->draw(*shader);
+
+
+
 
 			previous_time = current_time;
 

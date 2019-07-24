@@ -6,7 +6,7 @@
 #define MACH_SCENENODE_HPP
 
 #include "math/linalg/TransformCompound.hpp"
-#include "behaviour/NodeBehaviour.hpp"
+#include "NodeBehaviour.hpp"
 #include <memory>
 #include <vector>
 

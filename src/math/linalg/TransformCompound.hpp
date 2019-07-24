@@ -54,7 +54,7 @@ namespace mach {
 			m_local_transform = math::compose_trs(m_local_position, m_local_rotation, m_local_scale);
 			auto parent = m_parent.lock();
 			if (parent) {
-				m_world_transform = parent->get_mat() * m_local_transform;
+				m_world_transform = m_local_transform *  parent->get_mat();
 			} else {
 				m_world_transform = m_local_transform;
 			}

@@ -5,13 +5,16 @@
 #include "FirstPersonCameraBehaviour.hpp"
 #include "core/scene/SceneNode.hpp"
 
-namespace mach::core {
-	void core::FirstPersonCameraBehaviour::update(float p_delta_time) {
+namespace mach::behaviour {
+	void FirstPersonCameraBehaviour::update(float p_delta_time) {
 		auto mouse_cur_pos = MouseInput::position();
 		auto mouse_delta = mouse_cur_pos - m_mouse_last_pos;
 
 		auto camera = m_scene_node.lock();
 		if(camera){
+			if(camera->transform->parent.lock()){
+				Logger::log("Camera rotation and position is not edited in world space, using it like this may have unintended side effects");
+			}
 			if(MouseInput::pressed(Button1)){
 				float camera_rotation_speed = p_delta_time * m_camera_movement_speed;
 				Vec2 rotation_deltas = Vec2(mouse_delta.x, mouse_delta.y) * camera_rotation_speed;
