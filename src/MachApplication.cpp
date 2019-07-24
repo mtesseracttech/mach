@@ -44,7 +44,7 @@ namespace mach {
 		auto camera = scene->get_main_camera();
 
 		camera->transform->local_position = Vec3(0.0, 8.0, 10.0);
-		camera->add_behaviour(std::make_unique<core::FirstPersonCameraBehaviour>(core::FirstPersonCameraBehaviour(0, 0)));
+		camera->add_behaviour(std::make_unique<core::FirstPersonCameraBehaviour>(core::FirstPersonCameraBehaviour(5, 50)));
 
 		Vec2 old_mouse_pos = MouseInput::position();
 		float previous_time = 0.0;
