@@ -6,8 +6,9 @@
 #define MACH_SCENENODE_HPP
 
 #include "math/linalg/TransformCompound.hpp"
-#include "Behaviour/SceneBehaviour.hpp"
+#include "behaviour/NodeBehaviour.hpp"
 #include <memory>
+#include <vector>
 
 namespace mach::core {
 
@@ -18,7 +19,7 @@ namespace mach::core {
 	class SceneNode : public std::enable_shared_from_this<SceneNode<T>> {
 	protected:
 		std::shared_ptr<TransformCompound<T>> m_transform;
-		std::vector<SceneBehaviour> m_behaviours;
+		std::vector<std::unique_ptr<NodeBehaviour>> m_behaviours;
 		std::weak_ptr<SceneHierarchy<T>> m_scene;
 		std::string m_name;
 
@@ -57,8 +58,9 @@ namespace mach::core {
 			Logger::log(m_name + " getting destroyed", Debug);
 		}
 
-		void add_behaviour(const SceneBehaviour &p_behaviour) {
-			m_behaviours.push_back(p_behaviour);
+		void add_behaviour(std::unique_ptr<NodeBehaviour> p_behaviour) {
+			p_behaviour->set_owner(this->weak_from_this());
+			m_behaviours.push_back(std::move(p_behaviour));
 		}
 
 		PROPERTY(const std::weak_ptr<SceneHierarchy<T>> &, scene, get_scene, set_scene);
@@ -88,17 +90,16 @@ namespace mach::core {
 			m_name = p_name;
 		}
 
-		void update() {
-			Logger::log(m_name + " is updating!", Debug);
+		void update(float p_delta_time) {
 			for (int i = m_behaviours.size() - 1; i >= 0; --i) {
-				m_behaviours[i].update();
+				m_behaviours[i]->update(p_delta_time);
 			}
 			for (int i = m_transform->get_child_count() - 1; i >= 0; --i) {
 				std::shared_ptr<TransformCompound<T>> child_transform = (*m_transform)[i];
 				if (child_transform) {
 					auto child = child_transform->user.lock();
 					if (child) {
-						child->update();
+						child->update(p_delta_time);
 					}
 				}
 			}

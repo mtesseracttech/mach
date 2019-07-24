@@ -8,6 +8,7 @@
 #include <io/input/KeyInput.hpp>
 #include <graphics/renderer/Renderer.hpp>
 #include <graphics/renderer/window/RenderWindow.hpp>
+#include <core/scene/Camera.hpp>
 
 namespace mach {
 	class MachApplication {

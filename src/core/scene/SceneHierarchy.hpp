@@ -5,13 +5,11 @@
 #ifndef MACH_SCENEHIERARCHY_HPP
 #define MACH_SCENEHIERARCHY_HPP
 
-#include <auxiliary/VectorUtils.hpp>
-#include <core/Scene/Camera.hpp>
-#include "SceneNode.hpp"
+//#include <auxiliary/VectorUtils.hpp>
+//#include "core/scene/Camera.hpp"
+//#include "SceneNode.hpp"
 
 namespace mach::core {
-
-
 	typedef std::shared_ptr<SceneNode<float>> NodePtr;
 
 	template<typename T>
@@ -73,13 +71,12 @@ namespace mach::core {
 			return total;
 		}
 
-		void update() {
-			Logger::log("Scene Hierarchy update!");
+		void update(float p_delta_time) {
 			for (int i = m_base_nodes.size() - 1; i >= 0; --i) {
-				m_base_nodes[i]->update();
+				m_base_nodes[i]->update(p_delta_time);
 			}
 			if (m_main_camera) {
-				m_main_camera->update();
+				m_main_camera->update(p_delta_time);
 			}
 		}
 	};

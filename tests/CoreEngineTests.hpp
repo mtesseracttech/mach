@@ -7,8 +7,8 @@
 
 #include <iostream>
 #include <auxiliary/MachAssertion.hpp>
-#include <core/Scene/SceneHierarchy.hpp>
-#include <core/Scene/SceneNode.hpp>
+#include "core/scene/SceneHierarchy.hpp"
+#include "core/scene/SceneNode.hpp"
 
 namespace mach::tests::core {
 	class CoreEngineTests {
@@ -42,7 +42,7 @@ namespace mach::tests::core {
 		mach_assert(scene->get_total_nodes() == 5, "Total nodes should be 5 at this point, 4, ");
 
 
-		scene->update();
+		scene->update(0);
 	}
 }
 

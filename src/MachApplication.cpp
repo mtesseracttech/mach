@@ -13,6 +13,7 @@
 #include "../tests/TestRunner.hpp"
 #include "math/linalg/Matrix/MatrixUtils.hpp"
 #include "math/linalg/Rotations.hpp"
+#include "core/scene/behaviour/FirstPersonCameraBehaviour.hpp"
 
 namespace mach {
 	MachApplication::MachApplication() {
@@ -32,6 +33,7 @@ namespace mach {
 
 		auto shader = cache::AssetCache<gfx::OpenGLShader>::get().load_asset("base");
 		auto model = cache::AssetCache<gfx::Model<float>>::get().load_asset("nanosuit/nanosuit.obj");
+
 		Transform model_transform;
 
 		float camera_speed = 20.0;
@@ -42,9 +44,9 @@ namespace mach {
 		auto camera = scene->get_main_camera();
 
 		camera->transform->local_position = Vec3(0.0, 8.0, 10.0);
+		camera->add_behaviour(std::make_unique<core::FirstPersonCameraBehaviour>(core::FirstPersonCameraBehaviour(0, 0)));
 
-		Vec2 old_mouse_pos;
-
+		Vec2 old_mouse_pos = MouseInput::position();
 		float previous_time = 0.0;
 
 		while (!m_window->is_closing()) {
@@ -57,35 +59,7 @@ namespace mach {
 			auto cur_pos = MouseInput::position();
 			auto mouse_delta = cur_pos - old_mouse_pos;
 
-			if (KeyInput::enter(Escape)) {
-				m_window->close();
-			}
-
-			float movement_speed = delta_time * camera_speed;
-			if (KeyInput::pressed(W)) {
-				camera->transform->local_position += -camera->transform->forward * movement_speed;
-			}
-			if (KeyInput::pressed(S)) {
-				camera->transform->local_position += -camera->transform->backward * movement_speed;
-			}
-			if (KeyInput::pressed(A)) {
-				camera->transform->local_position += camera->transform->right * movement_speed;
-			}
-			if (KeyInput::pressed(D)) {
-				camera->transform->local_position += camera->transform->left * movement_speed;
-			}
-
-
-			if (MouseInput::pressed(Button1)) {
-				float mouse_speed = delta_time * 0.5;
-				Vec2 rotation_deltas = Vec2(mouse_delta.x, mouse_delta.y) * mouse_speed;
-				Quat around_x = Quat::from_angle_axis(rotation_deltas.y, camera->transform->left);
-				//Quat around_x = Quat::from_angle_axis(rotation_deltas.y, -Vec3::right());
-				Quat around_y = Quat::from_angle_axis(rotation_deltas.x, Vec3::up());
-				camera->transform->local_rotation = camera->transform->local_rotation * around_x * around_y;
-				//std::cout << camera->transform->position << std::endl;
-			}
-
+			scene->update(delta_time);
 
 			old_mouse_pos = cur_pos;
 
@@ -99,14 +73,19 @@ namespace mach {
 
 			m_window->swap_buffers();
 			m_window->poll_events();
+
+			if (KeyInput::enter(Escape)) {
+				m_window->close();
+			}
 		}
 		shutdown();
 	}
 
-
 	void MachApplication::shutdown() {
 		m_window->close();
 	}
+
+
 }
 
 int main() {

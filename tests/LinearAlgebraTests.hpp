@@ -13,7 +13,7 @@
 #include <auxiliary/MachAssertion.hpp>
 #include <math/util/MathUtils.hpp>
 #include <math/linalg/TransformCompound.hpp>
-#include <core/Scene/SceneHierarchy.hpp>
+#include <core/scene/SceneHierarchy.hpp>
 
 namespace mach::tests::math {
 	class LinearAlgebraTests {

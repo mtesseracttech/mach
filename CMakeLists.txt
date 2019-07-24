@@ -60,11 +60,11 @@ add_executable(mach lib/glad.c
         src/graphics/renderer/material/Texture.hpp
         src/caching/AssetCache.hpp
         src/math/linalg/Matrix/MatrixUtils.hpp
-        src/core/Scene/Camera.hpp
+        src/core/scene/Camera.hpp
         src/math/linalg/TransformCompound.hpp
         src/auxiliary/Memory.hpp
-        src/core/Scene/SceneNode.hpp
-        src/core/Scene/Behaviour/SceneBehaviour.hpp src/core/Scene/SceneHierarchy.hpp tests/CoreEngineTests.hpp)
+        src/core/scene/SceneNode.hpp
+        src/core/scene/behaviour/NodeBehaviour.hpp src/core/scene/SceneHierarchy.hpp tests/CoreEngineTests.hpp src/core/scene/behaviour/FirstPersonCameraBehaviour.hpp src/core/scene/behaviour/FirstPersonCameraBehaviour.cpp)
 
 target_compile_options(mach PRIVATE -fdeclspec)
 

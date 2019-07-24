@@ -6,6 +6,7 @@
 #define MACH_MATRIXUTILS_HPP
 
 #include <math/linalg/LinAlgTypes.hpp>
+#include <math/util/MathUtils.hpp>
 #include "RotationMatrix.hpp"
 #include "ScaleMatrix.hpp"
 
