@@ -39,8 +39,6 @@ namespace mach {
 		model_transform->add_child(model2_transform);
 		model2_transform->local_position = Vec3(10,10,10);
 
-		float camera_speed = 20.0;
-
 		Timer timer;
 
 		auto scene = core::SceneHierarchy<float>::create(std::make_shared<core::Camera<float>>());
@@ -64,31 +62,22 @@ namespace mach {
 
 			old_mouse_pos = cur_pos;
 
-			//model_transform.local_position = Vec3(.5, -.5,.5);
-//			shader->use();
-//			shader->set_val("view", scene->get_main_camera()->get_view());
-//			shader->set_val("perspective", math::perspective<float>(0.0001, 1000, 90, m_window->get_aspect_ratio()));
-//			shader->set_val("model", model_transform.get_mat());
-//			model->draw(*shader);
-
-			//std::cout << model_transform.get_mat() << std::endl;
-
 			model_transform->local_rotation *= Quat::from_angle_axis(delta_time, Vec3::up());
 
+			auto look_at_view = math::look_at(scene->get_main_camera()->transform->position, model2_transform->position, Vec3::up());
+			auto camera_view = scene->get_main_camera()->get_view();
+
 			shader->use();
-			shader->set_val("view", scene->get_main_camera()->get_view());
+			shader->set_val("view", look_at_view);
 			shader->set_val("perspective", math::perspective<float>(0.0001, 1000, 90, m_window->get_aspect_ratio()));
 			shader->set_val("model", model_transform->get_mat());
 			model->draw(*shader);
 
 			shader->use();
-			shader->set_val("view", scene->get_main_camera()->get_view());
+			shader->set_val("view", look_at_view);
 			shader->set_val("perspective", math::perspective<float>(0.0001, 1000, 90, m_window->get_aspect_ratio()));
 			shader->set_val("model", model2_transform->get_mat());
 			model->draw(*shader);
-
-
-
 
 			previous_time = current_time;
 

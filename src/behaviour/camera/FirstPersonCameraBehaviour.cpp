@@ -13,7 +13,7 @@ namespace mach::behaviour {
 		auto camera = m_scene_node.lock();
 		if(camera){
 			if(camera->transform->parent.lock()){
-				Logger::log("Camera rotation and position is not edited in world space, using it like this may have unintended side effects");
+				Logger::log("Camera rotation and position are not edited in world space, using it like this will likely not work well yet");
 			}
 			if(MouseInput::pressed(Button1)){
 				float camera_rotation_speed = p_delta_time * m_camera_movement_speed;
