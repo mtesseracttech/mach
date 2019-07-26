@@ -60,8 +60,14 @@ namespace mach::gfx {
 			const bool has_geom_shader = io::FileIO::file_exists(geom_shader_name);
 
 			if (!has_vert_shader || !has_frag_shader) {
-				throw std::runtime_error(
-						"The shader " + p_program_name + " is incomplete, it is missing a vertex or fragment file");
+				std::stringstream ss;
+				ss << "The shader ";
+				ss << '"' << p_program_name << '"' << " is incomplete, it is missing: ";
+				if (!has_vert_shader) ss << "Vertex";
+				if (!has_vert_shader && !has_frag_shader) ss << " and ";
+				if (!has_frag_shader) ss << "Fragment";
+				ss << " file(s).";
+				throw std::runtime_error(ss.str());
 			}
 
 			m_program_name = p_program_name;

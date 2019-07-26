@@ -31,13 +31,15 @@ namespace mach {
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LESS);
 
-		auto shader = cache::AssetCache<gfx::OpenGLShader>::get().load_asset("base");
+		//auto shader = cache::AssetCache<gfx::OpenGLShader>::get().load_asset("base");
+		auto shader = cache::AssetCache<gfx::OpenGLShader>::get().load_asset("phong");
+
 		auto model = cache::AssetCache<gfx::Model<float>>::get().load_asset("nanosuit/nanosuit.obj");
 
 		auto model_transform = std::make_shared<Transform>();
 		auto model2_transform = std::make_shared<Transform>();
 		model_transform->add_child(model2_transform);
-		model2_transform->local_position = Vec3(10,10,10);
+		//model2_transform->local_position = Vec3(10,10,10);
 
 		Timer timer;
 
@@ -45,7 +47,7 @@ namespace mach {
 		auto camera = scene->get_main_camera();
 
 		camera->transform->local_position = Vec3(0.0, 8.0, 10.0);
-		camera->add_behaviour(std::make_unique<behaviour::FirstPersonCameraBehaviour>(behaviour::FirstPersonCameraBehaviour(5, 50)));
+		camera->add_behaviour(std::make_unique<behaviour::FirstPersonCameraBehaviour>(behaviour::FirstPersonCameraBehaviour(50, 1)));
 
 		Vec2 old_mouse_pos = MouseInput::position();
 		float previous_time = 0.0;
@@ -62,22 +64,44 @@ namespace mach {
 
 			old_mouse_pos = cur_pos;
 
-			model_transform->local_rotation *= Quat::from_angle_axis(delta_time, Vec3::up());
+			//model_transform->local_rotation *= Quat::from_angle_axis(delta_time, Vec3::up());
 
-			auto look_at_view = math::look_at(scene->get_main_camera()->transform->position, model2_transform->position, Vec3::up());
 			auto camera_view = scene->get_main_camera()->get_view();
 
-			shader->use();
-			shader->set_val("view", look_at_view);
-			shader->set_val("perspective", math::perspective<float>(0.0001, 1000, 90, m_window->get_aspect_ratio()));
-			shader->set_val("model", model_transform->get_mat());
-			model->draw(*shader);
+			int rows = 1;
+			int cols = 1;
+			float spacing = 10.0;
+			Vec2 middle(spacing * ((float)(cols - 1) / 2.0), spacing * ((float)(rows - 1) / 2.0));
+			for(int x = 0; x < cols; ++x){
+				for(int y = 0; y < rows; ++y){
+					Vec2 position(x * spacing, y * spacing);
+					float dist_from_center = Vec2::distance(position, middle);
+					model_transform->local_position = Vec3(position.x, std::sin((current_time * 100 + dist_from_center)/spacing) * 2.0, position.y);
+					shader->use();
+					shader->set_val("view", camera_view);
+					shader->set_val("perspective", math::perspective<float>(0.0001, 1000, 90, m_window->get_aspect_ratio()));
+					shader->set_val("model", model_transform->get_mat());
+					model->draw(*shader);
+				}
+			}
 
-			shader->use();
-			shader->set_val("view", look_at_view);
-			shader->set_val("perspective", math::perspective<float>(0.0001, 1000, 90, m_window->get_aspect_ratio()));
-			shader->set_val("model", model2_transform->get_mat());
-			model->draw(*shader);
+//			shader->use();
+//			shader->set_val("view", camera_view);
+//			shader->set_val("perspective", math::perspective<float>(0.0001, 1000, 90, m_window->get_aspect_ratio()));
+//			shader->set_val("model", Mat4::identity());
+//			model->draw(*shader);
+//
+//			shader->use();
+//			shader->set_val("view", camera_view);
+//			shader->set_val("perspective", math::perspective<float>(0.0001, 1000, 90, m_window->get_aspect_ratio()));
+//			shader->set_val("model", model_transform->get_mat());
+//			model->draw(*shader);
+//
+//			shader->use();
+//			shader->set_val("view", camera_view);
+//			shader->set_val("perspective", math::perspective<float>(0.0001, 1000, 90, m_window->get_aspect_ratio()));
+//			shader->set_val("model", model2_transform->get_mat());
+//			model->draw(*shader);
 
 			previous_time = current_time;
 

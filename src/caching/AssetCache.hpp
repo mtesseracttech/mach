@@ -8,6 +8,7 @@
 #include <map>
 #include <memory>
 #include <auxiliary/logging/Logger.hpp>
+#include <typeinfo>
 
 namespace mach::cache {
 	template<typename T>

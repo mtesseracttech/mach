@@ -7,23 +7,41 @@
 
 namespace mach::behaviour {
 	void FirstPersonCameraBehaviour::update(float p_delta_time) {
-		auto mouse_cur_pos = MouseInput::position();
-		auto mouse_delta = mouse_cur_pos - m_mouse_last_pos;
+		Vec2 mouse_cur_pos = MouseInput::position();
+		Vec2 mouse_delta = mouse_cur_pos - m_mouse_last_pos;
 
 		auto camera = m_scene_node.lock();
-		if(camera){
-			if(camera->transform->parent.lock()){
+		if (camera) {
+			if (camera->transform->has_parent()) {
 				Logger::log("Camera rotation and position are not edited in world space, using it like this will likely not work well yet");
 			}
-			if(MouseInput::pressed(Button1)){
-				float camera_rotation_speed = p_delta_time * m_camera_movement_speed;
-				Vec2 rotation_deltas = Vec2(mouse_delta.x, mouse_delta.y) * camera_rotation_speed;
-				Quat around_x = Quat::from_angle_axis(rotation_deltas.y, camera->transform->right);
-				Quat around_y = Quat::from_angle_axis(-rotation_deltas.x, Vec3::up());
-				camera->transform->local_rotation *= around_x * around_y;
+
+			m_rotations_average = Vec2::zero();
+
+			if (MouseInput::pressed(Button1)) {
+				m_current_rotation += mouse_delta * m_camera_rotation_speed * p_delta_time;
 			}
 
-			float cam_movement_speed = p_delta_time * m_camera_rotation_speed;
+			m_rotations.push_back(m_current_rotation);
+
+			if (m_rotations.size() > m_average_frames) {
+				m_rotations.pop_front();
+			}
+
+			for (const auto &rotation : m_rotations) {
+				m_rotations_average += rotation;
+			}
+
+			m_rotations_average /= (float)m_rotations.size();
+
+			m_rotations_average = Vec2(clamp_angle(m_rotations_average.x, math::to_rad(m_minimum_x), math::to_rad(m_maximum_x)),
+			                           clamp_angle(m_rotations_average.y, math::to_rad(m_minimum_y), math::to_rad(m_maximum_y)));
+
+			Quat around_x = Quat::from_angle_axis(m_rotations_average.y, Vec3::right());
+			Quat around_y = Quat::from_angle_axis(-m_rotations_average.x, Vec3::up());
+			camera->transform->local_rotation = m_original_rotation * around_x * around_y;
+
+			float cam_movement_speed = p_delta_time * m_camera_movement_speed;
 			if (KeyInput::pressed(W)) {
 				camera->transform->local_position -= camera->transform->forward * cam_movement_speed;
 			}
@@ -38,5 +56,13 @@ namespace mach::behaviour {
 			}
 		}
 		m_mouse_last_pos = mouse_cur_pos;
+	}
+
+	void FirstPersonCameraBehaviour::set_owner(std::weak_ptr<core::SceneNode <float>> p_owner) {
+		core::NodeBehaviour::set_owner(p_owner);
+		auto camera = p_owner.lock();
+		if(camera){
+			m_original_rotation = camera->transform->local_rotation;
+		}
 	}
 }

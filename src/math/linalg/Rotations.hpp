@@ -5,6 +5,8 @@
 #ifndef MACH_ROTATIONS_HPP
 #define MACH_ROTATIONS_HPP
 
+#include <math/util/MathUtils.hpp>
+
 namespace mach {
 	enum RotationOrder {
 		PHB,
@@ -31,6 +33,22 @@ namespace mach {
 			case BHP:
 				return p_bank * p_heading * p_pitch;
 		}
+	}
+
+	template<typename T>
+	static T clamp_angle(const T &p_angle, const T &p_min, const T &p_max) {
+		const T full_rotation = math::pi * 2.0;
+
+		T angle = std::fmod(p_angle, full_rotation);
+		if ((angle >= -full_rotation) && (angle <= full_rotation)) {
+			if (angle < -full_rotation) {
+				angle += full_rotation;
+			}
+			if (angle > full_rotation) {
+				angle -= full_rotation;
+			}
+		}
+		return std::clamp(angle, p_min, p_max);
 	}
 
 	template<typename T>
@@ -69,6 +87,8 @@ namespace mach {
 			}
 		}
 	};
+
+
 }
 
 #endif //MACH_ROTATIONS_HPP

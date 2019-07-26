@@ -64,14 +64,16 @@ namespace mach {
 		}
 
 		//To be used in conjunction with the world pos/rot/scale setters
-		Matrix4<T> create_local_transform(const Matrix4<T> &p_world_transform) {
+		void create_local_transform(const Matrix4<T> &p_world_transform) {
 			mark_changed();
 			auto parent = m_parent.lock();
 			if (parent) {
-				return m_local_transform = p_world_transform * parent->get_mat().inverse();
+				m_local_transform = p_world_transform * parent->get_mat().inverse() ;
 			} else {
-				return m_local_transform = p_world_transform;
+				m_local_transform = p_world_transform;
 			}
+			m_world_transform = p_world_transform;
+			update_local_vars();
 		}
 
 		void update_world_vars() {
@@ -197,40 +199,17 @@ namespace mach {
 			return m_local_scale;
 		}
 
-//		void set_world_rotation(const Quaternion<T> &p_rotation) {
-//			auto new_world_transform = RotationMatrix<T>::from_quat(p_rotation).to_mat4();
-//			new_world_transform[0] *= m_world_scale.x;
-//			new_world_transform[1] *= m_world_scale.y;
-//			new_world_transform[2] *= m_world_scale.z;
-//			new_world_transform[3].x = m_world_position.x;
-//			new_world_transform[3].y = m_world_position.y;
-//			new_world_transform[3].z = m_world_position.z;
-//			new_world_transform[3].w = m_world_transform[3].w;
-//			create_local_transform(new_world_transform);
-//			update_local_vars();
+
+//		void set_world_position(const Vector3<T> &p_position) {
+//			create_local_transform(math::compose_trs(p_position, m_world_rotation, m_world_scale));
 //		}
 //
-//		void set_world_position(const Vector3<T> &p_position) {
-//			auto new_world_transform = m_world_transform;
-//			new_world_transform[3].x = p_position.x;
-//			new_world_transform[3].y = p_position.y;
-//			new_world_transform[3].z = p_position.z;
-//			new_world_transform[3].w = m_world_transform[3].w;
-//			create_local_transform(new_world_transform);
-//			update_local_vars();
+//		void set_world_rotation(const Quaternion<T> &p_rotation){
+//			create_local_transform(math::compose_trs(m_world_position, p_rotation, m_world_scale));
 //		}
 //
 //		void set_world_scale(const Vector3<T> &p_scale) {
-//			auto new_world_transform = RotationMatrix<T>::from_quat(m_world_rotation).to_mat4();
-//			new_world_transform[0] *= p_scale.x;
-//			new_world_transform[1] *= p_scale.y;
-//			new_world_transform[2] *= p_scale.z;
-//			new_world_transform[3].x = m_world_position.x;
-//			new_world_transform[3].y = m_world_position.y;
-//			new_world_transform[3].z = m_world_position.z;
-//			new_world_transform[3].w = m_world_transform[3].w;
-//			create_local_transform(new_world_transform);
-//			update_local_vars();
+//			create_local_transform(math::compose_trs(m_world_position, m_world_rotation, p_scale));
 //		}
 
 		void set_local_rotation(const Quaternion<T> &p_rotation) {
@@ -303,6 +282,10 @@ namespace mach {
 
 		void set_parent(std::weak_ptr<TransformCompound> p_parent) {
 			m_parent = p_parent;
+		}
+
+		bool has_parent(){
+			return m_parent.lock();
 		}
 	};
 
