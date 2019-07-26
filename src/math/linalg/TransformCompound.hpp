@@ -285,7 +285,7 @@ namespace mach {
 		}
 
 		bool has_parent(){
-			return m_parent.lock();
+			return !m_parent.expired();
 		}
 	};
 

@@ -16,8 +16,8 @@ namespace mach::behaviour {
 
 		float m_minimum_x = -360;
 		float m_maximum_x = 360;
-		float m_minimum_y = -60;
-		float m_maximum_y = 60;
+		float m_minimum_y = -89;
+		float m_maximum_y = 89;
 
 		float m_camera_movement_speed = 0.0;
 		float m_camera_rotation_speed = 0.0;

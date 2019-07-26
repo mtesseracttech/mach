@@ -58,7 +58,7 @@ namespace mach {
 			auto cur_pos = MouseInput::position();
 			auto mouse_delta = cur_pos - old_mouse_pos;
 
-			m_window->clear(0.1, 0.1, 0.1, 1.0);
+			m_window->clear(1, 1, 1, 1);
 
 			scene->update(delta_time);
 
@@ -76,7 +76,7 @@ namespace mach {
 				for(int y = 0; y < rows; ++y){
 					Vec2 position(x * spacing, y * spacing);
 					float dist_from_center = Vec2::distance(position, middle);
-					model_transform->local_position = Vec3(position.x, std::sin((current_time * 100 + dist_from_center)/spacing) * 2.0, position.y);
+					//model_transform->local_position = Vec3(position.x, std::sin((current_time * 100 + dist_from_center)/spacing) * 2.0, position.y);
 					shader->use();
 					shader->set_val("view", camera_view);
 					shader->set_val("perspective", math::perspective<float>(0.0001, 1000, 90, m_window->get_aspect_ratio()));

@@ -19,8 +19,11 @@ namespace mach::behaviour {
 			m_rotations_average = Vec2::zero();
 
 			if (MouseInput::pressed(Button1)) {
-				m_current_rotation += mouse_delta * m_camera_rotation_speed * p_delta_time;
+				m_current_rotation += mouse_delta * m_camera_rotation_speed * 0.02;
+				m_current_rotation = Vec2(clamp_angle(m_current_rotation.x, math::to_rad(m_minimum_x), math::to_rad(m_maximum_x)),
+				                          clamp_angle(m_current_rotation.y, math::to_rad(m_minimum_y), math::to_rad(m_maximum_y)));
 			}
+
 
 			m_rotations.push_back(m_current_rotation);
 
@@ -36,6 +39,8 @@ namespace mach::behaviour {
 
 			m_rotations_average = Vec2(clamp_angle(m_rotations_average.x, math::to_rad(m_minimum_x), math::to_rad(m_maximum_x)),
 			                           clamp_angle(m_rotations_average.y, math::to_rad(m_minimum_y), math::to_rad(m_maximum_y)));
+
+			std::cout << m_rotations_average << std::endl;
 
 			Quat around_x = Quat::from_angle_axis(m_rotations_average.y, Vec3::right());
 			Quat around_y = Quat::from_angle_axis(-m_rotations_average.x, Vec3::up());

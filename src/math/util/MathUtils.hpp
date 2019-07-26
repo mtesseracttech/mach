@@ -25,6 +25,11 @@ namespace mach::math {
 	inline T to_deg(T p_rad) {
 		return p_rad * rad_to_deg;
 	}
+
+	template <typename T>
+	inline int sign(const T &p_val) {
+		return (T(0) < p_val) - (p_val < T(0));
+	}
 }
 
 #endif //MACH_MATHUTILS_HPP
