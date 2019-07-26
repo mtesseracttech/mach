@@ -20,8 +20,7 @@ namespace mach::behaviour {
 
 			if (MouseInput::pressed(Button1)) {
 				m_current_rotation += mouse_delta * m_camera_rotation_speed * 0.02;
-				m_current_rotation = Vec2(clamp_angle(m_current_rotation.x, math::to_rad(m_minimum_x), math::to_rad(m_maximum_x)),
-				                          clamp_angle(m_current_rotation.y, math::to_rad(m_minimum_y), math::to_rad(m_maximum_y)));
+				m_current_rotation.x = m_current_rotation.x, math::to_rad(m_minimum_x), math::to_rad(m_maximum_x);
 			}
 
 
