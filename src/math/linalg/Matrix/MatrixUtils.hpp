@@ -124,7 +124,7 @@ namespace mach::math {
 	Matrix4<T> perspective(const T &p_z_near, const T &p_z_far, const T &p_fov_y, const T &p_aspect_ratio) {
 		mach_assert(p_z_near > 0.0, "Near clipping distance must be positive");
 		mach_assert(p_z_far > p_z_near, "Far clipping distance must further than the near clipping distance");
-		T f = 1.0 / std::tan(math::to_rad(p_fov_y) / 2.0); //cot(fovy/2)
+		T f = 1.0 / std::tan(p_fov_y / 2.0); //cot(fovy/2)
 		Matrix4<T> m = Matrix4<T>::zero();
 		m[0][0] = f / p_aspect_ratio;
 		m[1][1] = f;

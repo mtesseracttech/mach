@@ -31,15 +31,18 @@ namespace mach {
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LESS);
 
-		//auto shader = cache::AssetCache<gfx::OpenGLShader>::get().load_asset("base");
-		auto shader = cache::AssetCache<gfx::OpenGLShader>::get().load_asset("phong");
+		//auto phong_shader = cache::AssetCache<gfx::OpenGLShader>::get().load_asset("base");
+		auto phong_shader = cache::AssetCache<gfx::OpenGLShader>::get().load_asset("phong");
+		auto lighting_shader = cache::AssetCache<gfx::OpenGLShader>::get().load_asset("flat");
 
-		auto model = cache::AssetCache<gfx::Model<float>>::get().load_asset("nanosuit/nanosuit.obj");
+		auto nanosuit_model = cache::AssetCache<gfx::Model<float>>::get().load_asset("nanosuit/nanosuit.obj");
+		auto light_model = cache::AssetCache<gfx::Model<float>>::get().load_asset("sphere.obj");
 
 		auto model_transform = std::make_shared<Transform>();
-		auto model2_transform = std::make_shared<Transform>();
-		model_transform->add_child(model2_transform);
-		//model2_transform->local_position = Vec3(10,10,10);
+		auto light_transform = std::make_shared<Transform>();
+
+		light_transform->local_position = Vec3(2,10,5);
+		light_transform->local_scale = Vec3(1.0/40.0);
 
 		Timer timer;
 
@@ -64,44 +67,26 @@ namespace mach {
 
 			old_mouse_pos = cur_pos;
 
-			//model_transform->local_rotation *= Quat::from_angle_axis(delta_time, Vec3::up());
+			model_transform->local_rotation *= Quat::from_angle_axis(delta_time, Vec3::up());
 
 			auto camera_view = scene->get_main_camera()->get_view();
 
-			int rows = 1;
-			int cols = 1;
-			float spacing = 10.0;
-			Vec2 middle(spacing * ((float)(cols - 1) / 2.0), spacing * ((float)(rows - 1) / 2.0));
-			for(int x = 0; x < cols; ++x){
-				for(int y = 0; y < rows; ++y){
-					Vec2 position(x * spacing, y * spacing);
-					float dist_from_center = Vec2::distance(position, middle);
-					//model_transform->local_position = Vec3(position.x, std::sin((current_time * 100 + dist_from_center)/spacing) * 2.0, position.y);
-					shader->use();
-					shader->set_val("view", camera_view);
-					shader->set_val("perspective", math::perspective<float>(0.0001, 1000, 90, m_window->get_aspect_ratio()));
-					shader->set_val("model", model_transform->get_mat());
-					model->draw(*shader);
-				}
-			}
+			model_transform->local_rotation = Quat::from_angle_axis(current_time, Vec3::up());
+			phong_shader->use();
+			phong_shader->set_val("object_color", Vec3(1.0, 0.5, 0.31));
+			phong_shader->set_val("light_color", Vec3(1.0, 1.0, 1.0));
+			phong_shader->set_val("light_pos", light_transform->position);
+			phong_shader->set_val("view", camera_view);
+			phong_shader->set_val("perspective", math::perspective<float>(0.0001, 1000, math::to_rad(90), m_window->get_aspect_ratio()));
+			phong_shader->set_val("model", model_transform->get_mat());
+			nanosuit_model->draw(*phong_shader);
 
-//			shader->use();
-//			shader->set_val("view", camera_view);
-//			shader->set_val("perspective", math::perspective<float>(0.0001, 1000, 90, m_window->get_aspect_ratio()));
-//			shader->set_val("model", Mat4::identity());
-//			model->draw(*shader);
-//
-//			shader->use();
-//			shader->set_val("view", camera_view);
-//			shader->set_val("perspective", math::perspective<float>(0.0001, 1000, 90, m_window->get_aspect_ratio()));
-//			shader->set_val("model", model_transform->get_mat());
-//			model->draw(*shader);
-//
-//			shader->use();
-//			shader->set_val("view", camera_view);
-//			shader->set_val("perspective", math::perspective<float>(0.0001, 1000, 90, m_window->get_aspect_ratio()));
-//			shader->set_val("model", model2_transform->get_mat());
-//			model->draw(*shader);
+			lighting_shader->use();
+			lighting_shader->set_val("color", Vec3(0.8, 0.8, 0));
+			lighting_shader->set_val("view", camera_view);
+			lighting_shader->set_val("perspective", math::perspective<float>(0.0001, 1000, math::to_rad(90), m_window->get_aspect_ratio()));
+			lighting_shader->set_val("model", light_transform->get_mat());
+			light_model->draw(*lighting_shader);
 
 			previous_time = current_time;
 
@@ -118,8 +103,6 @@ namespace mach {
 	void MachApplication::shutdown() {
 		m_window->close();
 	}
-
-
 }
 
 int main() {

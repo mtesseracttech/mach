@@ -324,7 +324,7 @@ namespace mach {
 		}
 
 
-		inline void normalize() const {
+		inline void normalize() {
 			T l = length();
 			if (approx_eq<T>(l, 0.0)) {
 				for (size_t i = 0; i < N; ++i) {

@@ -19,5 +19,4 @@ void main()
     vert_position = a_pos;
     vert_tex_coord = a_tex_coord;
     gl_Position = mvp * vec4(a_pos, 1.0);
-    //gl_Position = vec4(a_pos, 1.0);
 }

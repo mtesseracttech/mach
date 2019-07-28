@@ -60,9 +60,9 @@ namespace mach {
 		}
 
 		static inline RotationMatrix from_quat(const Quaternion <T> &p_q) {
-			T sq_x = p_q.x * p_q.x;
-			T sq_y = p_q.y * p_q.y;
-			T sq_z = p_q.z * p_q.z;
+			T xx = p_q.x * p_q.x;
+			T yy = p_q.y * p_q.y;
+			T zz = p_q.z * p_q.z;
 			T xy = p_q.x * p_q.y;
 			T xz = p_q.x * p_q.z;
 			T xw = p_q.x * p_q.w;
@@ -70,9 +70,9 @@ namespace mach {
 			T yw = p_q.y * p_q.w;
 			T zw = p_q.z * p_q.w;
 
-			return RotationMatrix(1 - 2 * (sq_y + sq_z), 2 * (xy - zw), 2 * (xz + yw),
-			                      2 * (xy + zw), 1 - 2 * (sq_x + sq_z), 2 * (yz - xw),
-			                      2 * (xz - yw), 2 * (yz + xw), 1 - 2 * (sq_x + sq_y));
+			return RotationMatrix(1 - 2 * (yy + zz), 2 * (xy - zw), 2 * (xz + yw),
+			                      2 * (xy + zw), 1 - 2 * (xx + zz), 2 * (yz - xw),
+			                      2 * (xz - yw), 2 * (yz + xw), 1 - 2 * (xx + yy));
 		}
 
 		//Angle Axis
