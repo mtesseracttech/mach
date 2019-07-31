@@ -5,6 +5,8 @@
 #ifndef MACH_MATHUTILS_HPP
 #define MACH_MATHUTILS_HPP
 
+#include <math/linalg/LinAlgTypes.hpp>
+
 namespace mach::math {
 	constexpr double e = 2.71828182845904523536;
 	constexpr double pi = 3.14159265358979323846;
@@ -29,6 +31,13 @@ namespace mach::math {
 	template <typename T>
 	inline int sign(const T &p_val) {
 		return (T(0) < p_val) - (p_val < T(0));
+	}
+
+	template<typename T>
+	inline Vector<T, 3> color_over_time(T p_a){
+		T t = std::fmod(p_a, 1.0) * 2 * pi;
+		auto colors_non_normalized = Vector<T,3>(std::max<T>(std::sin(t), 0.0), std::max<T>(std::sin(t + pi / 3.0),0.0), std::max<T>(std::sin(t + 2 * pi / 3.0),0.0));
+		return colors_non_normalized / 2.0;
 	}
 }
 

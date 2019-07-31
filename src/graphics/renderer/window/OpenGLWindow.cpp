@@ -25,6 +25,7 @@ namespace mach::gfx {
 			}
 
 			glfwSetFramebufferSizeCallback(window, glfw_resize_window_callback);
+			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
 			m_glfw_window = window;
 			Logger::log("Successfully Created a GLFW/OpenGL window!", Info);

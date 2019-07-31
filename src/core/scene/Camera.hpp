@@ -22,10 +22,7 @@ namespace mach::core {
 			Vector3<T> up = right.cross(this->m_transform->forward).normalized();
 			Vector3<T> forward = this->m_transform->forward;
 
-			return math::view(this->m_transform->position,
-			                  right,
-			                  up,
-			                  forward);
+			return math::view(this->m_transform->position, right, up, forward);
 		}
 	};
 }

@@ -15,7 +15,7 @@ namespace mach::behaviour {
 		std::list<Vec2> m_rotations;
 		std::list<Vec3> m_velocities;
 
-		uint32_t m_average_frames = 20;
+		uint32_t m_average_frames = 10;
 
 		Vec2 m_mouse_last_pos = MouseInput::position();
 
@@ -34,9 +34,10 @@ namespace mach::behaviour {
 		Vec3 m_current_velocity = Vec3::zero();
 		Vec3 m_velocity_average = Vec3::zero();
 	public:
-		FirstPersonCameraBehaviour(float p_movement_speed, float p_rotation_speed):
+		FirstPersonCameraBehaviour(uint32_t p_average_frames, float p_movement_speed, float p_rotation_speed):
 			m_camera_movement_speed(p_movement_speed),
-			m_camera_rotation_speed(p_rotation_speed){
+			m_camera_rotation_speed(p_rotation_speed),
+			m_average_frames(p_average_frames) {
 		}
 
 	private:

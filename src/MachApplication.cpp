@@ -50,7 +50,7 @@ namespace mach {
 		auto camera = scene->get_main_camera();
 
 		camera->transform->local_position = Vec3(0.0, 8.0, 10.0);
-		camera->add_behaviour(std::make_unique<behaviour::FirstPersonCameraBehaviour>(behaviour::FirstPersonCameraBehaviour(50, 1)));
+		camera->add_behaviour(std::make_unique<behaviour::FirstPersonCameraBehaviour>(behaviour::FirstPersonCameraBehaviour(5, 50, 0.2)));
 
 		Vec2 old_mouse_pos = MouseInput::position();
 		float previous_time = 0.0;
@@ -61,30 +61,34 @@ namespace mach {
 			auto cur_pos = MouseInput::position();
 			auto mouse_delta = cur_pos - old_mouse_pos;
 
-			m_window->clear(1, 1, 1, 1);
+			m_window->clear(0.1, 0.1, 0.1, 0.1);
 
 			scene->update(delta_time);
 
+			auto light_color = math::color_over_time(current_time);
+
 			old_mouse_pos = cur_pos;
 
-			model_transform->local_rotation *= Quat::from_angle_axis(delta_time, Vec3::up());
+			light_transform->local_position = Vec3(std::sin(current_time) * 5, light_transform->local_position.y, std::cos(current_time) * 5);
 
-			auto camera_view = scene->get_main_camera()->get_view();
+			auto view = scene->get_main_camera()->get_view();
+			auto perspective = math::perspective<float>(0.01, 1000, math::to_rad(90), m_window->get_aspect_ratio());
+			auto cam_pos = scene->get_main_camera()->transform->position;
 
-			model_transform->local_rotation = Quat::from_angle_axis(current_time, Vec3::up());
 			phong_shader->use();
-			phong_shader->set_val("object_color", Vec3(1.0, 0.5, 0.31));
-			phong_shader->set_val("light_color", Vec3(1.0, 1.0, 1.0));
-			phong_shader->set_val("light_pos", light_transform->position);
-			phong_shader->set_val("view", camera_view);
-			phong_shader->set_val("perspective", math::perspective<float>(0.0001, 1000, math::to_rad(90), m_window->get_aspect_ratio()));
+			phong_shader->set_val("object_color", Vec3(0.2, 0.2, 0.2));
+			phong_shader->set_val("light_color", light_color);
+			phong_shader->set_val("light_position", light_transform->position);
+			phong_shader->set_val("camera_position", cam_pos);
+			phong_shader->set_val("view", view);
+			phong_shader->set_val("perspective", perspective);
 			phong_shader->set_val("model", model_transform->get_mat());
 			nanosuit_model->draw(*phong_shader);
 
 			lighting_shader->use();
-			lighting_shader->set_val("color", Vec3(0.8, 0.8, 0));
-			lighting_shader->set_val("view", camera_view);
-			lighting_shader->set_val("perspective", math::perspective<float>(0.0001, 1000, math::to_rad(90), m_window->get_aspect_ratio()));
+			lighting_shader->set_val("color", light_color);
+			lighting_shader->set_val("view", view);
+			lighting_shader->set_val("perspective", perspective);
 			lighting_shader->set_val("model", light_transform->get_mat());
 			light_model->draw(*lighting_shader);
 

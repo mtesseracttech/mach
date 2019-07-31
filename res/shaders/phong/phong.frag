@@ -5,23 +5,29 @@ out vec4 frag_color;
 uniform vec3 object_color;
 uniform vec3 light_color;
 uniform vec3 light_position;
+uniform vec3 camera_position;
 
 in vec3 frag_normal;
 in vec3 frag_position;
-in vec3 cam_pos;
 
-//in vec2 frag_tex_coord;
 in mat4 model_view;
 
 void main() {
-    vec3 l = normalize(frag_position - light_position);
-    vec3 r = normalize(reflect(l, frag_normal));
-    vec3 v = normalize(frag_position - cam_pos);
-    float ambient_strength = dot(v, r);
+    float ambient_strength = 0.1;
     vec3 ambient = ambient_strength * light_color;
 
-    vec3 result = ambient * object_color;
+    vec3 normal = normalize(frag_normal);
+    vec3 light = normalize(light_position - frag_position);
+    float difference = max(dot(normal, light), 0.0);
+    vec3 diffuse = difference * light_color;
 
-    frag_color = vec4(frag_normal, 1.0);
-    //frag_color = vec4(result, 1.0);
+    float specular_strength = 0.5;
+    vec3 view_dir = normalize(camera_position - frag_position);
+    vec3 reflect_dir = reflect(-light, normal);
+
+    float spec = pow(max(dot(view_dir, reflect_dir), 0.0), 32);
+    vec3 specular = specular_strength * spec * light_color;
+
+    vec3 result = (ambient + diffuse + specular) * object_color;
+    frag_color = vec4(result, 1.0);
 }
