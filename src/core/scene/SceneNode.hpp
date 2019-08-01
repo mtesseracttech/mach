@@ -19,7 +19,7 @@ namespace mach::core {
 	class SceneNode : public std::enable_shared_from_this<SceneNode<T>> {
 	protected:
 		std::shared_ptr<TransformCompound<T>> m_transform;
-		std::vector<std::unique_ptr<NodeBehaviour>> m_behaviours;
+		std::vector<std::shared_ptr<NodeBehaviour>> m_behaviours;
 		std::weak_ptr<SceneHierarchy<T>> m_scene;
 		std::string m_name;
 
@@ -58,9 +58,9 @@ namespace mach::core {
 			Logger::log(m_name + " getting destroyed", Debug);
 		}
 
-		void add_behaviour(std::unique_ptr<NodeBehaviour> p_behaviour) {
+		void add_behaviour(std::shared_ptr<NodeBehaviour> p_behaviour) {
 			p_behaviour->set_owner(this->weak_from_this());
-			m_behaviours.push_back(std::move(p_behaviour));
+			m_behaviours.push_back(p_behaviour);
 		}
 
 		PROPERTY(const std::weak_ptr<SceneHierarchy<T>> &, scene, get_scene, set_scene);

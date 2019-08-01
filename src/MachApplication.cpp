@@ -31,7 +31,8 @@ namespace mach {
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LESS);
 
-		//auto phong_shader = cache::AssetCache<gfx::OpenGLShader>::get().load_asset("base");
+		gfx::CursorMode cursor_mode = gfx::Visible;
+
 		auto phong_shader = cache::AssetCache<gfx::OpenGLShader>::get().load_asset("phong");
 		auto lighting_shader = cache::AssetCache<gfx::OpenGLShader>::get().load_asset("flat");
 
@@ -50,7 +51,10 @@ namespace mach {
 		auto camera = scene->get_main_camera();
 
 		camera->transform->local_position = Vec3(0.0, 8.0, 10.0);
-		camera->add_behaviour(std::make_unique<behaviour::FirstPersonCameraBehaviour>(behaviour::FirstPersonCameraBehaviour(5, 50, 0.2)));
+
+		auto camera_behaviour = std::make_shared<behaviour::FirstPersonCameraBehaviour>(5, 50, 0.1);
+		camera->add_behaviour(camera_behaviour);
+		camera_behaviour->set_cursor_mode(cursor_mode);
 
 		Vec2 old_mouse_pos = MouseInput::position();
 		float previous_time = 0.0;
@@ -65,8 +69,6 @@ namespace mach {
 
 			scene->update(delta_time);
 
-			auto light_color = math::color_over_time(current_time);
-
 			old_mouse_pos = cur_pos;
 
 			light_transform->local_position = Vec3(std::sin(current_time) * 5, light_transform->local_position.y, std::cos(current_time) * 5);
@@ -75,11 +77,24 @@ namespace mach {
 			auto perspective = math::perspective<float>(0.01, 1000, math::to_rad(90), m_window->get_aspect_ratio());
 			auto cam_pos = scene->get_main_camera()->transform->position;
 
+			Vec3 light_color((1.0 + std::sin((current_time * 17)/10))/2.0,
+					(1.0 + std::sin((current_time * 21)/10))/2.0,
+					(1.0 + std::sin((current_time * 23)/10))/2.0);
+			light_color = light_color.normalized();
+			Vec3 diffuse_color = light_color * 0.5;
+			Vec3 ambient_color = diffuse_color * 0.5;
+			Vec3 specular_color(1.0, 1.0, 1.0);
+
+
 			phong_shader->use();
 			phong_shader->set_val("object_color", Vec3(0.2, 0.2, 0.2));
 			phong_shader->set_val("light_color", light_color);
 			phong_shader->set_val("light_position", light_transform->position);
 			phong_shader->set_val("camera_position", cam_pos);
+			phong_shader->set_val("material.ambient", ambient_color);
+			phong_shader->set_val("material.diffuse", diffuse_color);
+			phong_shader->set_val("material.specular", specular_color);
+			phong_shader->set_val("material.shininess", 32.0f);
 			phong_shader->set_val("view", view);
 			phong_shader->set_val("perspective", perspective);
 			phong_shader->set_val("model", model_transform->get_mat());
@@ -99,6 +114,19 @@ namespace mach {
 
 			if (KeyInput::enter(Escape)) {
 				m_window->close();
+			}
+			if(KeyInput::enter(C)){ //Cursor mode swapping
+				switch(cursor_mode){
+					case gfx::Visible:
+						m_window->set_cursor_mode(gfx::Invisible);
+						cursor_mode = gfx::Invisible;
+						break;
+					case gfx::Invisible:
+						m_window->set_cursor_mode(gfx::Visible);
+						cursor_mode = gfx::Visible;
+						break;
+				}
+				camera_behaviour->set_cursor_mode(cursor_mode);
 			}
 		}
 		shutdown();

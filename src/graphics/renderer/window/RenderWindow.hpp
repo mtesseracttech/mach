@@ -14,6 +14,11 @@
 
 
 namespace mach::gfx {
+	enum CursorMode{
+		Visible,
+		Invisible
+	};
+
 	class RenderWindow {
 	protected:
 		GLFWwindow *m_glfw_window = nullptr;
@@ -44,6 +49,8 @@ namespace mach::gfx {
 		virtual void set_window_title(std::string p_window_title);
 
 		virtual void set_window_dimensions(uint32_t p_width, uint32_t p_height);
+
+		virtual void set_cursor_mode(CursorMode p_mode) = 0;
 
 		IVec2 get_window_dimensions();
 

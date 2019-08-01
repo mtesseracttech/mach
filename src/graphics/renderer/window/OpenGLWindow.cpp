@@ -25,7 +25,8 @@ namespace mach::gfx {
 			}
 
 			glfwSetFramebufferSizeCallback(window, glfw_resize_window_callback);
-			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+			//glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 
 			m_glfw_window = window;
 			Logger::log("Successfully Created a GLFW/OpenGL window!", Info);
@@ -51,5 +52,20 @@ namespace mach::gfx {
 	void OpenGLWindow::clear(float p_r, float p_g, float p_b, float p_a) {
 		glClearColor(p_r, p_g, p_b, p_a);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	}
+
+	void OpenGLWindow::set_cursor_mode(CursorMode p_mode) {
+		if(m_glfw_window){
+			switch (p_mode){
+				case Visible:
+					glfwSetInputMode(m_glfw_window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+					break;
+				case Invisible:
+					glfwSetInputMode(m_glfw_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+					break;
+				default:
+					break;
+			}
+		}
 	}
 }

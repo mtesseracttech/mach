@@ -16,7 +16,7 @@ namespace mach::behaviour {
 				Logger::log("Camera rotation and position are not edited in world space, using it like this will likely not work well yet, unless parent's rotation is identity");
 			}
 
-			if (MouseInput::pressed(Button1)) {
+			if (MouseInput::pressed(Button1) || m_mode == gfx::Invisible) {
 				m_current_rotation += mouse_delta * m_camera_rotation_speed * 0.02;
 				m_current_rotation.x = m_current_rotation.x, math::to_rad(m_minimum_x), math::to_rad(m_maximum_x);
 			}
@@ -82,5 +82,9 @@ namespace mach::behaviour {
 		if(camera){
 			m_original_rotation = camera->transform->local_rotation;
 		}
+	}
+
+	void FirstPersonCameraBehaviour::set_cursor_mode(gfx::CursorMode p_mode) {
+		m_mode = p_mode;
 	}
 }

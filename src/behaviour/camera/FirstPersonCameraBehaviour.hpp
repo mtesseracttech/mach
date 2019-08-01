@@ -33,6 +33,8 @@ namespace mach::behaviour {
 
 		Vec3 m_current_velocity = Vec3::zero();
 		Vec3 m_velocity_average = Vec3::zero();
+
+		gfx::CursorMode m_mode = gfx::Visible;
 	public:
 		FirstPersonCameraBehaviour(uint32_t p_average_frames, float p_movement_speed, float p_rotation_speed):
 			m_camera_movement_speed(p_movement_speed),
@@ -40,7 +42,8 @@ namespace mach::behaviour {
 			m_average_frames(p_average_frames) {
 		}
 
-	private:
+		void set_cursor_mode(gfx::CursorMode p_mode);
+
 		void set_owner(std::weak_ptr<core::SceneNode<float>> p_scene_node) override;
 
 		void start() override {}

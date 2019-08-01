@@ -30,6 +30,9 @@ namespace mach::gfx {
 		void resize_framebuffer(uint32_t p_width, uint32_t p_height) override;
 
 		void resize_viewport(uint32_t p_width, uint32_t p_height) override;
+
+		void set_cursor_mode(CursorMode p_mode) override;
+
 	};
 }
 
