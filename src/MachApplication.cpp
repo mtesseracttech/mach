@@ -77,31 +77,21 @@ namespace mach {
 			auto perspective = math::perspective<float>(0.01, 1000, math::to_rad(90), m_window->get_aspect_ratio());
 			auto cam_pos = scene->get_main_camera()->transform->position;
 
-			Vec3 light_color((1.0 + std::sin((current_time * 17)/10))/2.0,
-					(1.0 + std::sin((current_time * 21)/10))/2.0,
-					(1.0 + std::sin((current_time * 23)/10))/2.0);
-			light_color = light_color.normalized();
-			Vec3 diffuse_color = light_color * 0.5;
-			Vec3 ambient_color = diffuse_color * 0.5;
-			Vec3 specular_color(1.0, 1.0, 1.0);
-
-
 			phong_shader->use();
-			phong_shader->set_val("object_color", Vec3(0.2, 0.2, 0.2));
-			phong_shader->set_val("light_color", light_color);
-			phong_shader->set_val("light_position", light_transform->position);
-			phong_shader->set_val("camera_position", cam_pos);
-			phong_shader->set_val("material.ambient", ambient_color);
-			phong_shader->set_val("material.diffuse", diffuse_color);
-			phong_shader->set_val("material.specular", specular_color);
-			phong_shader->set_val("material.shininess", 32.0f);
+			phong_shader->set_val("camera_position", camera->transform->position);
+			phong_shader->set_val("material.specular", Vec3(1.0));
+			phong_shader->set_val("material.shininess", 8.f);
+			phong_shader->set_val("light.position", light_transform->position);
+			phong_shader->set_val("light.ambient",  Vec3(0.2));
+			phong_shader->set_val("light.diffuse",  Vec3(0.5));
+			phong_shader->set_val("light.specular", Vec3(1.0));
 			phong_shader->set_val("view", view);
 			phong_shader->set_val("perspective", perspective);
 			phong_shader->set_val("model", model_transform->get_mat());
 			nanosuit_model->draw(*phong_shader);
 
 			lighting_shader->use();
-			lighting_shader->set_val("color", light_color);
+			lighting_shader->set_val("color", Vec3(1.0));
 			lighting_shader->set_val("view", view);
 			lighting_shader->set_val("perspective", perspective);
 			lighting_shader->set_val("model", light_transform->get_mat());

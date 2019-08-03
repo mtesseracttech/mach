@@ -50,6 +50,8 @@ namespace mach::gfx {
 
 	public:
 		explicit OpenGLShader(const std::string &p_program_name) {
+			Logger::log("Loading shader module: " + p_program_name);
+
 			const std::string shader_path = "../res/shaders/" + p_program_name + "/";
 			const std::string vert_shader_name = shader_path + p_program_name + ".vert";
 			const std::string frag_shader_name = shader_path + p_program_name + ".frag";

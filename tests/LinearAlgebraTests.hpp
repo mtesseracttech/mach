@@ -364,10 +364,6 @@ namespace mach::tests::math {
 		t2->local_scale = Vec3(2, 2, 2);
 		t2->local_position = Vec3(1, 2, 3);
 		t2->local_rotation = Quat(std::sqrt(2) / 2, 0, 0, std::sqrt(2) / 2);
-//
-//		Logger::log(t2->position);
-//		Logger::log(t2->rotation);
-//		Logger::log(t2->scale);
 
 
 		Logger::log("MISCELLANEOUS LINEAR ALGEBRA TESTS");

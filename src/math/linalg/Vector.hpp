@@ -311,6 +311,10 @@ namespace mach {
 			return (p_v1 - p_v2).length();
 		}
 
+		static inline T angle(const Vector &p_v1, const Vector &p_v2){
+			T cos_theta = dot(p_v1, p_v2)/(p_v1.length() * p_v2.length());
+			return std::acos(cos_theta);
+		}
 
 		inline bool is_unit() const {
 			return approx_eq<T>(length_squared(), 1.0);

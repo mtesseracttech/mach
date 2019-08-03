@@ -55,7 +55,6 @@ namespace mach {
 			return std::abs(p_a - p_b) <= p_epsilon;
 		}
 	}
-
 }
 
 #endif //MACH_NUMBERTRAITS_HPP
