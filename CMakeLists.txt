@@ -74,7 +74,7 @@ include_directories("${BASEPATH}")
 
 
 # Copies the res folder to the build folder
-file(COPY res DESTINATION "${CMAKE_BINARY_DIR}")
+#file(COPY res DESTINATION "${CMAKE_BINARY_DIR}")
 
 
 # Setting up PkgConfig
@@ -83,6 +83,16 @@ find_package(PkgConfig REQUIRED)
 # Finding and including GLAD
 target_include_directories(mach PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/include/")
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules/")
+
+get_cmake_property(_variableNames VARIABLES)
+list (SORT _variableNames)
+foreach (_variableName ${_variableNames})
+    message(STATUS "${_variableName}=${${_variableName}}")
+endforeach()
+
+#target_include_directories(mach ${STB_INCLUDE_DIR})
+
+
 
 # Finding and linking OpenGL
 find_package(OpenGL REQUIRED)
@@ -93,6 +103,5 @@ if (OPENGL_FOUND)
 elseif (NOT OPENGL_FOUND)
     message(FATAL_ERROR "Could not find OpenGL")
 endif (OPENGL_FOUND)
-
 
 target_link_libraries(mach ${CONAN_LIBS})

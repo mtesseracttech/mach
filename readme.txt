@@ -11,8 +11,6 @@ conan profile new clang --detect
 - Adjust as needed
 - Follow the relevant platform dependent bit below:
 
-
-
 LINUX:
 
 profile contents:
@@ -101,13 +99,14 @@ compiler=clang
 compiler.version=8
 compiler.libcxx=libstdc++
 build_type=Release
+
 [options]
+
 [build_requires]
+
 [env]
 CC=C:\msys64\mingw64\bin\clang.exe
 CXX=C:\msys64\mingw64\bin\clang++.exe
-
-
 ******************************
 
 

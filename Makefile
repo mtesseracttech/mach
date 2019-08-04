@@ -204,32 +204,59 @@ src/auxiliary/logging/Logger.cpp.s:
 	$(MAKE) -f CMakeFiles/mach.dir/build.make CMakeFiles/mach.dir/src/auxiliary/logging/Logger.cpp.s
 .PHONY : src/auxiliary/logging/Logger.cpp.s
 
-src/auxiliary/time/Timer.o: src/auxiliary/time/Timer.cpp.o
+src/behaviour/camera/FirstPersonCameraBehaviour.o: src/behaviour/camera/FirstPersonCameraBehaviour.cpp.o
 
-.PHONY : src/auxiliary/time/Timer.o
+.PHONY : src/behaviour/camera/FirstPersonCameraBehaviour.o
 
 # target to build an object file
-src/auxiliary/time/Timer.cpp.o:
-	$(MAKE) -f CMakeFiles/mach.dir/build.make CMakeFiles/mach.dir/src/auxiliary/time/Timer.cpp.o
-.PHONY : src/auxiliary/time/Timer.cpp.o
+src/behaviour/camera/FirstPersonCameraBehaviour.cpp.o:
+	$(MAKE) -f CMakeFiles/mach.dir/build.make CMakeFiles/mach.dir/src/behaviour/camera/FirstPersonCameraBehaviour.cpp.o
+.PHONY : src/behaviour/camera/FirstPersonCameraBehaviour.cpp.o
 
-src/auxiliary/time/Timer.i: src/auxiliary/time/Timer.cpp.i
+src/behaviour/camera/FirstPersonCameraBehaviour.i: src/behaviour/camera/FirstPersonCameraBehaviour.cpp.i
 
-.PHONY : src/auxiliary/time/Timer.i
+.PHONY : src/behaviour/camera/FirstPersonCameraBehaviour.i
 
 # target to preprocess a source file
-src/auxiliary/time/Timer.cpp.i:
-	$(MAKE) -f CMakeFiles/mach.dir/build.make CMakeFiles/mach.dir/src/auxiliary/time/Timer.cpp.i
-.PHONY : src/auxiliary/time/Timer.cpp.i
+src/behaviour/camera/FirstPersonCameraBehaviour.cpp.i:
+	$(MAKE) -f CMakeFiles/mach.dir/build.make CMakeFiles/mach.dir/src/behaviour/camera/FirstPersonCameraBehaviour.cpp.i
+.PHONY : src/behaviour/camera/FirstPersonCameraBehaviour.cpp.i
 
-src/auxiliary/time/Timer.s: src/auxiliary/time/Timer.cpp.s
+src/behaviour/camera/FirstPersonCameraBehaviour.s: src/behaviour/camera/FirstPersonCameraBehaviour.cpp.s
 
-.PHONY : src/auxiliary/time/Timer.s
+.PHONY : src/behaviour/camera/FirstPersonCameraBehaviour.s
 
 # target to generate assembly for a file
-src/auxiliary/time/Timer.cpp.s:
-	$(MAKE) -f CMakeFiles/mach.dir/build.make CMakeFiles/mach.dir/src/auxiliary/time/Timer.cpp.s
-.PHONY : src/auxiliary/time/Timer.cpp.s
+src/behaviour/camera/FirstPersonCameraBehaviour.cpp.s:
+	$(MAKE) -f CMakeFiles/mach.dir/build.make CMakeFiles/mach.dir/src/behaviour/camera/FirstPersonCameraBehaviour.cpp.s
+.PHONY : src/behaviour/camera/FirstPersonCameraBehaviour.cpp.s
+
+src/behaviour/camera/LookAtCameraBehaviour.o: src/behaviour/camera/LookAtCameraBehaviour.cpp.o
+
+.PHONY : src/behaviour/camera/LookAtCameraBehaviour.o
+
+# target to build an object file
+src/behaviour/camera/LookAtCameraBehaviour.cpp.o:
+	$(MAKE) -f CMakeFiles/mach.dir/build.make CMakeFiles/mach.dir/src/behaviour/camera/LookAtCameraBehaviour.cpp.o
+.PHONY : src/behaviour/camera/LookAtCameraBehaviour.cpp.o
+
+src/behaviour/camera/LookAtCameraBehaviour.i: src/behaviour/camera/LookAtCameraBehaviour.cpp.i
+
+.PHONY : src/behaviour/camera/LookAtCameraBehaviour.i
+
+# target to preprocess a source file
+src/behaviour/camera/LookAtCameraBehaviour.cpp.i:
+	$(MAKE) -f CMakeFiles/mach.dir/build.make CMakeFiles/mach.dir/src/behaviour/camera/LookAtCameraBehaviour.cpp.i
+.PHONY : src/behaviour/camera/LookAtCameraBehaviour.cpp.i
+
+src/behaviour/camera/LookAtCameraBehaviour.s: src/behaviour/camera/LookAtCameraBehaviour.cpp.s
+
+.PHONY : src/behaviour/camera/LookAtCameraBehaviour.s
+
+# target to generate assembly for a file
+src/behaviour/camera/LookAtCameraBehaviour.cpp.s:
+	$(MAKE) -f CMakeFiles/mach.dir/build.make CMakeFiles/mach.dir/src/behaviour/camera/LookAtCameraBehaviour.cpp.s
+.PHONY : src/behaviour/camera/LookAtCameraBehaviour.cpp.s
 
 src/graphics/renderer/OpenGLRenderer.o: src/graphics/renderer/OpenGLRenderer.cpp.o
 
@@ -285,86 +312,59 @@ src/graphics/renderer/Renderer.cpp.s:
 	$(MAKE) -f CMakeFiles/mach.dir/build.make CMakeFiles/mach.dir/src/graphics/renderer/Renderer.cpp.s
 .PHONY : src/graphics/renderer/Renderer.cpp.s
 
-src/graphics/shaders/OpenGLShader.o: src/graphics/shaders/OpenGLShader.cpp.o
+src/graphics/renderer/window/OpenGLWindow.o: src/graphics/renderer/window/OpenGLWindow.cpp.o
 
-.PHONY : src/graphics/shaders/OpenGLShader.o
-
-# target to build an object file
-src/graphics/shaders/OpenGLShader.cpp.o:
-	$(MAKE) -f CMakeFiles/mach.dir/build.make CMakeFiles/mach.dir/src/graphics/shaders/OpenGLShader.cpp.o
-.PHONY : src/graphics/shaders/OpenGLShader.cpp.o
-
-src/graphics/shaders/OpenGLShader.i: src/graphics/shaders/OpenGLShader.cpp.i
-
-.PHONY : src/graphics/shaders/OpenGLShader.i
-
-# target to preprocess a source file
-src/graphics/shaders/OpenGLShader.cpp.i:
-	$(MAKE) -f CMakeFiles/mach.dir/build.make CMakeFiles/mach.dir/src/graphics/shaders/OpenGLShader.cpp.i
-.PHONY : src/graphics/shaders/OpenGLShader.cpp.i
-
-src/graphics/shaders/OpenGLShader.s: src/graphics/shaders/OpenGLShader.cpp.s
-
-.PHONY : src/graphics/shaders/OpenGLShader.s
-
-# target to generate assembly for a file
-src/graphics/shaders/OpenGLShader.cpp.s:
-	$(MAKE) -f CMakeFiles/mach.dir/build.make CMakeFiles/mach.dir/src/graphics/shaders/OpenGLShader.cpp.s
-.PHONY : src/graphics/shaders/OpenGLShader.cpp.s
-
-src/graphics/window/OpenGLWindow.o: src/graphics/window/OpenGLWindow.cpp.o
-
-.PHONY : src/graphics/window/OpenGLWindow.o
+.PHONY : src/graphics/renderer/window/OpenGLWindow.o
 
 # target to build an object file
-src/graphics/window/OpenGLWindow.cpp.o:
-	$(MAKE) -f CMakeFiles/mach.dir/build.make CMakeFiles/mach.dir/src/graphics/window/OpenGLWindow.cpp.o
-.PHONY : src/graphics/window/OpenGLWindow.cpp.o
+src/graphics/renderer/window/OpenGLWindow.cpp.o:
+	$(MAKE) -f CMakeFiles/mach.dir/build.make CMakeFiles/mach.dir/src/graphics/renderer/window/OpenGLWindow.cpp.o
+.PHONY : src/graphics/renderer/window/OpenGLWindow.cpp.o
 
-src/graphics/window/OpenGLWindow.i: src/graphics/window/OpenGLWindow.cpp.i
+src/graphics/renderer/window/OpenGLWindow.i: src/graphics/renderer/window/OpenGLWindow.cpp.i
 
-.PHONY : src/graphics/window/OpenGLWindow.i
+.PHONY : src/graphics/renderer/window/OpenGLWindow.i
 
 # target to preprocess a source file
-src/graphics/window/OpenGLWindow.cpp.i:
-	$(MAKE) -f CMakeFiles/mach.dir/build.make CMakeFiles/mach.dir/src/graphics/window/OpenGLWindow.cpp.i
-.PHONY : src/graphics/window/OpenGLWindow.cpp.i
+src/graphics/renderer/window/OpenGLWindow.cpp.i:
+	$(MAKE) -f CMakeFiles/mach.dir/build.make CMakeFiles/mach.dir/src/graphics/renderer/window/OpenGLWindow.cpp.i
+.PHONY : src/graphics/renderer/window/OpenGLWindow.cpp.i
 
-src/graphics/window/OpenGLWindow.s: src/graphics/window/OpenGLWindow.cpp.s
+src/graphics/renderer/window/OpenGLWindow.s: src/graphics/renderer/window/OpenGLWindow.cpp.s
 
-.PHONY : src/graphics/window/OpenGLWindow.s
+.PHONY : src/graphics/renderer/window/OpenGLWindow.s
 
 # target to generate assembly for a file
-src/graphics/window/OpenGLWindow.cpp.s:
-	$(MAKE) -f CMakeFiles/mach.dir/build.make CMakeFiles/mach.dir/src/graphics/window/OpenGLWindow.cpp.s
-.PHONY : src/graphics/window/OpenGLWindow.cpp.s
+src/graphics/renderer/window/OpenGLWindow.cpp.s:
+	$(MAKE) -f CMakeFiles/mach.dir/build.make CMakeFiles/mach.dir/src/graphics/renderer/window/OpenGLWindow.cpp.s
+.PHONY : src/graphics/renderer/window/OpenGLWindow.cpp.s
 
-src/graphics/window/RenderWindow.o: src/graphics/window/RenderWindow.cpp.o
+src/graphics/renderer/window/RenderWindow.o: src/graphics/renderer/window/RenderWindow.cpp.o
 
-.PHONY : src/graphics/window/RenderWindow.o
+.PHONY : src/graphics/renderer/window/RenderWindow.o
 
 # target to build an object file
-src/graphics/window/RenderWindow.cpp.o:
-	$(MAKE) -f CMakeFiles/mach.dir/build.make CMakeFiles/mach.dir/src/graphics/window/RenderWindow.cpp.o
-.PHONY : src/graphics/window/RenderWindow.cpp.o
+src/graphics/renderer/window/RenderWindow.cpp.o:
+	$(MAKE) -f CMakeFiles/mach.dir/build.make CMakeFiles/mach.dir/src/graphics/renderer/window/RenderWindow.cpp.o
+.PHONY : src/graphics/renderer/window/RenderWindow.cpp.o
 
-src/graphics/window/RenderWindow.i: src/graphics/window/RenderWindow.cpp.i
+src/graphics/renderer/window/RenderWindow.i: src/graphics/renderer/window/RenderWindow.cpp.i
 
-.PHONY : src/graphics/window/RenderWindow.i
+.PHONY : src/graphics/renderer/window/RenderWindow.i
 
 # target to preprocess a source file
-src/graphics/window/RenderWindow.cpp.i:
-	$(MAKE) -f CMakeFiles/mach.dir/build.make CMakeFiles/mach.dir/src/graphics/window/RenderWindow.cpp.i
-.PHONY : src/graphics/window/RenderWindow.cpp.i
+src/graphics/renderer/window/RenderWindow.cpp.i:
+	$(MAKE) -f CMakeFiles/mach.dir/build.make CMakeFiles/mach.dir/src/graphics/renderer/window/RenderWindow.cpp.i
+.PHONY : src/graphics/renderer/window/RenderWindow.cpp.i
 
-src/graphics/window/RenderWindow.s: src/graphics/window/RenderWindow.cpp.s
+src/graphics/renderer/window/RenderWindow.s: src/graphics/renderer/window/RenderWindow.cpp.s
 
-.PHONY : src/graphics/window/RenderWindow.s
+.PHONY : src/graphics/renderer/window/RenderWindow.s
 
 # target to generate assembly for a file
-src/graphics/window/RenderWindow.cpp.s:
-	$(MAKE) -f CMakeFiles/mach.dir/build.make CMakeFiles/mach.dir/src/graphics/window/RenderWindow.cpp.s
-.PHONY : src/graphics/window/RenderWindow.cpp.s
+src/graphics/renderer/window/RenderWindow.cpp.s:
+	$(MAKE) -f CMakeFiles/mach.dir/build.make CMakeFiles/mach.dir/src/graphics/renderer/window/RenderWindow.cpp.s
+.PHONY : src/graphics/renderer/window/RenderWindow.cpp.s
 
 src/io/input/KeyInput.o: src/io/input/KeyInput.cpp.o
 
@@ -438,24 +438,24 @@ help:
 	@echo "... src/auxiliary/logging/Logger.o"
 	@echo "... src/auxiliary/logging/Logger.i"
 	@echo "... src/auxiliary/logging/Logger.s"
-	@echo "... src/auxiliary/time/Timer.o"
-	@echo "... src/auxiliary/time/Timer.i"
-	@echo "... src/auxiliary/time/Timer.s"
+	@echo "... src/behaviour/camera/FirstPersonCameraBehaviour.o"
+	@echo "... src/behaviour/camera/FirstPersonCameraBehaviour.i"
+	@echo "... src/behaviour/camera/FirstPersonCameraBehaviour.s"
+	@echo "... src/behaviour/camera/LookAtCameraBehaviour.o"
+	@echo "... src/behaviour/camera/LookAtCameraBehaviour.i"
+	@echo "... src/behaviour/camera/LookAtCameraBehaviour.s"
 	@echo "... src/graphics/renderer/OpenGLRenderer.o"
 	@echo "... src/graphics/renderer/OpenGLRenderer.i"
 	@echo "... src/graphics/renderer/OpenGLRenderer.s"
 	@echo "... src/graphics/renderer/Renderer.o"
 	@echo "... src/graphics/renderer/Renderer.i"
 	@echo "... src/graphics/renderer/Renderer.s"
-	@echo "... src/graphics/shaders/OpenGLShader.o"
-	@echo "... src/graphics/shaders/OpenGLShader.i"
-	@echo "... src/graphics/shaders/OpenGLShader.s"
-	@echo "... src/graphics/window/OpenGLWindow.o"
-	@echo "... src/graphics/window/OpenGLWindow.i"
-	@echo "... src/graphics/window/OpenGLWindow.s"
-	@echo "... src/graphics/window/RenderWindow.o"
-	@echo "... src/graphics/window/RenderWindow.i"
-	@echo "... src/graphics/window/RenderWindow.s"
+	@echo "... src/graphics/renderer/window/OpenGLWindow.o"
+	@echo "... src/graphics/renderer/window/OpenGLWindow.i"
+	@echo "... src/graphics/renderer/window/OpenGLWindow.s"
+	@echo "... src/graphics/renderer/window/RenderWindow.o"
+	@echo "... src/graphics/renderer/window/RenderWindow.i"
+	@echo "... src/graphics/renderer/window/RenderWindow.s"
 	@echo "... src/io/input/KeyInput.o"
 	@echo "... src/io/input/KeyInput.i"
 	@echo "... src/io/input/KeyInput.s"
