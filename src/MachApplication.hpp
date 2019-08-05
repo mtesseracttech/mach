@@ -5,6 +5,11 @@
 #ifndef MACH_MACHAPPLICATION_HPP
 #define MACH_MACHAPPLICATION_HPP
 
+#include <io/input/KeyInput.hpp>
+#include <graphics/renderer/Renderer.hpp>
+#include <graphics/renderer/window/RenderWindow.hpp>
+#include <core/scene/Camera.hpp>
+
 namespace mach {
 	class MachApplication {
 	public:
@@ -12,14 +17,9 @@ namespace mach {
 
 		void run();
 
-		void test();
-
 	protected:
-		RenderWindow *m_window;
-
-		void setup_window();
-
-		void setup_input();
+		std::shared_ptr<gfx::RenderWindow> m_window;
+		std::shared_ptr<gfx::Renderer> m_renderer;
 
 		void setup_subsystems();
 
