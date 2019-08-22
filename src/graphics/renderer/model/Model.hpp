@@ -27,7 +27,7 @@ namespace mach::gfx {
 			std::string textures_file_path = "../res/textures/" + p_model_name;
 
 			Assimp::Importer import;
-			const aiScene *scene = import.ReadFile(model_file_path, aiProcess_Triangulate | aiProcess_FlipUVs);
+			const aiScene *scene = import.ReadFile(model_file_path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_GenNormals);
 
 			if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
 				std::stringstream ss;

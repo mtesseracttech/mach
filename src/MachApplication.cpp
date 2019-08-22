@@ -38,12 +38,18 @@ namespace mach {
 
 		auto nanosuit_model = cache::AssetCache<gfx::Model<float>>::get().load_asset("nanosuit/nanosuit.obj");
 		auto light_model = cache::AssetCache<gfx::Model<float>>::get().load_asset("sphere.obj");
+		auto quad_model = cache::AssetCache<gfx::Model<float>>::get().load_asset("quad.obj");
 
 		auto model_transform = std::make_shared<Transform>();
 		auto light_transform = std::make_shared<Transform>();
+		auto ground_transform = std::make_shared<Transform>();
 
 		light_transform->local_position = Vec3(2,10,5);
 		light_transform->local_scale = Vec3(1.0/40.0);
+
+
+		ground_transform->local_rotation = Quat::from_angle_axis(math::to_rad(90.0), Vec3::right());
+		ground_transform->local_scale = Vec3(20);
 
 		Timer timer;
 
@@ -89,6 +95,10 @@ namespace mach {
 			phong_shader->set_val("perspective", perspective);
 			phong_shader->set_val("model", model_transform->get_mat());
 			nanosuit_model->draw(*phong_shader);
+
+
+			phong_shader->set_val("model", ground_transform->get_mat());
+			quad_model->draw(*phong_shader);
 
 			lighting_shader->use();
 			lighting_shader->set_val("color", Vec3(1.0));
