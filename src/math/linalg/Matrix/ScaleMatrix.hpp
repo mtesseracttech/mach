@@ -34,18 +34,18 @@ namespace mach {
 		}
 
 		inline static ScaleMatrix scale_along_cardinal_axes(const Vector3<T> &p_k) {
-			return ScaleMatrix(p_k.x, 0.0, 0.0,
-			                   0.0, p_k.y, 0.0,
-			                   0.0, 0.0, p_k.z);
+			return ScaleMatrix(p_k.x(), 0.0, 0.0,
+			                   0.0, p_k.y(), 0.0,
+			                   0.0, 0.0, p_k.z());
 		}
 
 		inline static ScaleMatrix scale_along_direction(const Vector3<T> &p_n, T p_k) {
 			mach_assert(p_n.is_unit(),
 			            "You can only create a scale matrix along a normalized vector");
 			T km = p_k - 1.0;
-			return ScaleMatrix(1.0 + km * p_n.x * p_n.x, km * p_n.x * p_n.y, km * p_n.x, *p_n.z,
-			                   km * p_n.x * p_n.y, 1.0 + km * p_n.y * p_n.y, km * p_n.y, *p_n.z,
-			                   km * p_n.x, *p_n.z, km * p_n.y, *p_n.z, 1.0 + km * p_n.z * p_n.z);
+			return ScaleMatrix(1.0 + km * p_n.x() * p_n.x(), km * p_n.x() * p_n.y(), km * p_n.x(), *p_n.z(),
+			                   km * p_n.x() * p_n.y(), 1.0 + km * p_n.y() * p_n.y(), km * p_n.y(), *p_n.z(),
+			                   km * p_n.x(), *p_n.z(), km * p_n.y(), * p_n.z(), 1.0 + km * p_n.z() * p_n.z());
 		}
 
 		inline Matrix4<T> to_mat4() const {

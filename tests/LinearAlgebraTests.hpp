@@ -54,11 +54,11 @@ namespace mach::tests::math {
 		//Logger::log(info);
 
 		Vec2 vec2(10, -15);
-		mach_assert(vec2.x == 10.f && vec2.y == -15.f, "");
+		mach_assert(vec2.x() == 10.f && vec2.y() == -15.f, "");
 		Vec3 vec3(-123, 75, 21);
-		mach_assert(vec3.x == -123.f && vec3.y == 75.f && vec3.z == 21.f, "");
+		mach_assert(vec3.x() == -123.f && vec3.y() == 75.f && vec3.z() == 21.f, "");
 		Vec4 vec4(12345, -1345, 2895, -12983);
-		mach_assert(vec4.x == 12345.f && vec4.y == -1345.f && vec4.z == 2895.f && vec4.w == -12983.f, "");
+		mach_assert(vec4.x() == 12345.f && vec4.y() == -1345.f && vec4.z() == 2895.f && vec4.w() == -12983.f, "");
 		Logger::log("Initialization: OK");
 
 		static_assert(sizeof(Vec2) == sizeof(float) * 2, "");
@@ -76,8 +76,8 @@ namespace mach::tests::math {
 
 		Vec2 v2_zero = Vec2::zero();
 		Vec4 v4_one = Vec4::one();
-		mach_assert(v2_zero.x == 0.f && v2_zero.y == 0.f, "");
-		mach_assert(v4_one.x == 1.f && v4_one.y == 1.f && v4_one.z == 1.f && v4_one.w == 1.f, "");
+		mach_assert(v2_zero.x() == 0.f && v2_zero.y() == 0.f, "");
+		mach_assert(v4_one.x() == 1.f && v4_one.y() == 1.f && v4_one.z() == 1.f && v4_one.w() == 1.f, "");
 		Logger::log("Zero/One: OK");
 
 		Vec3 v_a_plus_b(10, 65, 10);
@@ -122,7 +122,7 @@ namespace mach::tests::math {
 		Logger::log("Magnitude: OK");
 
 		Vec2 thirty_deg_vec_n = vec_mag_5.normalized();
-		mach_assert(thirty_deg_vec_n.x == 3.0f / 5.0f && thirty_deg_vec_n.y == 4.0f / 5.0f, "");
+		mach_assert(thirty_deg_vec_n.x() == 3.0f / 5.0f && thirty_deg_vec_n.y() == 4.0f / 5.0f, "");
 		mach_assert(thirty_deg_vec_n.length_squared() == 1.0f, "");
 		mach_assert(thirty_deg_vec_n.length() == 1.0f, "");
 		Logger::log("Normalization: OK");
@@ -310,6 +310,16 @@ namespace mach::tests::math {
 		mach_assert(Quat::slerp(Quat::identity(), q_u, 1.0) == Quat::lerp_norm(Quat::identity(), q_u, 1.0), "");
 		Logger::log("Slerp: DONE");
 
+		Quat q_1(std::sqrt(2) / 2, 0, 0, std::sqrt(2) / 2);
+		Quat q_2(std::sqrt(3)/3, std::sqrt(3)/3,std::sqrt(3)/3, 0);
+
+		mach_assert(q_1.is_unit(), "Q1 apparently is not unit");
+		mach_assert(q_2.is_unit(), "Q2 apparently is not unit");
+
+		mach_assert((q_1 * q_2).is_unit(), "Q1 * Q2 apparently is not unit");
+
+		std::cout << q_1 << " * " << q_2 << " = " << q_1 * q_2 << std::endl;
+
 //		throw NotImplemented("Missing tests");
 //		Logger::log("Pow: DONE");
 //
@@ -348,22 +358,18 @@ namespace mach::tests::math {
 		Logger::log("Size of TransformD: " + to_str(sizeof(TransformD)) + " bytes", Info);
 
 		auto t1 = std::make_shared<Transform>();
-//		Logger::log(t1->local_position);
-		t1->local_position = Vec3(1, 2, 3);
-		t1->local_rotation = Quat(std::sqrt(2) / 2, 0, 0, std::sqrt(2) / 2);
-		t1->local_scale = Vec3(2, 3, 4);
-//		Logger::log(t1->position);
-//		Logger::log(t1->rotation);
-//		Logger::log(t1->scale);
+		t1->local_position(Vec3(1, 2, 3));
+		t1->local_rotation(Quat(std::sqrt(2) / 2, 0, 0, std::sqrt(2) / 2));
+		t1->local_scale(Vec3(2, 3, 4));
 		auto t2 = std::make_shared<Transform>();
 		t1->add_child(t2);
 		auto child_cnt = t1->get_child_count();
 		t1->add_child(t2);
 		mach_assert(child_cnt == 1 && child_cnt == t1->get_child_count(),
 		            "Child count should not change when same child is added twice");
-		t2->local_scale = Vec3(2, 2, 2);
-		t2->local_position = Vec3(1, 2, 3);
-		t2->local_rotation = Quat(std::sqrt(2) / 2, 0, 0, std::sqrt(2) / 2);
+		t2->local_scale(Vec3(2, 2, 2));
+		t2->local_position(Vec3(1, 2, 3));
+		t2->local_rotation(Quat(std::sqrt(2) / 2, 0, 0, std::sqrt(2) / 2));
 
 
 		Logger::log("MISCELLANEOUS LINEAR ALGEBRA TESTS");

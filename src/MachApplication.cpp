@@ -44,19 +44,19 @@ namespace mach {
 		auto light_transform = std::make_shared<Transform>();
 		auto ground_transform = std::make_shared<Transform>();
 
-		light_transform->local_position = Vec3(2,10,5);
-		light_transform->local_scale = Vec3(1.0/40.0);
+		light_transform->local_position(Vec3(2,10,5));
+		light_transform->local_scale(Vec3(1.0/40.0));
 
 
-		ground_transform->local_rotation = Quat::from_angle_axis(math::to_rad(90.0), Vec3::right());
-		ground_transform->local_scale = Vec3(20);
+		ground_transform->local_rotation(Quat::from_angle_axis(math::to_rad(90.0), Vec3::right()));
+		ground_transform->local_scale(Vec3(20));
 
 		Timer timer;
 
 		auto scene = core::SceneHierarchy<float>::create(std::make_shared<core::Camera<float>>());
 		auto camera = scene->get_main_camera();
 
-		camera->transform->local_position = Vec3(0.0, 8.0, 10.0);
+		camera->transform()->local_position(Vec3(0.0, 8.0, 10.0));
 
 		auto camera_behaviour = std::make_shared<behaviour::FirstPersonCameraBehaviour>(5, 50, 0.1);
 		camera->add_behaviour(camera_behaviour);
@@ -77,34 +77,34 @@ namespace mach {
 
 			old_mouse_pos = cur_pos;
 
-			light_transform->local_position = Vec3(std::sin(current_time) * 5, light_transform->local_position.y, std::cos(current_time) * 5);
+			light_transform->local_position(Vec3(std::sin(current_time) * 5, light_transform->local_position().y(), std::cos(current_time) * 5));
 
-			auto view = scene->get_main_camera()->get_view();
+			auto view = scene->get_main_camera()->view();
 			auto perspective = math::perspective<float>(0.01, 1000, math::to_rad(90), m_window->get_aspect_ratio());
-			auto cam_pos = scene->get_main_camera()->transform->position;
+			auto cam_pos = scene->get_main_camera()->transform()->world_position();
 
 			phong_shader->use();
-			phong_shader->set_val("camera_position", camera->transform->position);
+			phong_shader->set_val("camera_position", camera->transform()->world_position());
 			phong_shader->set_val("material.specular", Vec3(1.0));
 			phong_shader->set_val("material.shininess", 8.f);
-			phong_shader->set_val("light.position", light_transform->position);
+			phong_shader->set_val("light.position", light_transform->world_position());
 			phong_shader->set_val("light.ambient",  Vec3(0.2));
 			phong_shader->set_val("light.diffuse",  Vec3(0.5));
 			phong_shader->set_val("light.specular", Vec3(1.0));
 			phong_shader->set_val("view", view);
 			phong_shader->set_val("perspective", perspective);
-			phong_shader->set_val("model", model_transform->get_mat());
+			phong_shader->set_val("model", model_transform->matrix());
 			nanosuit_model->draw(*phong_shader);
 
 
-			phong_shader->set_val("model", ground_transform->get_mat());
+			phong_shader->set_val("model", ground_transform->matrix());
 			quad_model->draw(*phong_shader);
 
 			lighting_shader->use();
 			lighting_shader->set_val("color", Vec3(1.0));
 			lighting_shader->set_val("view", view);
 			lighting_shader->set_val("perspective", perspective);
-			lighting_shader->set_val("model", light_transform->get_mat());
+			lighting_shader->set_val("model", light_transform->matrix());
 			light_model->draw(*lighting_shader);
 
 			previous_time = current_time;

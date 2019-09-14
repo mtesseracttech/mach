@@ -34,7 +34,7 @@ namespace mach::tests::core {
 		auto node0 = SceneNode<float>::create(scene, "Node0");
 		auto node1 = SceneNode<float>::create(node0, "Node1");
 		mach_assert(scene->get_total_nodes() == 3, "Total nodes should be 3 at this point, 2 nodes, 1 camera");
-		node0->transform->add_child(node1->transform);
+		node0->transform()->add_child(node1->transform());
 		mach_assert(scene->get_total_nodes() == 3, "And Now as well");
 		auto node2 = SceneNode<float>::create(node1, "Node2");
 		mach_assert(scene->get_total_nodes() == 4, "Total nodes should be 4 at this point, 4, ");

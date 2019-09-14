@@ -12,13 +12,13 @@ namespace mach::behaviour {
 
 		auto camera = m_scene_node.lock();
 		if (camera) {
-			if (camera->transform->has_parent()) {
+			if (camera->transform()->has_parent()) {
 				Logger::log("Camera rotation and position are not edited in world space, using it like this will likely not work well yet, unless parent's rotation is identity");
 			}
 
 			if (MouseInput::pressed(Button1) || m_mode == gfx::Invisible) {
 				m_current_rotation += mouse_delta * m_camera_rotation_speed * 0.02;
-				m_current_rotation.x = m_current_rotation.x, math::to_rad(m_minimum_x), math::to_rad(m_maximum_x);
+				m_current_rotation.y(clamp_angle(m_current_rotation.y(), math::to_rad(m_minimum_y), math::to_rad(m_maximum_y)));
 			}
 
 			m_rotations.push_back(m_current_rotation);
@@ -35,26 +35,26 @@ namespace mach::behaviour {
 
 			m_rotations_average /= (float)m_rotations.size();
 
-			m_rotations_average = Vec2(clamp_angle(m_rotations_average.x, math::to_rad(m_minimum_x), math::to_rad(m_maximum_x)),
-			                           clamp_angle(m_rotations_average.y, math::to_rad(m_minimum_y), math::to_rad(m_maximum_y)));
+			m_rotations_average = Vec2(clamp_angle(m_rotations_average.x(), math::to_rad(m_minimum_x), math::to_rad(m_maximum_x)),
+			                           clamp_angle(m_rotations_average.y(), math::to_rad(m_minimum_y), math::to_rad(m_maximum_y)));
 
-			Quat around_x = Quat::from_angle_axis(m_rotations_average.y, Vec3::right());
-			Quat around_y = Quat::from_angle_axis(-m_rotations_average.x, Vec3::up());
-			camera->transform->local_rotation = m_original_rotation * around_x * around_y;
+			Quat around_x = Quat::from_angle_axis(m_rotations_average.y(), Vec3::right());
+			Quat around_y = Quat::from_angle_axis(-m_rotations_average.x(), Vec3::up());
+			camera->transform()->local_rotation(m_original_rotation * around_x * around_y);
 
 			m_current_velocity = Vec3::zero();
 
 			if (KeyInput::pressed(W)) {
-				m_current_velocity += camera->transform->forward;
+				m_current_velocity += camera->transform()->forward();
 			}
 			if (KeyInput::pressed(S)) {
-				m_current_velocity += camera->transform->backward;
+				m_current_velocity += camera->transform()->backward();
 			}
 			if (KeyInput::pressed(A)) {
-				m_current_velocity += camera->transform->left;
+				m_current_velocity += camera->transform()->left();
 			}
 			if (KeyInput::pressed(D)) {
-				m_current_velocity += camera->transform->right;
+				m_current_velocity += camera->transform()->right();
 			}
 
 			m_current_velocity =  m_current_velocity.normalized() * m_camera_movement_speed;
@@ -71,7 +71,7 @@ namespace mach::behaviour {
 			}
 			m_velocity_average /= (float)m_velocities.size();
 
-			camera->transform->local_position -= m_velocity_average * p_delta_time;
+			camera->transform()->local_position(camera->transform()->local_position() - m_velocity_average * p_delta_time);
 		}
 		m_mouse_last_pos = mouse_cur_pos;
 	}
@@ -80,7 +80,7 @@ namespace mach::behaviour {
 		core::NodeBehaviour::set_owner(p_owner);
 		auto camera = p_owner.lock();
 		if(camera){
-			m_original_rotation = camera->transform->local_rotation;
+			m_original_rotation = camera->transform()->local_rotation();
 		}
 	}
 

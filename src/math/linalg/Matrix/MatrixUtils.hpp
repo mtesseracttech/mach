@@ -17,7 +17,7 @@ namespace mach::math {
 		return Matrix4<T>(1.0, 0.0, 0.0, 0.0,
 		                  0.0, 1.0, 0.0, 0.0,
 		                  0.0, 0.0, 1.0, 0.0,
-		                  p_trans.x, p_trans.y, p_trans.z, 1.0);
+		                  p_trans.x(), p_trans.y(), p_trans.z(), 1.0);
 	}
 
 	template<typename T>
@@ -34,10 +34,10 @@ namespace mach::math {
 		               -p_position.dot(p_up),
 		               -p_position.dot(p_direction));
 
-		return Matrix4<T>(p_right.x, p_up.x, p_direction.x, 0.0,
-		                  p_right.y, p_up.y, p_direction.y, 0.0,
-		                  p_right.z, p_up.z, p_direction.z, 0.0,
-		                  pos.x, pos.y, pos.z, 1.0);
+		return Matrix4<T>(p_right.x(), p_up.x(), p_direction.x(), 0.0,
+		                  p_right.y(), p_up.y(), p_direction.y(), 0.0,
+		                  p_right.z(), p_up.z(), p_direction.z(), 0.0,
+		                  pos.x(), pos.y(), pos.z(), 1.0);
 	}
 
 	template<typename T>
@@ -85,18 +85,18 @@ namespace mach::math {
 	                   Vector3<T> *p_translation,
 	                   Quaternion<T> *p_rotation,
 	                   Vector3<T> *p_scale) {
-		p_scale->x = Vector3<T>(p_trs_matrix[0]).length();
-		p_scale->y = Vector3<T>(p_trs_matrix[1]).length();
-		p_scale->z = Vector3<T>(p_trs_matrix[2]).length();
+		p_scale->x(Vector3<T>(p_trs_matrix[0]).length());
+		p_scale->y(Vector3<T>(p_trs_matrix[1]).length());
+		p_scale->z(Vector3<T>(p_trs_matrix[2]).length());
 
-		p_translation->x = p_trs_matrix[3].x;
-		p_translation->y = p_trs_matrix[3].y;
-		p_translation->z = p_trs_matrix[3].z;
+		p_translation->x(p_trs_matrix[3].x());
+		p_translation->y(p_trs_matrix[3].y());
+		p_translation->z(p_trs_matrix[3].z());
 
 		Matrix3<T> rotation;
-		rotation[0] = Vector3<T>(p_trs_matrix[0] / p_scale->x);
-		rotation[1] = Vector3<T>(p_trs_matrix[1] / p_scale->y);
-		rotation[2] = Vector3<T>(p_trs_matrix[2] / p_scale->z);
+		rotation[0] = Vector3<T>(p_trs_matrix[0] / p_scale->x());
+		rotation[1] = Vector3<T>(p_trs_matrix[1] / p_scale->y());
+		rotation[2] = Vector3<T>(p_trs_matrix[2] / p_scale->z());
 		*p_rotation = Quaternion<T>::from_matrix(rotation);
 	}
 
@@ -109,14 +109,14 @@ namespace mach::math {
 		p_scale->y = Vector3<T>(p_trs_matrix[1]).length();
 		p_scale->z = Vector3<T>(p_trs_matrix[2]).length();
 
-		p_translation->x = p_trs_matrix[3].x;
-		p_translation->y = p_trs_matrix[3].y;
-		p_translation->z = p_trs_matrix[3].z;
+		p_translation->x(p_trs_matrix[3].x());
+		p_translation->y(p_trs_matrix[3].y());
+		p_translation->z(p_trs_matrix[3].z());
 
 		Matrix3<T> rotation;
-		rotation[0] = Vector3<T>(p_trs_matrix[0] / p_scale->x);
-		rotation[1] = Vector3<T>(p_trs_matrix[1] / p_scale->y);
-		rotation[2] = Vector3<T>(p_trs_matrix[2] / p_scale->z);
+		rotation[0] = Vector3<T>(p_trs_matrix[0] / p_scale->x());
+		rotation[1] = Vector3<T>(p_trs_matrix[1] / p_scale->y());
+		rotation[2] = Vector3<T>(p_trs_matrix[2] / p_scale->z());
 		*p_rotation = RotationMatrix<T>::from_mat3(rotation);
 	}
 

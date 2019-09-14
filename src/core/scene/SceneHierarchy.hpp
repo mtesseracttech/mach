@@ -35,8 +35,8 @@ namespace mach::core {
 				auto it = std::find(m_base_nodes.begin(), m_base_nodes.end(), p_node);
 				if (it == m_base_nodes.end()) {
 					m_base_nodes.push_back(p_node);
-					p_node->scene = this->weak_from_this();
-					p_node->transform->parent = std::weak_ptr<TransformCompound<float>>(); //Basically a nullptr
+					p_node->scene(this->weak_from_this());
+					p_node->transform()->parent(std::weak_ptr<TransformCompound<float>>()); //Basically a nullptr
 				}
 			}
 		}
@@ -62,11 +62,11 @@ namespace mach::core {
 		std::size_t get_total_nodes() {
 			std::size_t total = get_base_node_count();
 			for (const auto &node: m_base_nodes) {
-				total += node->transform->get_children_count_deep();
+				total += node->transform()->get_children_count_deep();
 			}
 			if (m_main_camera) {
 				total++;
-				total += m_main_camera->transform->get_children_count_deep();
+				total += m_main_camera->transform()->get_children_count_deep();
 			}
 			return total;
 		}

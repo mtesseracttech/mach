@@ -103,18 +103,18 @@ namespace mach::gfx {
 			for (uint32_t i = 0; i < p_mesh->mNumVertices; i++) {
 				Vertex<T> vertex;
 				Vector3<T> vector;
-				vector.x = p_mesh->mVertices[i].x;
-				vector.y = p_mesh->mVertices[i].y;
-				vector.z = p_mesh->mVertices[i].z;
+				vector.x(p_mesh->mVertices[i].x);
+				vector.y(p_mesh->mVertices[i].y);
+				vector.z(p_mesh->mVertices[i].z);
 				vertex.m_position = vector;
-				vector.x = p_mesh->mNormals[i].x;
-				vector.y = p_mesh->mNormals[i].y;
-				vector.z = p_mesh->mNormals[i].z;
+				vector.x(p_mesh->mNormals[i].x);
+				vector.y(p_mesh->mNormals[i].y);
+				vector.z(p_mesh->mNormals[i].z);
 				vertex.m_normal = vector;
 				if (p_mesh->mTextureCoords[0]) {
 					Vector2<T> uv;
-					uv.x = p_mesh->mTextureCoords[0][i].x;
-					uv.y = p_mesh->mTextureCoords[0][i].y;
+					uv.x(p_mesh->mTextureCoords[0][i].x);
+					uv.y(p_mesh->mTextureCoords[0][i].y);
 					vertex.m_tex_coords = uv;
 				} else {
 					vertex.m_tex_coords = Vector2<T>(0.0, 0.0);

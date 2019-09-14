@@ -54,7 +54,7 @@ namespace mach {
 			m_local_transform = math::compose_trs(m_local_position, m_local_rotation, m_local_scale);
 			auto parent = m_parent.lock();
 			if (parent) {
-				m_world_transform = m_local_transform *  parent->get_mat();
+				m_world_transform = m_local_transform * parent->matrix();
 			} else {
 				m_world_transform = m_local_transform;
 			}
@@ -68,7 +68,7 @@ namespace mach {
 			mark_changed();
 			auto parent = m_parent.lock();
 			if (parent) {
-				m_local_transform = p_world_transform * parent->get_mat().inverse() ;
+				m_local_transform = p_world_transform * parent->matrix().inverse() ;
 			} else {
 				m_local_transform = p_world_transform;
 			}
@@ -157,45 +157,35 @@ namespace mach {
 			}
 		}
 
-//		PROPERTY(Quaternion<T>, rotation, get_world_rotation, set_world_rotation);
-//		PROPERTY(Vector3<T>, position, get_world_position, set_world_position);
-//		PROPERTY(Vector3<T>, scale, get_world_scale, set_world_scale);
-		PROPERTY_READONLY(Quaternion<T>, rotation, get_world_rotation);
-		PROPERTY_READONLY(Vector3<T>, position, get_world_position);
-		PROPERTY_READONLY(Vector3<T>, scale, get_world_scale);
-		PROPERTY(Quaternion<T>, local_rotation, get_local_rotation, set_local_rotation);
-		PROPERTY(Vector3<T>, local_position, get_local_position, set_local_position);
-		PROPERTY(Vector3<T>, local_scale, get_local_scale, set_local_scale);
-
-		Matrix4<T> get_mat() {
+		Matrix4<T> matrix() {
 			check_mat();
 			return m_world_transform;
 		}
 
-		Quaternion<T> get_world_rotation() {
+		Quaternion<T> world_rotation() {
 			check_mat();
 			return m_world_rotation;
 		}
 
-		Vector3<T> get_world_position() {
+		Vector3<T> world_position() {
 			check_mat();
 			return m_world_position;
 		}
 
-		Vector3<T> get_world_scale() {
+		Vector3<T> world_scale() {
 			check_mat();
 			return m_world_scale;
 		}
 
-		Quaternion<T> get_local_rotation() const {
+		Quaternion<T> local_rotation() const {
 			return m_local_rotation;
 		}
 
-		Vector3<T> get_local_position() const {
+		Vector3<T> local_position() const {
 			return m_local_position;
 		}
 
-		Vector3<T> get_local_scale() const {
+		Vector3<T> local_scale() const {
 			return m_local_scale;
 		}
 
@@ -212,75 +202,62 @@ namespace mach {
 //			create_local_transform(math::compose_trs(m_world_position, m_world_rotation, p_scale));
 //		}
 
-		void set_local_rotation(const Quaternion<T> &p_rotation) {
+		void local_rotation(const Quaternion<T> &p_rotation) {
 			mark_changed();
 			m_local_rotation = p_rotation;
 		}
 
-		void set_local_position(const Vector3<T> &p_position) {
+		void local_position(const Vector3<T> &p_position) {
 			mark_changed();
 			m_local_position = p_position;
 		}
 
-		void set_local_scale(const Vector3<T> &p_scale) {
+		void local_scale(const Vector3<T> &p_scale) {
 			mark_changed();
 			m_local_scale = p_scale;
 		}
 
-		PROPERTY_READONLY(Vector3<T>, up, get_up);
-		PROPERTY_READONLY(Vector3<T>, down, get_down);
-		PROPERTY_READONLY(Vector3<T>, left, get_left);
-		PROPERTY_READONLY(Vector3<T>, right, get_right);
-		PROPERTY_READONLY(Vector3<T>, forward, get_forward);
-		PROPERTY_READONLY(Vector3<T>, backward, get_backward);
-
-		Vector3<T> get_forward() {
+		Vector3<T> forward() {
 			return get_world_dir(2);
 		}
 
-		Vector3<T> get_backward() {
+		Vector3<T> backward() {
 			return -get_world_dir(2);
 		}
 
-		Vector3<T> get_up() {
+		Vector3<T> up() {
 			return get_world_dir(1);
 		}
 
-		Vector3<T> get_down() {
+		Vector3<T> down() {
 			return -get_world_dir(1);
 		}
 
-		Vector3<T> get_right() {
+		Vector3<T> right() {
 			return get_world_dir(0);
 		}
 
-		Vector3<T> get_left() {
+		Vector3<T> left() {
 			return -get_world_dir(0);
 		}
 
-		PROPERTY_READONLY(bool, changed, get_changed);
-
-		bool get_changed() {
+		bool has_changed() {
 			return m_changed;
 		}
 
-		PROPERTY(std::weak_ptr<core::SceneNode<T>>, user, get_user, set_user);
-
-		std::weak_ptr<core::SceneNode<T>> get_user() {
+		std::weak_ptr<core::SceneNode<T>> user() {
 			return m_user;
 		}
 
-		void set_user(std::weak_ptr<core::SceneNode<T>> p_user) {
+		void user(std::weak_ptr<core::SceneNode<T>> p_user) {
 			m_user = p_user;
 		}
 
-		PROPERTY(std::weak_ptr<TransformCompound>, parent, get_parent, set_parent);
-
-		std::weak_ptr<TransformCompound> get_parent() {
+		std::weak_ptr<TransformCompound> parent() {
 			return m_parent;
 		}
 
-		void set_parent(std::weak_ptr<TransformCompound> p_parent) {
+		void parent(std::weak_ptr<TransformCompound> p_parent) {
 			m_parent = p_parent;
 		}
 

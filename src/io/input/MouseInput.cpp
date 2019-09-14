@@ -38,8 +38,7 @@ namespace mach {
 	}
 
 	void MouseInput::glfw_mouse_pos_callback(GLFWwindow *p_window, double p_x, double p_y) {
-		m_position.x = p_x;
-		m_position.y = p_y;
+		m_position = Vec2(p_x, p_y);
 	}
 
 	void MouseInput::button_up(int p_button) {
