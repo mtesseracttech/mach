@@ -35,13 +35,13 @@ namespace mach::core {
 		                   const std::string &p_name = "N/A") :
 				m_transform(std::make_shared<TransformCompound<T>>(TransformCompound<T>())),
 				m_name(p_name),
-				m_scene(p_parent.lock()->scene) {
+				m_scene(p_parent.lock()->scene()) {
 		}
 
 		static std::shared_ptr<SceneNode> create(std::weak_ptr<SceneHierarchy<T>> p_scene,
 		                                         const std::string &p_name = "N/A") {
 			std::shared_ptr<SceneNode> node = std::make_shared<SceneNode>(p_scene, p_name);
-			node->m_transform->user = node->weak_from_this();
+			node->m_transform->user(node->weak_from_this());
 			node->m_scene.lock()->add_node(node);
 			return node;
 		}
@@ -49,8 +49,8 @@ namespace mach::core {
 		static std::shared_ptr<SceneNode> create(std::weak_ptr<SceneNode> p_parent,
 		                                         const std::string &p_name = "N/A") {
 			std::shared_ptr<SceneNode> node = std::make_shared<SceneNode>(p_parent, p_name);
-			node->m_transform->user = node->weak_from_this();
-			p_parent.lock()->transform->add_child(node->m_transform);
+			node->m_transform->user(node->weak_from_this());
+			p_parent.lock()->transform()->add_child(node->m_transform);
 			return node;
 		}
 
@@ -63,30 +63,30 @@ namespace mach::core {
 			m_behaviours.push_back(p_behaviour);
 		}
 
-		PROPERTY(const std::weak_ptr<SceneHierarchy<T>> &, scene, get_scene, set_scene);
+//		PROPERTY(const std::weak_ptr<SceneHierarchy<T>> &, scene, get_scene, set_scene);
 
-		const std::weak_ptr<SceneHierarchy<T>> &get_scene() {
+		const std::weak_ptr<SceneHierarchy<T>> &scene() {
 			return m_scene;
 		}
 
-		void set_scene(const std::weak_ptr<SceneHierarchy<T>> &p_scene) {
+		void scene(const std::weak_ptr<SceneHierarchy<T>> &p_scene) {
 			m_scene = p_scene;
 		}
 
-		PROPERTY(const std::shared_ptr<TransformCompound<T>>, transform, get_transform, set_transform);
+//		PROPERTY(const std::shared_ptr<TransformCompound<T>>, transform, get_transform, set_transform);
 
-		const std::shared_ptr<TransformCompound<T>> get_transform() const {
+		const std::shared_ptr<TransformCompound<T>> transform() const {
 			return m_transform;
 		}
 
 
-		PROPERTY(const std::string &, name, get_name, set_name);
+//		PROPERTY(const std::string &, name, get_name, set_name);
 
-		const std::string &get_name() {
+		const std::string &name() {
 			return m_name;
 		}
 
-		void set_name(const std::string &p_name) {
+		void name(const std::string &p_name) {
 			m_name = p_name;
 		}
 
@@ -97,7 +97,7 @@ namespace mach::core {
 			for (int i = m_transform->get_child_count() - 1; i >= 0; --i) {
 				std::shared_ptr<TransformCompound<T>> child_transform = (*m_transform)[i];
 				if (child_transform) {
-					auto child = child_transform->user.lock();
+					auto child = child_transform->user().lock();
 					if (child) {
 						child->update(p_delta_time);
 					}

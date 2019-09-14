@@ -130,7 +130,7 @@ namespace mach {
 		}
 
 		inline bool is_unit() {
-			return approx_eq(magnitude_squared(), 1.0);
+			return approx_eq<T>(magnitude_squared(), 1.0);
 		}
 
 

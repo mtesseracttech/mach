@@ -15,14 +15,16 @@ namespace mach::core {
 		                const std::string &p_name = "Camera") : SceneNode<T>(p_scene, p_name) {
 		}
 
-		PROPERTY_READONLY(Matrix4<T>, view_matrix, get_view);
+		Matrix4<T> view() {
+			Vector3<T> right = this->m_transform->forward().cross(Vector3<T>::up()).normalized();
+			Vector3<T> up = right.cross(this->m_transform->forward()).normalized();
+			Vector3<T> forward = this->m_transform->forward();
 
-		Matrix4<T> get_view() {
-			Vector3<T> right = this->m_transform->forward.cross(Vector3<T>::up()).normalized();
-			Vector3<T> up = right.cross(this->m_transform->forward).normalized();
-			Vector3<T> forward = this->m_transform->forward;
+			Logger::log("right: "  + to_str(right));
+			Logger::log("up: "  + to_str(up));
+			Logger::log("fwd: "  + to_str(forward));
 
-			return math::view(this->m_transform->position, right, up, forward);
+			return math::view(this->m_transform->world_position(), right, up, forward);
 		}
 	};
 }

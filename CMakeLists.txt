@@ -66,7 +66,7 @@ add_executable(mach lib/glad.c
         src/core/scene/SceneNode.hpp
         src/core/scene/NodeBehaviour.hpp src/core/scene/SceneHierarchy.hpp tests/CoreEngineTests.hpp src/behaviour/camera/FirstPersonCameraBehaviour.hpp src/behaviour/camera/FirstPersonCameraBehaviour.cpp src/behaviour/camera/LookAtCameraBehaviour.cpp src/behaviour/camera/LookAtCameraBehaviour.hpp)
 
-target_compile_options(mach PRIVATE -fdeclspec)
+#target_compile_options(mach PRIVATE -fdeclspec)
 
 # Sets a base path for the includes so that they can be used in the same way as in Visual Studio/Codeblocks
 set(BASEPATH "${CMAKE_SOURCE_DIR}/src")

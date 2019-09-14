@@ -17,14 +17,10 @@
 #include "auxiliary/Properties.hpp"
 
 /*
- * Thanks to Gaztin from the Cherno discord, for helping me with the CRTP and the functor system.
+ * Thanks to Gaztin from the Cherno discord, for helping me with the functor things.
  */
 
 namespace mach {
-//#define PROPERTY(_type, _name, _get, _put) __declspec(property(get=_get, put=_put)) _type _name
-//#define PROPERTY_READONLY(_type, _name, _get) __declspec(property(get=_get)) _type _name
-//#define PROPERTY_WRITEONLY(_type, _name, _set) __declspec(property(put=_put)) _type _name
-
 	template<typename T, std::size_t N>
 	class Vector {
 		std::array<T, N> m_data;
@@ -98,47 +94,42 @@ namespace mach {
 			return m_data.data();
 		}
 
-		PROPERTY(T, x, get_x, set_x);
-		PROPERTY(T, y, get_y, set_y);
-		PROPERTY(T, z, get_z, set_z);
-		PROPERTY(T, w, get_w, set_w);
-
-		constexpr T get_x() const {
+		constexpr T x() const {
 			static_assert(N > 0, "Cannot call x on an lower than 1d vector");
 			return m_data[0];
 		}
 
-		constexpr void set_x(T p_x) {
+		constexpr void x(T p_x) {
 			static_assert(N > 0, "Cannot call x on an lower than 1d vector");
 			m_data[0] = p_x;
 		}
 
-		constexpr T get_y() const {
+		constexpr T y() const {
 			static_assert(N > 1, "Cannot call y on an lower than 2d vector");
 			return m_data[1];
 		}
 
-		constexpr void set_y(T p_y) {
+		constexpr void y(T p_y) {
 			static_assert(N > 1, "Cannot call y on an lower than 2d vector");
 			m_data[1] = p_y;
 		}
 
-		constexpr T get_z() const {
+		constexpr T z() const {
 			static_assert(N > 2, "Cannot call z on an lower than 3d vector");
 			return m_data[2];
 		}
 
-		constexpr void set_z(T p_z) {
+		constexpr void z(T p_z) {
 			static_assert(N > 2, "Cannot call z on an lower than 3d vector");
 			m_data[2] = p_z;
 		}
 
-		constexpr T get_w() const {
+		constexpr T w() const {
 			static_assert(N > 3, "Cannot call w on an lower than 4d vector");
 			return m_data[3];
 		}
 
-		constexpr void set_w(T p_w) {
+		constexpr void w(T p_w) {
 			static_assert(N > 3, "Cannot call w on an lower than 4d vector");
 			m_data[3] = p_w;
 		}
@@ -413,9 +404,9 @@ namespace mach {
 		static inline Vector cross(const Vector &p_v1, const Vector &p_v2) {
 			static_assert(N == 3, "Cross product is only defined for 3d vectors");
 			Vector output(
-					p_v1.y * p_v2.z - p_v1.z * p_v2.y,
-					p_v1.z * p_v2.x - p_v1.x * p_v2.z,
-					p_v1.x * p_v2.y - p_v1.y * p_v2.x
+					p_v1.y() * p_v2.z() - p_v1.z() * p_v2.y(),
+					p_v1.z() * p_v2.x() - p_v1.x() * p_v2.z(),
+					p_v1.x() * p_v2.y() - p_v1.y() * p_v2.x()
 			);
 			return output;
 		}
