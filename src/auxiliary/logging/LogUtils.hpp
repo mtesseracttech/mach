@@ -28,7 +28,7 @@ namespace mach {
 	}
 
 	static std::string get_execution_path() {
-#if _WINDOWS
+#if _WIN32
 		throw NotImplemented("Windows current dir printing is not implemented");
 #else
 		char buff[PATH_MAX];
