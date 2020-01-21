@@ -20,9 +20,9 @@ namespace mach::core {
 			Vector3<T> up = right.cross(this->m_transform->forward()).normalized();
 			Vector3<T> forward = this->m_transform->forward();
 
-			Logger::log("right: "  + to_str(right));
-			Logger::log("up: "  + to_str(up));
-			Logger::log("fwd: "  + to_str(forward));
+//			Logger::log("right: "  + to_str(right));
+//			Logger::log("up: "  + to_str(up));
+//			Logger::log("fwd: "  + to_str(forward));
 
 			return math::view(this->m_transform->world_position(), right, up, forward);
 		}
