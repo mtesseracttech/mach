@@ -23,8 +23,8 @@ namespace mach::gfx {
 
 	public:
 		explicit Model(const std::string &p_model_name) {
-			std::string model_file_path = "../res/models/" + p_model_name;
-			std::string textures_file_path = "../res/textures/" + p_model_name;
+			std::string model_file_path = "models/" + p_model_name;
+			std::string textures_file_path = "textures/" + p_model_name;
 
 			Assimp::Importer import;
 			const aiScene *scene = import.ReadFile(model_file_path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_GenNormals);
