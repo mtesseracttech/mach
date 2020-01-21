@@ -270,7 +270,7 @@ namespace mach {
 
 		friend std::ostream &operator<<(std::ostream &p_os, const Vector &p_v) {
 			p_os << std::fixed << std::setprecision(3) << "(" << p_v[0];
-			for (int i = 1; i < N; ++i) {
+			for (std::size_t i = 1; i < N; ++i) {
 				p_os << "," << p_v[i];
 			}
 			p_os << ")";

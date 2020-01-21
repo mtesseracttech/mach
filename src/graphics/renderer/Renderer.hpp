@@ -18,7 +18,7 @@ namespace mach::gfx {
 		template<typename RendererType>
 		static std::shared_ptr<RendererType> create() {
 			return std::shared_ptr<RendererType>(new RendererType());
-		};
+		}
 	};
 }
 

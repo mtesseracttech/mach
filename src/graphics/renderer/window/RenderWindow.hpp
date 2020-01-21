@@ -21,18 +21,19 @@ namespace mach::gfx {
 
 	class RenderWindow {
 	protected:
+        std::string m_window_title;
+
+        uint32_t m_width = 0;
+        uint32_t m_height = 0;
+
 		GLFWwindow *m_glfw_window = nullptr;
 		bool m_closing = false;
 
-		uint32_t m_width = 0;
-		uint32_t m_height = 0;
-		float m_aspect_ratio = 0;
-
-		RenderWindow(std::string p_window_title, uint32_t p_width, uint32_t p_height);
+		RenderWindow(const std::string& p_window_title, uint32_t p_width, uint32_t p_height);
 
 		virtual ~RenderWindow();
-
 	public:
+	    float get_aspect_ratio() const;
 
 		GLFWwindow *get_raw_window() const;
 
@@ -54,8 +55,6 @@ namespace mach::gfx {
 
 		IVec2 get_window_dimensions();
 
-		float get_aspect_ratio();
-
 	protected:
 		virtual void resize_framebuffer(uint32_t p_width, uint32_t p_height) = 0;
 
@@ -68,9 +67,9 @@ namespace mach::gfx {
 	public:
 		template<typename WindowType>
 		static std::shared_ptr<WindowType>
-		create_window(std::string p_window_title, uint32_t p_width, uint32_t p_height) {
+		create_window(const std::string& p_window_title, uint32_t p_width, uint32_t p_height) {
 			return std::shared_ptr<WindowType>(new WindowType(p_window_title, p_width, p_height));
-		};
+		}
 
 		template<typename WindowType>
 		static std::shared_ptr<WindowType> create_window(uint32_t p_width, uint32_t p_height) {
@@ -80,8 +79,8 @@ namespace mach::gfx {
 		}
 
 		template<typename WindowType>
-		static std::shared_ptr<WindowType> create_window(std::string p_window_title) {
-			return create_window<WindowType>(std::move(p_window_title),
+		static std::shared_ptr<WindowType> create_window(const std::string& p_window_title) {
+			return create_window<WindowType>(p_window_title,
 			                                 mach::Constants::DEF_WIN_WIDTH,
 			                                 mach::Constants::DEF_WIN_HEIGHT);
 		}

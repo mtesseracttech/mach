@@ -26,6 +26,7 @@ namespace mach::gfx {
 		}
 
 		void print_linking_error_info(uint32_t p_program_handle, const std::string &p_shader_name) {
+            (void) p_program_handle;
 			char info_log[512];
 			glGetProgramInfoLog(m_shader_program, 512, nullptr, info_log);
 			std::stringstream ss;

@@ -93,9 +93,9 @@ namespace mach {
 
 		friend std::ostream &operator<<(std::ostream &p_os, const Matrix &p_m) {
 			p_os << '\n';
-			for (int i = 0; i < H; ++i) {
+			for (std::size_t i = 0; i < H; ++i) {
 				p_os << std::fixed << std::setprecision(3) << "[" << p_m[i][0];
-				for (int j = 1; j < W; ++j) {
+				for (std::size_t j = 1; j < W; ++j) {
 					p_os << "," << p_m[i][j];
 				}
 				p_os << "]";
@@ -110,7 +110,7 @@ namespace mach {
 
 		inline Vector<T, H> col(size_t p_n) {
 			Vector<T, H> output;
-			for (size_t i = 0; i < H; ++i) {
+			for (std::size_t i = 0; i < H; ++i) {
 				output[i] = (*this)[i][p_n];
 			}
 			return output;
@@ -118,7 +118,7 @@ namespace mach {
 
 		inline Matrix<T, W, H> transpose() const {
 			Matrix<T, W, H> output;
-			for (size_t row = 0; row < H; ++row) {
+			for (std::size_t row = 0; row < H; ++row) {
 				for (size_t col = 0; col < W; ++col) {
 					output[col][row] = (*this)[row][col];
 				}
@@ -128,7 +128,7 @@ namespace mach {
 
 		inline Matrix normalized() const {
 			Matrix output;
-			for (size_t row = 0; row < H; ++row) {
+			for (std::size_t row = 0; row < H; ++row) {
 				output[row] = (*this)[row].normalized();
 			}
 			return output;
@@ -157,22 +157,22 @@ namespace mach {
 				//Creating the return value
 				T result = T();
 				//Preparing the information for the new matrix
-				constexpr size_t lower_w = (W - 1);
-				constexpr size_t lower_h = (H - 1);
-				for (int i = 0; i < W; ++i) {
+				constexpr std::size_t lower_w = (W - 1);
+				constexpr std::size_t lower_h = (H - 1);
+				for (std::size_t i = 0; i < W; ++i) {
 					//Going though the top row
 					const T lh = m_rows[0][i];
 					//Constructing smaller matrix
 					Matrix<T, lower_w, lower_h> rh;
 					//The column at which we are inserting the cofactors
 					int rhw = 0;
-					for (int w = 0; w < W; ++w) {
+					for (std::size_t w = 0; w < W; ++w) {
 						//If the current column is equal to the reference cell's column, we skip it
 						if (w == i) {
 							continue;
 						}
 						//Filling in the new matrix' column
-						for (int h = 1; h < H; ++h) {
+						for (std::size_t h = 1; h < H; ++h) {
 							rh[rhw][h - 1] = m_rows[h][w];
 						}
 						++rhw;
@@ -198,21 +198,21 @@ namespace mach {
 				result[1][1] = m_rows[0][0];
 			} else {
 				//Preparing the information for the cofactor matrices
-				constexpr size_t lower_w = (W - 1);
-				constexpr size_t lower_h = (H - 1);
-				for (size_t r = 0; r < H; ++r) {
-					for (size_t c = 0; c < W; ++c) {
+				constexpr std::size_t lower_w = (W - 1);
+				constexpr std::size_t lower_h = (H - 1);
+				for (std::size_t r = 0; r < H; ++r) {
+					for (std::size_t c = 0; c < W; ++c) {
 						//Constructing smaller cofactor matrix to get determinant for cofactors
 						Matrix<T, lower_w, lower_h> small_cof_mat;
 
 						//Filling in smaller matrix
-						size_t small_idx_row = 0; //"real" index of the row in the cofactor matrix
-						for (size_t cofactor_row = 0; cofactor_row < H; ++cofactor_row) {
-							size_t small_idx_col = 0; //"real" index of the column in the cofactor matrix
+                        std::size_t small_idx_row = 0; //"real" index of the row in the cofactor matrix
+						for (std::size_t cofactor_row = 0; cofactor_row < H; ++cofactor_row) {
+                            std::size_t small_idx_col = 0; //"real" index of the column in the cofactor matrix
 							if (cofactor_row == r) {
 								continue;
 							}
-							for (size_t cofactor_col = 0; cofactor_col < W; ++cofactor_col) {
+							for (std::size_t cofactor_col = 0; cofactor_col < W; ++cofactor_col) {
 								if (cofactor_col == c) {
 									continue;
 								} else {
@@ -251,8 +251,8 @@ namespace mach {
 			static_assert(W == RH, "Matrix multiplication is only defined for matrices with matching inner dimensions");
 			auto p_m_t = p_m.transpose();
 			Matrix<T, H, RW> output;
-			for (size_t row = 0; row < H; ++row) {
-				for (size_t col = 0; col < RW; ++col) {
+			for (std::size_t row = 0; row < H; ++row) {
+				for (std::size_t col = 0; col < RW; ++col) {
 					output[row][col] = (*this)[row].dot(p_m_t[col]);
 				}
 			}
@@ -262,7 +262,7 @@ namespace mach {
 
 		inline Vector<T, W> operator*(const Vector<T, W> &p_v) const {
 			Vector<T, W> output;
-			for (size_t i = 0; i < output.size(); ++i) {
+			for (std::size_t i = 0; i < output.size(); ++i) {
 				output[i] = (*this)[i].dot(p_v);
 			}
 			return output;
@@ -270,7 +270,7 @@ namespace mach {
 
 		inline Matrix operator*(const T &p_s) const {
 			Matrix output;
-			for (size_t r = 0; r < H; ++r) {
+			for (std::size_t r = 0; r < H; ++r) {
 				output[r] = m_rows[r] * p_s;
 			}
 			return output;
@@ -286,7 +286,7 @@ namespace mach {
 
 
 		inline bool operator==(const Matrix &p_m) const {
-			for (size_t i = 0; i < H; ++i) {
+			for (std::size_t i = 0; i < H; ++i) {
 				if (!(m_rows[i] == p_m.m_rows[i])) {
 					return false;
 				}

@@ -22,7 +22,10 @@ namespace mach {
 		}
 	}
 
-	void KeyInput::glfw_key_callback(GLFWwindow *p_window, int p_key, int p_scancode, int p_action, int mods) {
+	void KeyInput::glfw_key_callback(GLFWwindow *p_window, int p_key, int p_scancode, int p_action, int p_mods) {
+        (void)p_scancode;
+        (void)p_window;
+        (void)p_mods;
 		switch (p_action) {
 			case GLFW_PRESS:
 				key_down(p_key);

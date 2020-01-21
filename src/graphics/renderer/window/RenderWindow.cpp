@@ -60,10 +60,7 @@ namespace mach::gfx {
 		glfwPollEvents();
 	}
 
-	RenderWindow::RenderWindow(std::string p_window_title, uint32_t p_width, uint32_t p_height) {
-		m_width = p_width;
-		m_height = p_height;
-
+	RenderWindow::RenderWindow(const std::string& p_window_title, uint32_t p_width, uint32_t p_height) : m_window_title(p_window_title), m_width(p_width), m_height(p_height)  {
 		glfwSetErrorCallback(glfw_error_callback);
 
 		if (glfwInit() == GL_FALSE) {
@@ -77,7 +74,7 @@ namespace mach::gfx {
 		return IVec2(m_width, m_height);
 	}
 
-	float RenderWindow::get_aspect_ratio() {
+	float RenderWindow::get_aspect_ratio() const {
 		return (float)m_width / (float)m_height;
 	}
 }

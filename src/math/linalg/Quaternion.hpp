@@ -2,6 +2,10 @@
 // Created by mtesseract on 6/9/19.
 //
 
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wnested-anon-types"
+#pragma clang diagnostic ignored "-Wgnu-anonymous-struct"
 #ifndef MACH_QUATERNION_HPP
 #define MACH_QUATERNION_HPP
 
@@ -349,3 +353,4 @@ namespace mach {
 }
 
 #endif //MACH_QUATERNION_HPP
+#pragma clang diagnostic pop

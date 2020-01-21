@@ -58,7 +58,7 @@ namespace mach::gfx {
 
 	private:
 
-		unsigned int texture_from_file(const char *p_path, const std::string &p_directory, bool p_gamma) {
+		unsigned int texture_from_file(const char *p_path, const std::string &p_directory) {
 			std::string filename = std::string(p_path);
 			filename = p_directory + '/' + filename;
 
@@ -159,7 +159,7 @@ namespace mach::gfx {
 				}
 				if (!skip) {   // if texture hasn't been loaded already, load it
 					Texture texture;
-					texture.m_id = texture_from_file(str.C_Str(), m_texture_directory, false);
+					texture.m_id = texture_from_file(str.C_Str(), m_texture_directory);
 					texture.m_type = p_type_name;
 					texture.m_path = str.C_Str();
 					textures.push_back(texture);

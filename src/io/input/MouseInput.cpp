@@ -25,6 +25,9 @@ namespace mach {
 	}
 
 	void MouseInput::glfw_mouse_button_callback(GLFWwindow *p_window, int p_button, int p_action, int p_mods) {
+        (void)p_window;
+        (void)p_mods;
+
 		switch (p_action) {
 			case GLFW_PRESS:
 				button_down(p_button);
@@ -38,6 +41,7 @@ namespace mach {
 	}
 
 	void MouseInput::glfw_mouse_pos_callback(GLFWwindow *p_window, double p_x, double p_y) {
+        (void)p_window;
 		m_position = Vec2(p_x, p_y);
 	}
 

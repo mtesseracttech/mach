@@ -37,9 +37,9 @@ namespace mach::behaviour {
 		gfx::CursorMode m_mode = gfx::Visible;
 	public:
 		FirstPersonCameraBehaviour(uint32_t p_average_frames, float p_movement_speed, float p_rotation_speed):
-			m_camera_movement_speed(p_movement_speed),
-			m_camera_rotation_speed(p_rotation_speed),
-			m_average_frames(p_average_frames) {
+			m_average_frames(p_average_frames),
+            m_camera_movement_speed(p_movement_speed),
+            m_camera_rotation_speed(p_rotation_speed){
 		}
 
 		void set_cursor_mode(gfx::CursorMode p_mode);

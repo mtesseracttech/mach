@@ -2,7 +2,12 @@ cmake_minimum_required(VERSION 3.14)
 project(mach)
 
 set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
+#Sets a base path for the includes so that they can be used in the same way as in Visual Studio/Codeblocks
+set(BASEPATH "${CMAKE_SOURCE_DIR}/src")
+include_directories("${BASEPATH}")
 
 #Adding GLFW
 option(GLFW_BUILD_DOCS OFF)

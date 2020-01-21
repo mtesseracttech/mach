@@ -27,15 +27,15 @@ namespace mach::core {
 		explicit SceneNode(std::weak_ptr<SceneHierarchy<T>> p_scene,
 		                   const std::string &p_name = "N/A") :
 				m_transform(std::make_shared<TransformCompound<T>>(TransformCompound<T>())),
-				m_name(p_name),
-				m_scene(p_scene) {
+				m_scene(p_scene),
+                m_name(p_name){
 		}
 
 		explicit SceneNode(std::weak_ptr<SceneNode> p_parent,
 		                   const std::string &p_name = "N/A") :
 				m_transform(std::make_shared<TransformCompound<T>>(TransformCompound<T>())),
-				m_name(p_name),
-				m_scene(p_parent.lock()->scene()) {
+				m_scene(p_parent.lock()->scene()),
+				m_name(p_name){
 		}
 
 		static std::shared_ptr<SceneNode> create(std::weak_ptr<SceneHierarchy<T>> p_scene,

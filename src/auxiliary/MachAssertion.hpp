@@ -46,7 +46,7 @@ namespace mach {
 		}
 
 		MachAssertionException(const char *p_expression, const char *p_file, int p_line, const std::string &p_message)
-				: m_expression(p_expression), m_file(p_file), m_line(p_line), m_message(p_message) {
+				: m_expression(p_expression), m_file(p_file), m_message(p_message), m_line(p_line) {
 			std::ostringstream output_stream;
 
 			if (!p_message.empty()) {

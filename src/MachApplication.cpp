@@ -62,26 +62,21 @@ namespace mach {
 		camera->add_behaviour(camera_behaviour);
 		camera_behaviour->set_cursor_mode(cursor_mode);
 
-		Vec2 old_mouse_pos = MouseInput::position();
 		float previous_time = 0.0;
 
 		while (!m_window->is_closing()) {
 			float current_time = timer.get_elapsed();
 			float delta_time = current_time - previous_time;
-			auto cur_pos = MouseInput::position();
-			auto mouse_delta = cur_pos - old_mouse_pos;
 
 			m_window->clear(0.1, 0.1, 0.1, 0.1);
 
 			scene->update(delta_time);
 
-			old_mouse_pos = cur_pos;
-
 			light_transform->local_position(Vec3(std::sin(current_time) * 5, light_transform->local_position().y(), std::cos(current_time) * 5));
 
 			auto view = scene->get_main_camera()->view();
 			auto perspective = math::perspective<float>(0.01, 1000, math::to_rad(90), m_window->get_aspect_ratio());
-			auto cam_pos = scene->get_main_camera()->transform()->world_position();
+			//auto cam_pos = scene->get_main_camera()->transform()->world_position();
 
 			phong_shader->use();
 			phong_shader->set_val("camera_position", camera->transform()->world_position());
