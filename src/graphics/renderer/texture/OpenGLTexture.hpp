@@ -11,7 +11,7 @@
 #include <glad/glad.h>
 #include <auxiliary/logging/Logger.hpp>
 #include <io/files/FileIO.hpp>
-#include "stb/stb_image.h"
+#include "stb_image.h"
 #include "auxiliary/Properties.hpp"
 
 namespace mach::gfx {

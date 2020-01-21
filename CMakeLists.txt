@@ -28,10 +28,11 @@ endif()
 include_directories(src/
         libs/assimp/include/
         libs/glfw/include/
-        libs/glad/glad/include/
-        libs/shaderc/libshaderc_spvc/include/)
+        libs/glad/include/
+        libs/stb/)
 
 
+file(GLOB VENDORS_SOURCES libs/glad/src/glad.c)
 file(GLOB_RECURSE PROJECT_HEADERS src/*.hpp)
 file(GLOB_RECURSE PROJECT_SOURCES src/*.cpp)
 file(GLOB_RECURSE PROJECT_SHADERS

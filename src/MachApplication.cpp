@@ -138,7 +138,6 @@ namespace mach {
 }
 
 int main() {
-	//std::cout << mach::get_execution_path() << std::endl;
 	mach::tests::run_tests();
 	mach::MachApplication app;
 	app.run();

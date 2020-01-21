@@ -77,7 +77,7 @@ namespace mach::gfx {
 
 			uint32_t vert_shader_handle = compile_shader(GL_VERTEX_SHADER, vert_shader_name);
 			uint32_t frag_shader_handle = compile_shader(GL_FRAGMENT_SHADER, frag_shader_name);
-			uint32_t geom_shader_handle = has_geom_shader ? compile_shader(GL_GEOMETRY_SHADER, geom_shader_name) : 0;
+			uint32_t geom_shader_handle = has_geom_shader ? compile_shader(GL_GEOMETRY_SHADER_ARB, geom_shader_name) : 0;
 
 			if (vert_shader_handle != 0) glAttachShader(m_shader_program, vert_shader_handle);
 			if (geom_shader_handle != 0) glAttachShader(m_shader_program, geom_shader_handle);
