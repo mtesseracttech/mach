@@ -119,7 +119,7 @@ namespace mach {
 		inline Matrix<T, W, H> transpose() const {
 			Matrix<T, W, H> output;
 			for (std::size_t row = 0; row < H; ++row) {
-				for (size_t col = 0; col < W; ++col) {
+				for (std::size_t col = 0; col < W; ++col) {
 					output[col][row] = (*this)[row][col];
 				}
 			}
